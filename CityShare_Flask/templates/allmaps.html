@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+
+    <div class="container" id="content">
+        <h2>Dine Kart</h2>
+          <p>Velg ett av følgende kart i tabellen</p>
+          <table class="table table-hover table-bordered">
+            <thead>
+              <tr class="warning">
+                  <th>MapID</th>
+                  <th>Laget av</th>
+                  <th>Titel</th>
+                  <th>Laget den</th>
+                  <th>Utløpsdato</th>
+              </tr>
+            </thead>
+            <tbody>
+
+                {% for map in maps %}
+                    <tr onclick="location.href='/showmap?mapid={{ map.mapid }}'">
+                        <td>{{ map.mapid }}</td>
+                        <td>{{ map.creater }}</td>
+                        <td>{{ map.title }}</td>
+                        <td>{{ map.issuedate }}</td>
+                        <td>{{ map.expirydate }}</td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+          </table>
+
+    </div>
+
+
+
+{% endblock %}

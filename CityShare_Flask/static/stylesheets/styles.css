@@ -1,0 +1,121 @@
+ /* header style */
+        ul.topnav {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0393ff;
+        }
+        ul.topnav li {float: left;}
+        ul.topnav li a {
+            display: block;
+            font-family: Andalus;
+            font-size: large;
+            color: #000000;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        ul.topnav li a:hover:not(.active) {background-color: #a4ff19;}
+        ul.topnav li a.active {background-color: #ffdc22;}
+        ul.topnav li.right {float: right;}
+        @media screen and (max-width: 600px){
+            ul.topnav li.right,
+            ul.topnav li {float: none;}
+        }
+        .navbar-form {
+            margin-right: 1em;
+        }
+
+        /*
+
+
+        /* footer style */
+
+ body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
+  min-height: 100%;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+ html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+ footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #0393ff;
+     color: white;
+  text-align: center;
+}
+
+ i {
+            margin: 0.1em;
+        }
+
+        #contact {
+            float: left;
+            text-align: left;
+            font-family: Andalus;
+            color: #000000;
+            margin-left: 1em;
+            font-stretch: condensed;
+            padding: 0px;
+        }
+
+        #contact h5 {
+            margin: 0px;
+        }
+
+        #social_media {
+            float: right;
+            margin-right: 1em;
+        }
+
+        .alert {
+            text-align: left;
+        }
+
+        .box {
+            display: inline-block;
+            float: left;
+            border: 1px solid grey;
+            box-shadow: 5px 5px #d3d3d3;
+            vertical-align: middle;
+            padding: 5%;
+        }
+
+        .box:hover {
+            border: 5px ridge #ff1493;
+        }
+
+        .box h3 {
+            font-family: Andalus;
+            color: #000000;
+
+        }
+
+        #content {
+            margin-top: 5%;
+            margin: 0 auto;
+            width: 80%;
+            padding: 2% 5% 4% 5%;
+        }
+
+ iframe {
+              height: 400px;
+              width: 500px;
+ }
