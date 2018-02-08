@@ -19,7 +19,7 @@
             <tbody>
 
                 {% for map in maps %}
-                    <tr onclick="location.href='/showmap?mapid={{ map.mapid }}'">
+                    <tr onclick="location.href='/MapChoices?mapid={{ map.mapid }}'">
                         <td>{{ map.mapid }}</td>
                         <td>{{ map.creater }}</td>
                         <td>{{ map.title }}</td>

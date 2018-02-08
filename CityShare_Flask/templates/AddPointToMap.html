@@ -1,0 +1,229 @@
+{% extends 'index.html' %}
+
+{% block stylingblock %}
+
+    <style>
+
+    #Map {
+        border: 1px solid #808080;
+        box-shadow: 5px 5px #808080;
+        margin-top: 5px;
+        width: 100%;
+        height: 450px;
+    }
+
+
+    </style>
+
+    <!-- slider styling and script-->
+    <style>
+        .slidecontainer {
+            width: 100%;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 15px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+           var slider = document.getElementById("rating");
+           var output = document.getElementById("currentRating");
+           output.innerHTML = slider.value;
+
+           slider.oninput = function() {
+               output.innerHTML = this.value;
+           }
+        });
+    </script>
+
+{% endblock %}
+
+{% block scriptblock %}
+
+    <script>
+
+        var number_of_active_markers = 0;
+
+        function initMap() {
+            var mapOptions = {
+                center: new google.maps.LatLng(51.5, -0.12),
+                zoom: 11,
+                mapTypeId: google.maps.MapTypeId.HYBRID,
+                gestureHandling: 'none',
+                zoomControl: false,
+                fullscreenControl: false
+            }
+            map = new google.maps.Map(document.getElementById("Map"), mapOptions);
+
+            northeastcorner = new google.maps.LatLng({{ map.northeastcorner }});
+            southwestcorner = new google.maps.LatLng({{ map.southwestcorner }});
+            bounds = new google.maps.LatLngBounds(northeastcorner, southwestcorner);
+            map.fitBounds(bounds);
+
+            google.maps.event.addListener(map,'click',function(event) {
+                if (number_of_active_markers == 0) {
+                    placeMarker(event.latLng);
+                    number_of_active_markers += 1;
+                } else {
+                    alert("Lagre nåværende punkt for å legge et punkt til");
+                }
+            });
+        };
+
+        // function to register the point in the database
+        // check if the point cordinates is available
+                    // if so, add to database by
+                        // calling register()
+                            // if mistake under inserting a new shape
+                                // flash a notification
+                            // if success,
+                                // flash a notification
+                                // empty fields
+                                // set number_of_active_markers = 0
+
+                    // if Not, Warn the user to add a new Point
+        function register() {
+            if ($('#center').val() != '') {
+                var mapid = $('#mapid').val();
+                var title = $('#title').val();
+                var description = $('#description').val();
+                var rating = $('#rating').val();
+                var center = $('#center').val();
+                $.post("/registerShape",
+                    {map_id: mapid , icon: "the icon url", shape_type: "Point", center: center,
+                        area_or_path: "", title: title, description: description, rating: rating},
+                    function(data,status) {
+                        if (data == 'OK' && status == 'success') {
+                            $('#center').val('');
+                            $('#title').val('');
+                            $('#description').val('');
+                            $('#rating').val('2');
+                            $('#currentRating').html('2');
+
+                            alert("Punktet er lagt til kartet");
+
+                            number_of_active_markers = 0
+                        } else {
+                            alert('En feil har skjedd prøv igjen');
+                        }
+                });
+            } else {
+                alert('Legg et punkt på kartet');
+            }
+        }
+
+        // function to place a marker on the map
+        function placeMarker(location) {
+            marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+
+            marker.setDraggable(false);
+            $('#center').val(location);
+        }
+
+        function emptyForm() {
+            if (number_of_active_markers > 0) {
+                $('#center').val('');
+                $('#currentRating').html('2');
+                marker.setMap(null);
+                number_of_active_markers = 0;
+            }
+        }
+
+    </script>
+
+
+
+{% endblock %}
+
+
+{% block content  %}
+
+
+<form id="AddPointForm" onsubmit="register(); return false;">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div id="Map"></div>
+                <input id="mapid" value="{{ map.mapid }}" hidden>
+                <input id="center" value="" hidden>
+            </div>
+
+            <div class="col-lg-6">
+                <h2>Fyll ut:</h2>
+                <div>
+                    <div>
+                        <!--
+                        <div id="AlertBox" class="alert alert-success alert-dismissable" hidden>
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                          <strong>Punktet er lagret!</strong>
+                        </div>
+                        -->
+
+                        <div class="form-group">
+                            <label for="title">Titel:</label>
+                            <input type="title" class="form-control" id="title" placeholder="Titel" name="Title" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Beskrivelse:</label>
+                            <textarea name="description" class="form-control" rows="2" id="description" placeholder="Beskrivelse" required></textarea>
+                        </div>
+
+                        <div class="slidecontainer">
+                            <p>Din Vurdering: <span id="currentRating"></span></p>
+                            <input name="rating" type="range" min="1" max="5" value="2" class="slider" id="rating" required>
+                        </div>
+
+                        <br>
+                        <button type="submit" class="btn btn-primary">Legg til</button>
+                        <button type="reset" onclick="emptyForm();" class="btn btn-danger">Tøm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+    <!--
+     <script src="{{url_for('static', filename='scripts/javascripteditmap.js')}}"></script>
+    -->
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY&callback=initMap"></script>
+
+
+{% endblock %}
