@@ -71,7 +71,7 @@
                     var splits = cor_str.split(",");
                     for (var i = 0; i < splits.length -1; i++) {
                         lat_lng = splits[i].split(" ");
-                        Coordinates.push(new google.maps.LatLng(parseInt(lat_lng[0]),parseInt(lat_lng[1])));
+                        Coordinates.push(new google.maps.LatLng(parseFloat(lat_lng[0]),parseFloat(lat_lng[1])));
                     }
 
                     var Path = new google.maps.Polyline({
@@ -82,6 +82,8 @@
                     });
 
                     Path.setMap(map);
+
+
 
                 }
 

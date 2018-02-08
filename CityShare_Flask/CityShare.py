@@ -106,7 +106,7 @@ def search_for_users():
 def add_new_map():
 
     if request.method == 'GET':
-        return render_template("new.html")
+        return render_template("new_map.html")
 
     else:
         map_creater = session.get("Logged_in")
@@ -118,7 +118,7 @@ def add_new_map():
         date = request.form.get('date')
         enddate = date[6:] + "-" + date[0:2] + "-" + date[3:5]
 
-        geo_boundery = request.form.get('map')
+        geo_boundery = request.form.get('geo_boundery')
         geo_boundery = geo_boundery.replace("((","")
         geo_boundery = geo_boundery.replace(")","")
         geo_boundery = geo_boundery.replace("(", "")
@@ -147,7 +147,7 @@ def add_new_map():
         except mysql.connector.Error as err:
             conn.close()
             print(err.msg)
-            return render_template("new.html")
+            return render_template("cast_files/new.html")
 
         ## TODO: adding users to the map
         cursor = conn.cursor()
@@ -163,7 +163,7 @@ def add_new_map():
             conn.close()
             return render_template("home.html")
 
-        return render_template("new.html")
+        return render_template("new_map.html")
 
 @app.route("/showmaps", methods=['GET'])
 def show_maps():
@@ -222,70 +222,6 @@ def map_choices():
 
     return render_template("MapChoices.html", mapid=mapid)
 
-"""
-@app.route("/ShowMap", methods=['GET'])
-def show_map():
-    mapid = request.args.get('mapid')
-    username = session.get("Logged_in")
-
-    ## TODO: check if the user have right to enter this map
-    conn = get_db()
-    cursor = conn.cursor()
-    sql = "SELECT COUNT(*) from Maps_Users WHERE username = '"+str(username)+"' AND map_id = "+str(mapid)+" LIMIT 0, 1;"
-    try:
-        cursor.execute(sql)
-        have_right = cursor.fetchone()[0]
-        if have_right == 1:
-            ## TODO: read map details from data base and return render template with results
-
-            sql = "SELECT map_creater, title, description, start_date, end_date, astext(geo_boundery) " \
-                  "FROM Maps " \
-                  "WHERE map_id = "+str(mapid)+";"
-            cursor.execute(sql)
-            data = cursor.fetchone()
-            bounds = str(data[5]).strip("POLYGON((").strip("))").split(",")
-            map = {
-                "mapid": mapid,
-                "creater": data[0],
-                "title": data[1],
-                "description": data[2],
-                "issuedate": data[3],
-                "expirydate": data[4],
-                "bounds": bounds,
-                "northeastcorner": bounds[0].replace(" ",","),
-                "southwestcorner": bounds[1].replace(" ",",")
-            }
-
-            sql = "SELECT shape_id, shape_creater, icon, shape_type, astext(center), astext(area_or_path), title, description, rate " \
-                  "FROM Shapes WHERE map_id = "+str(mapid)+";"
-            cursor.execute(sql)
-            data = cursor.fetchall()
-            shapes = []
-            for entry in data:
-                shape = {
-                    "shapeid": entry[0],
-                    "shapecreater": entry[1],
-                    "icon": entry[2],
-                    "shapetype": entry[3],
-                    "center": str(entry[4]).strip('POINT').strip('(').strip(')').replace(" ",", "),
-                    "area_or_path": entry[5],
-                    "title": entry[6],
-                    "description": entry[7],
-                    "rate": entry[8]
-                }
-                shapes.append(shape)
-
-        else:
-            return render_template("map.html", Fail="Du har ingen tilgang til dette kartet, kontakt administrator")
-
-    except mysql.connector.Error as err:
-        conn.close()
-        print(err.msg)
-        return render_template("map.html", Fail=err.msg)
-    finally:
-        conn.close()
-        return render_template("map.html", map=map, shapes=shapes)
-"""
 
 @app.route("/ShowMap", methods=['GET'])
 def show_map():

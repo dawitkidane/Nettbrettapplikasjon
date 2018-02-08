@@ -1,0 +1,226 @@
+{% extends 'index.html' %}
+
+{% block stylingblock %}
+    <style>
+        #Map {
+            width: 70%;
+        }
+
+        #ChoicePanel {
+            width: 30%;
+            padding: 10px;
+            overflow: auto;
+            max-height: 100vh;
+        }
+
+        .part {
+            height: 550px;
+            display: inline-block;
+            vertical-align: top;
+            margin-left:-5px;
+        }
+
+        a, a:hover, a:active, a:visited, a:focus {
+            text-decoration:none;
+        }
+
+        #form {
+            position: relative; z-index: 9999;
+        }
+
+        .btn-success, .btn-danger {
+            width: 49%;
+        }
+        .input-group {
+            width: 100%;
+        }
+
+      </style>
+{% endblock %}
+
+
+
+{% block scriptblock %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <script>
+
+        var map = null;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('Map'), {
+              zoom: 11,
+              center: {lat: 58.969975, lng: 5.733107}
+            });
+
+            //var image = '../static/icons/barber.png';
+            //var image = '2hand.png';
+            var beachMarker = new google.maps.Marker({
+              position: {lat: -33.890, lng: 151.274},
+              map: map //, icon: image
+            });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    map.setCenter(pos);
+                    map.setZoom(11);
+                    }, function() {
+                    // bruker ønsker ikke å dele sin posisjon
+
+                    });
+            } else {
+                // Browser doesn't support Geolocation
+                alert("Din browser støtter ikke geografisk gjenfinning");
+            }
+
+            // saving the map bounds
+            map.addListener('bounds_changed', function() {
+                $('#geo_boundery').val(map.getBounds());
+            });
+
+        }
+
+
+        $(document).ready(function () {
+
+            // Adding users / jQuery
+            $('#SearchUsersButton').on('click', function (e) {
+                var username = $('#searchUsers').val();
+
+                if (username != '') {
+                    $.post("/searchUsers",{ username: username }, function(data,status){
+                        if (status === "success") {
+                            var results = JSON.parse(data);
+                            var user = results[0];
+
+                            if (results.length > 0) {
+                                var addedusers = $("#AddedUsers").children().text();
+                                if (addedusers.includes(username) || addedusers.includes(user)) return;
+                                $('#AddUserButton').show();
+                                $('#AddUserButton').off('click');
+                                $('#AddUserButton').on('click', function(e) {
+                                    var newelement = "<li class='list-group-item'>"+user
+                                                        +"<span id='"+user+"' class='badge'>"
+                                                            +"<i class='fa fa-minus'></i>"
+                                                        +"</span>"
+                                                        +"<input name='users' value='"+user+"' type='hidden' class='form-control'>"
+                                                        +"</li>";
+                                    $('#AddedUsers').append(newelement);
+                                    $('#AddUserButton').hide();
+                                    $('#searchUsers').empty();
+                                    $('#'+user+'').off('click');
+                                    $('#'+user+'').on('click', function(e) {
+                                        $(this).parent().remove();
+                                    });
+                                });
+                            }
+
+                        } else {
+                            alert("Database Connection failure");
+                        }
+                    });
+                }
+            });
+            $('#AddUserButton').hide();
+
+            // Datepicker - jQuery
+            var dateToday = new Date();
+            var dates = $("#date").datepicker({
+                defaultDate: "+3m",
+                changeMonth: true,
+                numberOfMonths: 1,
+                minDate: dateToday,
+                onSelect: function(selectedDate) {
+                    var option = this.id == "from" ? "minDate" : "maxDate",
+                        instance = $(this).data("datepicker")//.css({"position": "relative", "z-index": 999999});
+                    date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
+                    dates.not(this).datepicker("option", option, date);
+                    $(this).blur();
+                }
+            });
+
+
+            // Checking that users are added to the map
+            $("#form").submit(function(){
+                if ( $("#AddedUsers").children().length === 0) {
+                    alert("Du må legge til minst en bruker !");
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+        });
+    </script>
+
+{% endblock %}
+
+
+
+
+
+{% block content %}
+
+
+    <div id="ChoicePanel" class="part">
+
+        <form id="form" action='/addnewmap' method="post">
+
+            <div>
+                <button id="submitbutton" type="submit" class="btn btn-success">Bekreft</button>
+                <button type="button" onclick="location.href='/'" class="btn btn-danger">Avbryt</button>
+            </div>
+
+            <div class="form-group">
+                <input name="geo_boundery" type="hidden" value="the map bounds" class="form-control" id="geo_boundery">
+            </div>
+
+            <div class="form-group">
+                <label for="title">Kart Tittel:</label>
+                <input type="title" class="form-control" id="title" placeholder="Tittel" name="title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Utløpsdato:</label>
+                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Kart Beskrivelse:</label>
+                <textarea type="description" id="description" name="description" placeholder="Beskrivelse" class="form-control" rows="5" required></textarea>
+            </div>
+
+            <div class="input-group">
+                <input id="searchUsers" type="text" class="form-control" placeholder="Søk blant brukere">
+                <div class="input-group-btn">
+                    <button id="AddUserButton" class="btn btn-default" type="button">
+                        <i class="glyphicon fa fa-plus"></i>
+                    </button>
+                    <button id="SearchUsersButton" class="btn btn-default" type="button">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <ul id="AddedUsers" class="list-group">
+                    <!--
+                    <li class="list-group-item">New <span class="badge"><i class="fa fa-plus"></i></span></li>
+                    -->
+                </ul>
+            </div>
+        </form>
+
+    </div>
+
+    <div id="Map" class="part"></div>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY&callback=initMap">
+    </script>
+{% endblock %}
