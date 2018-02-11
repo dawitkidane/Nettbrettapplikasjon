@@ -110,9 +110,7 @@ def add_new_map():
 
     else:
         map_creater = session.get("Logged_in")
-
         title = request.form.get('title')
-
         description = request.form.get('description')
 
         date = request.form.get('date')
@@ -134,6 +132,16 @@ def add_new_map():
         if map_creater not in users:
             users.append(map_creater)
 
+        points_categories = request.form.getlist('point_categories')
+        roads_categories = request.form.getlist('road_categories')
+        areas_categories = request.form.getlist('area_categories')
+        """
+        ['asdasd,Point,2hand.png', 'zoo,Point,zoo.png']
+        ['black,Road,#000000', 'blue,Road,#0000ff', 'green,Road,#008000']
+        ['red,Area,#ff0000', 'white,Area,#ffffff', 'yellow,Area,#ffff00', 'purple,Area,#e916d9']
+        
+        """
+
         ## TODO: ADD MAP TO DATABASE, 2 TABLES USERS AND MAPS
         conn = get_db()
         cursor = conn.cursor()
@@ -147,7 +155,7 @@ def add_new_map():
         except mysql.connector.Error as err:
             conn.close()
             print(err.msg)
-            return render_template("cast_files/new.html")
+            return render_template("new_map.html")
 
         ## TODO: adding users to the map
         cursor = conn.cursor()
@@ -155,6 +163,18 @@ def add_new_map():
             for user in users:
                 sql = "INSERT INTO Maps_Users(username, map_id) VALUES(%s,%s);"
                 cursor.execute(sql, (user, Map_id))
+                conn.commit()
+        except mysql.connector.Error as err:
+            print(err.msg)
+
+        cursor = conn.cursor()
+        try:
+            categories = points_categories + roads_categories + areas_categories
+            for category in categories:
+                cat = category.split(',')
+                sql = "INSERT INTO Maps_Categories(category_name, category_type, category_image_or_color, map_id) " \
+                      "VALUES(%s,%s,%s,%s);"
+                cursor.execute(sql, (cat[0], cat[1], cat[2], Map_id))
                 conn.commit()
         except mysql.connector.Error as err:
             conn.close()

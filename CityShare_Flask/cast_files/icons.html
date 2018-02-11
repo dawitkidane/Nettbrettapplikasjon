@@ -23,6 +23,28 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+
+      <!-- script for icon picker -->
+      <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+      <script type="text/javascript" src="https://cdn.rawgit.com/prashantchaudhary/ddslick/master/jquery.ddslick.min.js" ></script>
+      <script>
+
+            $(document).ready(function () {
+                $('#myDropdown').ddslick({
+                    width: 80,
+                    height: 150,
+                    selectText: "Select your favorite social network",
+                    truncateDescription: true,
+                    onSelected: function(data){
+                        //callback function: do something with selectedData;
+                        alert(data.selectedData.value);
+                    }
+                });
+            })
+
+        </script>
+
+
       <style>
          #map {
              width: 70%;
@@ -95,10 +117,30 @@
               </h4>
             </div>
             <div id="collapse4" class="panel-collapse collapse">
-              <div class="panel-body">content vei</div>
+              <div class="panel-body">
+
+                  <div class="input-group">
+                      <span class="input-group-addon">Kategori</span>
+                      <input type="text" name="iconName" class="form-control" placeholder="Kategori Navn" style="height: 59px" required>
+                      <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
+                      <select id="myDropdown" class="form-control" id="icon">
+                        <option value="barber.png" data-imagesrc='../static/icons/barber.png'></option>
+                        <option value="2hand.png" data-imagesrc='../static/icons/2hand.png'></option>
+                        <option value="barber.png" data-imagesrc='../static/icons/barber.png'></option>
+                        <option value="2hand.png" data-imagesrc='../static/icons/2hand.png'></option>
+                        <option value="barber.png" data-imagesrc='../static/icons/barber.png'></option>
+                        <option value="2hand.png" data-imagesrc='../static/icons/2hand.png'></option>
+                        <option value="barber.png" data-imagesrc='../static/icons/barber.png'></option>
+                        <option value="2hand.png" data-imagesrc='../static/icons/2hand.png'></option>
+                      </select>
+                  </div>
+
+              </div>
             </div>
           </div>
         </div>
+
+
     </div>
 
     <div id="map" class="box"></div>
