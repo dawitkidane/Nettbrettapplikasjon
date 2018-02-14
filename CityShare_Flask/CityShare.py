@@ -128,6 +128,8 @@ def add_new_map():
         d = str(array[3])
         geo_boundery = "GEOMFROMTEXT('POLYGON(("+a+" "+b+", "+c+" "+d+", "+a+" "+b+"))')"
 
+        geo_zoom = request.form.get('geo_zoom')
+
         users = request.form.getlist('users')
         if map_creater not in users:
             users.append(map_creater)
@@ -145,10 +147,10 @@ def add_new_map():
         ## TODO: ADD MAP TO DATABASE, 2 TABLES USERS AND MAPS
         conn = get_db()
         cursor = conn.cursor()
-        sql = "INSERT INTO Maps(map_creater, title, description, end_date, geo_boundery)" \
-              "VALUES(%s,%s,%s,%s,"+geo_boundery+");"
+        sql = "INSERT INTO Maps(map_creater, title, description, end_date, geo_boundery, zoom)" \
+              "VALUES(%s,%s,%s,%s,"+geo_boundery+",%s);"
         try:
-            cursor.execute(sql, (map_creater,title,description,enddate))
+            cursor.execute(sql, (map_creater,title,description,enddate,geo_zoom))
             conn.commit()
             Map_id = cursor.lastrowid
 
@@ -235,12 +237,158 @@ def show_maps():
     return render_template("allmaps.html", maps=maps)
 
 
-@app.route("/MapChoices", methods=['GET'])
-def map_choices():
+@app.route("/EditMap", methods=['GET'])
+def edit_map():
     mapid = request.args.get('mapid')
     username = session.get("Logged_in")
 
-    return render_template("MapChoices.html", mapid=mapid)
+    ## TODO: check if the user have right to enter this map
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = "SELECT COUNT(*) from Maps_Users WHERE username = '" + str(username) + "' AND map_id = " + str(
+        mapid) + " LIMIT 0, 1;"
+    try:
+        cursor.execute(sql)
+        have_right = cursor.fetchone()[0]
+        if have_right == 1:
+
+            ## Reading map details from database and return render template with results
+            sql = "SELECT map_creater, title, description, start_date, end_date, astext(geo_boundery), zoom " \
+                  "FROM Maps " \
+                  "WHERE map_id = " + str(mapid) + ";"
+            cursor.execute(sql)
+            data = cursor.fetchone()
+            bounds = str(data[5]).strip("POLYGON((").strip("))").split(",")
+            map = {
+                "mapid": mapid,
+                "creater": data[0],
+                "title": data[1],
+                "description": data[2],
+                "issuedate": data[3],
+                "expirydate": data[4],
+                "bounds": bounds,
+                "zoom": data[6],
+                "northeastcorner": bounds[0].replace(" ", ","),
+                "southwestcorner": bounds[1].replace(" ", ",")
+            }
+
+            """
+            ## Reading already registered shapes on map
+            sql = "SELECT shape_id, shape_creater, icon, shape_type, astext(center), astext(area_or_path), title, description, rate " \
+                  "FROM Shapes WHERE map_id = " + str(mapid) + ";"
+            cursor.execute(sql)
+            data = cursor.fetchall()
+            shapes = []
+            for entry in data:
+                shape = {
+                    "shapeid": entry[0],
+                    "shapecreater": entry[1],
+                    "icon": entry[2],
+                    "shapetype": entry[3],
+                    "center": str(entry[4]).strip('POINT').replace(" ", ", "),
+                    "areaorpath": str(entry[5]).strip("LINESTRING").strip("(").strip(")"),
+                    "title": entry[6],
+                    "description": entry[7],
+                    "rate": entry[8]
+                }
+                shapes.append(shape)
+            """
+
+            ## Reading registered Categories
+            sql = "SELECT category_ID, category_name, category_type, category_image_or_color FROM Maps_Categories WHERE map_id = "+str(mapid)+";"
+            cursor.execute(sql)
+            data = cursor.fetchall()
+            categories = []
+            points_categories = []
+            areas_categories = []
+            roads_categories = []
+            for entry in data:
+                category = {
+                    "ID": entry[0],
+                    "name": entry[1],
+                    "type": entry[2],
+                    "image_or_color": entry[3]
+                }
+                if category["type"] == "Point":
+                    points_categories.append(category)
+                elif category["type"] == "Road":
+                    roads_categories.append(category)
+                elif category["type"] == "Area":
+                    areas_categories.append(category)
+
+
+
+        else:
+            return render_template("edit_map.html", map={}, shapes=[],
+                                   Fail="Du har ingen tilgang til dette kartet, kontakt administrator")
+
+    except mysql.connector.Error as err:
+        conn.close()
+        print(err.msg)
+        return render_template("edit_map.html", map={}, shapes=[], Fail=err.msg)
+    finally:
+        conn.close()
+        return render_template("edit_map.html", map=map, points_categories=points_categories, roads_categories=roads_categories,
+                               areas_categories=areas_categories, shapes=[])
+
+    return render_template("edit_map.html", mapid=mapid)
+
+
+@app.route("/registerShape", methods=['POST'])
+def registerShape():
+
+    username = session.get('Logged_in')
+    category_id = request.form.get("categoryID")
+    center = "POINT"+request.form.get("center")
+    #area_or_path = "GEOMFROMTEXT('LineString("+request.form.get("area_or_path")+")')"
+    title = request.form.get("title")
+    description = request.form.get("description")
+    rating = request.form.get("rating")
+
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = "INSERT INTO Shapes(category_ID, shape_creater, center, title, description, rate)" \
+          "VALUES(%s,%s,"+center+",%s,%s,%s);"
+    try:
+        cursor.execute(sql, (category_id, username, title, description, rating))
+        Shape_id = cursor.lastrowid
+        conn.commit()
+    except mysql.connector.Error as err:
+        conn.close()
+        print(err.msg)
+        return "Failed"
+    finally:
+        conn.close()
+
+    return str(Shape_id)
+
+
+@app.route("/updateShape", methods=['POST'])
+def updateShape():
+    username = session.get('Logged_in')
+
+    shape_id = request.form.get('shape_id')
+    title = request.form.get("title")
+    description = request.form.get("description")
+    rating = request.form.get("rating")
+
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = "UPDATE Shapes " \
+          "SET title = '"+title+"', description = '"+description+"', rate = "+str(rating)+" " \
+          "WHERE shape_id = "+str(shape_id)+";"
+    try:
+        cursor.execute(sql)
+        conn.commit()
+    except mysql.connector.Error as err:
+        conn.close()
+        print(err.msg)
+        return "Failed"
+    finally:
+        conn.close()
+
+    return "OK"
+
 
 
 @app.route("/ShowMap", methods=['GET'])
@@ -437,34 +585,6 @@ def add_road_or_area_to_map():
         finally:
             conn.close()
             return render_template("AddRoadOrAreaToMap.html", map=map, shapes=shapes)
-
-@app.route("/registerShape", methods=['POST'])
-def registerShape():
-    username = session.get('Logged_in')
-    map_id = request.form.get("map_id")
-    icon = request.form.get("icon")
-    shape_type = request.form.get("shape_type")
-    center = "POINT"+request.form.get("center")
-    area_or_path = "GEOMFROMTEXT('LineString("+request.form.get("area_or_path")+")')"
-    title = request.form.get("title")
-    description = request.form.get("description")
-    rating = request.form.get("rating")
-
-    conn = get_db()
-    cursor = conn.cursor()
-    sql = "INSERT INTO Shapes(shape_creater, map_id, icon, shape_type, center, area_or_path, title, description, rate) " \
-          "VALUES(%s,%s,%s,%s,"+center+","+area_or_path+",%s,%s,%s);"
-    try:
-        cursor.execute(sql, (username, map_id, 'icon_url_or_image', shape_type, title, description, rating))
-        conn.commit()
-    except mysql.connector.Error as err:
-        conn.close()
-        print(err.msg)
-        return "Failed"
-    finally:
-        conn.close()
-
-    return "OK"
 
 
 

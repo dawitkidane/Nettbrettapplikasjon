@@ -74,7 +74,7 @@
   </head>
   <body>
 
-    <div id="SelectList" class="box">
+    <div class="box">
         <div class="panel-group" id="accordion">
           <div class="panel panel-primary">
             <div class="panel-heading">
@@ -118,52 +118,17 @@
             </div>
             <div id="collapse4" class="panel-collapse collapse">
               <div class="panel-body">
-
-                  <div class="input-group">
-                      <span class="input-group-addon">Kategori</span>
-                      <input type="text" name="iconName" class="form-control" placeholder="Kategori Navn" style="height: 59px" required>
-                      <span class="input-group-addon" style="width:0px; padding-left:0px; padding-right:0px; border:none;"></span>
-                      <select id="myDropdown" class="form-control" id="icon">
-                        <option value="barber.png" data-imagesrc='../static/icons/barber.png'></option>
-                        <option value="2hand.png" data-imagesrc='../static/icons/2hand.png'></option>
-                        <option value="barber.png" data-imagesrc='../static/icons/barber.png'></option>
-                        <option value="2hand.png" data-imagesrc='../static/icons/2hand.png'></option>
-                        <option value="barber.png" data-imagesrc='../static/icons/barber.png'></option>
-                        <option value="2hand.png" data-imagesrc='../static/icons/2hand.png'></option>
-                        <option value="barber.png" data-imagesrc='../static/icons/barber.png'></option>
-                        <option value="2hand.png" data-imagesrc='../static/icons/2hand.png'></option>
-                      </select>
-                  </div>
-
+                  content vei
               </div>
             </div>
           </div>
         </div>
-
-
     </div>
 
     <div id="map" class="box"></div>
 
 
-    <script>
-      // This example adds a marker to indicate the position of Bondi Beach in Sydney,
-      // Australia.
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: {lat: -33, lng: 151}
-        });
 
-        var image = '../static/icons/barber.png';
-        //var image = '2hand.png';
-        var beachMarker = new google.maps.Marker({
-          position: {lat: -33.890, lng: 151.274},
-          map: map,
-          icon: image
-        });
-      }
-    </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY&callback=initMap">
     </script>

@@ -1,0 +1,607 @@
+{% extends 'index.html' %}
+
+{% block stylingblock %}
+    <style>
+        #Map {
+            width: 70%;
+        }
+
+        #ChoicePanel {
+            width: 30%;
+            padding: 10px;
+            overflow: auto;
+            max-height: 100vh;
+        }
+
+        .part {
+            height: 550px;
+            display: inline-block;
+            vertical-align: top;
+            margin-left:-5px;
+        }
+
+        a, a:hover, a:active, a:visited, a:focus {
+            text-decoration:none;
+        }
+
+
+        body {
+            height: 100%;
+        }
+
+        label {
+            width: 100%;
+            height: 30px;
+        }
+        img {
+            width: 30px;
+            height: 30px;
+        }
+        p, img, div.color_box {
+            display: inline-block;
+        }
+
+        p {
+            vertical-align: middle;
+        }
+
+        div.color_box {
+            width: 70px;
+            height: 20px;
+            border-radius: 25px;
+        }
+
+    </style>
+{% endblock %}
+
+
+
+{% block scriptblock %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>
+
+        // a global variable to make the map available at all methods, this is needed
+        var map = null;
+
+        // An array to keep track of the map listeners used to draw the different category types
+        // (point, area, road). these listeners should be removed every time the user change shape type, to enable
+        // customized enviromenet.
+        var listeners = [];
+
+        // if another info window is open, and the user clicked on another marker, this variable is used to
+        // enable the user to change context to the wished marker.
+        var open_info_window = null;
+
+        // keeps track of the current marker, the one with an open info window.
+        var currentmarker = null;
+
+        // An hash-map to store temporary shapes, meaning not saved shapes in database yet.
+        var temporary_points = {};
+
+
+
+        // used to store the points registered in database, and after registering in database
+        // if the point is not here, then the shape is just temporarly
+        // example: points = [{shape_id_1: marker, shape_id_2: marker}]
+        // Not sure about this, explain further but dont remove it for now.
+        var saved_points = {};
+
+        var points = [];
+
+
+        // function to compute the centroid
+        function computeCentroid(pointsarray) {
+            var number_of_points = pointsarray.length;
+            var latitude = 0;
+            var longtitude = 0;
+            for (var i = 0; i < number_of_points; i++) {
+                latitude += pointsarray[i].lat();
+                longtitude += pointsarray[i].lng();
+            }
+            centroid = new google.maps.LatLng((latitude / number_of_points), (longtitude / number_of_points));
+            return centroid;
+        };
+
+        function initMap() {
+
+            northeastcorner = new google.maps.LatLng({{ map.northeastcorner }});
+            southwestcorner = new google.maps.LatLng({{ map.southwestcorner }});
+
+            map = new google.maps.Map(document.getElementById('Map'), {
+                center: computeCentroid([northeastcorner, southwestcorner]),
+                zoom: {{ map.zoom }},
+                gestureHandling: 'none', // true to turn on hand scroll
+                zoomControl: true,
+                fullscreenControl: false,
+                bounds: new google.maps.LatLngBounds(northeastcorner, southwestcorner)
+            });
+
+            // event to keep the user inside the map bound, and prevent adding markers outside the target geo area
+            google.maps.event.addListener(map,'bounds_changed',function() {
+                if (map.getZoom() < {{ map.zoom }}) {
+                    map.setZoom({{ map.zoom }});
+                    map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                }
+                var northeast = map.getBounds().getNorthEast(); // LatLng of the north-east corner
+                var southwest = map.getBounds().getSouthWest(); // LatLng of the south-west corder
+
+                var south = Math.abs(southwest.lat());
+                var north = Math.abs(northeast.lat());
+                var east = Math.abs(northeast.lng());
+                var west = Math.abs(southwest.lng());
+
+                var fixed_south = Math.abs(southwestcorner.lat());
+                var fixed_north = Math.abs(northeastcorner.lat());
+                var fixed_east = Math.abs(northeastcorner.lng());
+                var fixed_west = Math.abs(southwestcorner.lng());
+
+                /*
+                if (south > fixed_south && north > fixed_north) {
+                    map.setZoom({{ map.zoom }});
+                    map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                }
+                */
+
+            });
+
+
+        }
+
+        function register(point) {
+            alert($(point["infowindow"]).find("input[name~='title']").val());
+            alert(point["description"]);
+            alert(point["rating"]);
+            alert(point["category_id"]);
+            $.post("/registerShape",{
+                center: point["center"], title: point["title"],
+                description: point["description"],
+                rating: point["rating"], categoryID: point["category_id"]
+                },
+                function(data,status){
+                    alert("i am here 1");
+                    if (data === "Failed" && status === "success") {
+                        //alert("En Feil har skjedd");
+                    } else {
+                        saved_points[data] = temporary_points[key];
+                        delete temporary_points[key];
+                        number_of_successfully_saved_points += 1;
+                    }
+                });
+        }
+
+        // function to register a new point
+        function register_point() {
+            /*
+            * INSERT INTO Shapes(category_ID, shape_creater, center, title, description, rate)
+            *
+            * */
+            //category_id = $("input[name~='Category_ID']").val();
+            /*
+            center = $("input[name~='position']").val();
+            title = $("input[name~='title']").val();
+            description = $("textarea[name~='description']").val();
+            rating = $("input[name~='rating']").val();
+
+            $.post("/registerShape",{
+                center: center, title: title,
+                description: description,
+                rating: rating, category_id:category_id
+            },
+            function(data,status){
+                if (data === "Failed" && status === "success") {
+                    alert("En Feil har skjedd");
+                } else {
+                    var hash = {};
+                    hash[data] = currentmarker;
+                    points.push(hash);
+
+                    alert("point saved");
+                    saved_points.push(currentmarker);
+                }
+            });
+            */
+            temporary_points_length = Object.keys(temporary_points).length;
+            number_of_successfully_saved_points = 0;
+
+
+            for(var key in temporary_points) {
+                point = temporary_points[key];
+                register(point);
+            }
+
+            alert("i am here 2");
+
+            if (number_of_successfully_saved_points === temporary_points_length) {
+                alert("Lagring var vellykket");
+            } else {
+                alert("En feil har skjedd, bare "+number_of_successfully_saved_points+" ble lagret");
+            }
+
+
+        }
+
+        // function to delete a point
+        function delete_point() {
+
+            var found = false;
+            for (var i = 0; i < points.length; i++) {
+                for (var name in points[i]) {
+                    if (points[i][name] === currentmarker) {
+                        //alert(name);
+
+                        $.post("/deleteShape",{
+                            shape_id: name
+                        },
+                        function(data,status){
+                            if (data === "Failed" && status === "success") {
+                                alert("En Feil har skjedd");
+                            } else {
+                                alert("point deleted");
+                                found = true;
+                                currentmarker.setMap(null);
+                                currentmarker = null;
+                            }
+                        });
+                    }
+                }
+            }
+            if (found === false) {
+                currentmarker.setMap(null);
+                currentmarker = null;
+            }
+
+        }
+
+        // function to edit/update a point
+        function edit_point() {
+            center = $("input[name~='position']").val();
+            title = $("input[name~='title']").val();
+            description = $("textarea[name~='description']").val();
+            rating = $("input[name~='rating']").val();
+
+            var found = false;
+            for (var i = 0; i < points.length; i++) {
+                for (var shape_id in points[i]) {
+                    if (points[i][shape_id] === currentmarker) {
+                        $.post("/updateShape",{
+                            title: title,
+                            description: description,
+                            rating: rating,
+                            shape_id: shape_id
+                        },
+                        function(data,status){
+                            if (data === "Failed" && status === "success") {
+                                alert("En Feil har skjedd");
+                            } else {
+                                alert("Point edited");
+                            }
+                        });
+                    }
+                }
+            }
+
+
+        }
+
+        $(document).ready(function () {
+
+            $("#info_window").hide();
+
+            // function to listen to the category type changing by the user,
+            // and add the neccessary eventlistners to the map
+            $("input[name~='New_Marker']").change(function (e) {
+                var changed_to = $(this).val();
+                var icon = $(this).siblings('img').attr('src'); // only used by shapes with type points
+                category_id = $(this).attr('id');
+
+                // removing previous eventlisteners from map
+                if (changed_to == "Point" || changed_to == "Area" || changed_to == "Road") {
+                    for (var i = 0; i < listeners.length; i++) {
+                        google.maps.event.removeListener(listeners[i]);
+                        listeners[i].remove();
+                    }
+                }
+
+                switch(changed_to) {
+                    // case current mode is Point
+                    case "Point":
+                        var clicklistener = google.maps.event.addListener(map,'click',function(event) {
+
+
+                            if (open_info_window != null) {
+                                open_info_window.close();
+                            }
+
+
+                            if (event.latLng.lat() < southwestcorner.lat() && event.latLng.lat() > northeastcorner.lat()
+                            && event.latLng.lng() < southwestcorner.lng() && event.latLng.lng() > northeastcorner.lng()) {
+                                var marker = new google.maps.Marker({
+                                    position: event.latLng,
+                                    icon: icon
+                                });
+                                marker.setMap(map);
+
+                                temporary_shape_id = (Object.keys(temporary_points).length).toString();
+                                var content_window = "<div id=\"info_window\">\n" +
+                                    "        <form onsubmit=\"register_point(); return false;\">\n" +
+                                    "            <input type=\"hidden\" name=\"position\" value='"+marker.getPosition()+"'>\n" +
+                                    "            <div class='form-group'>\n" +
+                                    "                <label for='title'>Titel:</label>\n" +
+                                    "                <input type='title' class='form-control' id='title' placeholder='Titel' name='title' required>\n" +
+                                    "            </div>\n" +
+                                    "            <div class='form-group'>\n" +
+                                    "                <label for='description'>Beskrivelse:</label>\n" +
+                                    "                <textarea name='description' class='form-control' rows='2' id='description' placeholder='Beskrivelse' required></textarea>\n" +
+                                    "            </div>\n" +
+                                    "            <div class='slidecontainer'>\n" +
+                                    "                <p>Din Vurdering: <span id='currentRating'></span></p>\n" +
+                                    "                <input name='rating' type='range' min='1' max='5' value='2' class='slider' id='rating' required>\n" +
+                                    "            </div>\n" +
+                                    "            <br>\n" +
+                                    "            <!-- <button type='submit' class='btn btn-success'>Lagre</button>\n" +
+                                    "            <button type='button' class='btn btn-primary' onclick=\"edit_point();\">Endre</button>\n" +
+                                    "            <button type=\"button\" class='btn btn-danger' onclick=\"delete_point();\">Slett</button>\n -->" +
+                                    "        </form>\n" +
+                                    "    </div>";
+                                var infowindow = new google.maps.InfoWindow({
+                                    content: content_window
+                                });
+                                infowindow.open(map, marker);
+
+                                open_info_window = infowindow;
+
+                                //currentmarker = marker;
+
+                                center = marker.getPosition();
+                                title = $(content_window).find("input[name~='title']").val();
+                                description = $(content_window).find("textarea[name~='description']").val();
+                                rating = $(content_window).find("input[name~='rating']").val();
+                                area_or_path = "";
+
+                                var new_point = {
+                                    "marker": marker,
+                                    "infowindow": content_window,
+                                    "category_id": category_id,
+                                    "center": center,
+                                    "area_or_path": area_or_path,
+                                    "title": title,
+                                    "description": description,
+                                    "rating": rating
+                                };
+                                temporary_points[(Object.keys(temporary_points).length).toString()] = new_point;
+
+                                google.maps.event.addListener(infowindow, 'closeclick', function () {
+                                    /*
+                                    if (saved_points.includes(marker) == false) {
+                                        currentmarker.setMap(null);
+                                    }
+                                    */
+                                    map.setZoom({{ map.zoom }});
+                                    map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                                });
+
+                                google.maps.event.addListener(marker, 'click', function (event) {
+                                    //open_info_window = null;
+                                    // currentmarker = marker;
+                                    for (var key in temporary_points) {
+                                        if (temporary_points[key]["marker"] === marker) {
+                                            infowindow.open(map, marker);
+                                            return;
+                                        }
+                                    }
+                                    for (var key in temporary_points) {
+                                        if (saved_points[key]["marker"] === marker) {
+                                            infowindow.open(map, marker);
+                                            return;
+                                        }
+                                    }
+
+                                });
+                            } else {
+                                map.setZoom({{ map.zoom }});
+                                map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                            }
+
+
+                        });
+                        listeners.push(clicklistener);
+
+                        break;
+
+                    // case current mode is Road
+                    case "Road":
+                        var clicklistener = google.maps.event.addListener(map,'click',function() {
+                            alert("Road Clicked");
+                        });
+                        listeners.push(clicklistener);
+                        break;
+
+                    // case current mode is Area
+                    case "Area":
+                        var clicklistener = google.maps.event.addListener(map,'click',function() {
+                            alert("Area Clicked");
+                        });
+                        listeners.push(clicklistener);
+                        break;
+
+                    // a deafult , not realy used. just in case
+                    default:
+                        break;
+
+                }
+
+
+            }
+            );
+
+        });
+
+
+    </script>
+
+{% endblock %}
+
+
+
+
+
+{% block content %}
+
+
+    <div id="ChoicePanel" class="part">
+        <div class="panel-group" id="accordion">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                            <strong>Vis Kart</strong></a>
+                    </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <button type='submit' class='btn btn-success' onclick="register_point();">Lagre</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                            Legg til et <strong>Nytt Punkt</strong></a>
+                    </h4>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        {% for point_cat in points_categories %}
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="New_Marker" id="{{ point_cat.ID }}" value="Point">
+                                    <img class="category_icon" src="../static/icons/{{ point_cat.image_or_color }}">
+                                    <p>{{ point_cat.name }}</p>
+                                </label>
+                            </div>
+                        {% endfor %}
+
+                    <!--
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="New_Marker" value="b">
+                                <img class="category_icon" src="../static/icons/barber.png">
+                                <p>Kategori navn 1</p>
+                            </label>
+                        </div>
+                    -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-danger">
+
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                            Legg til et <strong>Nytt Område</strong></a>
+                    </h4>
+                </div>
+                <div id="collapse3" class="panel-collapse collapse">
+                    <div class="panel-body">
+
+                        {% for area_cat in areas_categories %}
+                            <div class="radio">
+                              <label>
+                                  <input type="radio" name="New_Marker" value="Area">
+                                  <div class="color_box" style="background-color: {{ area_cat.image_or_color }}"></div>
+                                  <p>{{ area_cat.name }}</p>
+                              </label>
+                            </div>
+                        {% endfor %}
+
+                    <!--
+                        <div class="radio">
+                            <label>
+                              <input type="radio" name="New_Marker" value="e">
+                              <div class="color_box" style="background-color: red"></div>
+                              <p>Kategori navn 1</p>
+                            </label>
+                        </div>
+                    -->
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
+                    Legg til en <strong>Ny Vei</strong></a>
+                  </h4>
+                </div>
+                <div id="collapse4" class="panel-collapse collapse">
+                  <div class="panel-body">
+
+                      {% for road_cat in roads_categories %}
+                          <div class="radio">
+                              <label>
+                                  <input type="radio" name="New_Marker" value="Road">
+                                  <div class="color_box" style="background-color: {{ road_cat.image_or_color }}"></div>
+                                  <p>{{ road_cat.name }}</p>
+                              </label>
+                          </div>
+                      {% endfor %}
+
+                  <!--
+                        <div class="radio">
+                            <label>
+                              <input type="radio" name="New_Marker" value="l">
+                              <div class="color_box" style="background-color: red"></div>
+                              <p>Kategori navn 1</p>
+                            </label>
+                        </div>
+                  -->
+                  </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="Map" class="part"></div>
+
+    <!-- Info_Window on map -->
+    <div id="info_window">
+        <form onsubmit="register_point(); return false;">
+            <input type="hidden" name="position" value="">
+            <div class='form-group'>
+                <label for='title'>Titel:</label>
+                <input type='title' class='form-control' id='title' placeholder='Titel' name='title' required>
+            </div>
+            <div class='form-group'>
+                <label for='description'>Beskrivelse:</label>
+                <textarea name='description' class='form-control' rows='2' id='description' placeholder='Beskrivelse' required></textarea>
+            </div>
+            <div class='slidecontainer'>
+                <p>Din Vurdering: <span id='currentRating'></span></p>
+                <input name='rating' type='range' min='1' max='5' value='2' class='slider' id='rating' required>
+            </div>
+            <br>
+            <button type='submit' class='btn btn-success'>Lagre</button>
+            <button type='button' class='btn btn-primary' onclick="edit_point();">Endre</button>
+            <button type="button" class='btn btn-danger' onclick="delete_point();">Slett</button>
+        </form>
+    </div>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY&callback=initMap">
+    </script>
+
+
+
+
+
+{% endblock %}

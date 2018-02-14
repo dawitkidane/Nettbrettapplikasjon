@@ -34,6 +34,7 @@ description TEXT,
 start_date TIMESTAMP DEFAULT now(),
 end_date DATE,
 geo_boundery POLYGON,
+zoom int,
 PRIMARY KEY(map_id),
 FOREIGN KEY (map_creater) REFERENCES Persons(username)
 );
@@ -47,27 +48,26 @@ FOREIGN KEY (map_id) REFERENCES Maps(map_id)
 );
 
 CREATE TABLE Maps_Categories(
+category_ID INT AUTO_INCREMENT,
 category_name VARCHAR(30),
 category_type VARCHAR(30),
 category_image_or_color VARCHAR(30),
 map_id INT,
-PRIMARY KEY (category_name, category_type, category_image_or_color, map_id),
+PRIMARY KEY (category_ID),
 FOREIGN KEY (map_id) REFERENCES Maps(map_id)
 );
 
 CREATE TABLE Shapes (
-shape_id INT auto_increment,
+shape_id INT AUTO_INCREMENT,
+category_ID INT,
 shape_creater VARCHAR(30),
-map_id INT,
-icon TEXT,
-shape_type VARCHAR(5),
 center POINT,
 area_or_path LINESTRING,
 title VARCHAR(50),
 description TEXT,
 rate INT DEFAULT 0,
-PRIMARY KEY(shape_id, map_id),
-FOREIGN KEY (map_id) REFERENCES Maps(map_id),
+PRIMARY KEY(shape_id, category_ID),
+FOREIGN KEY (category_ID) REFERENCES Maps_Categories(category_ID),
 FOREIGN KEY (shape_creater) REFERENCES Persons(username)
 );
 
@@ -81,66 +81,15 @@ VALUES('Dawit','Dawit1995','Dawit','Kidane','d_kzzz@yahoo.com',0047450088910,TRU
 INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone) 
 VALUES('Rami','Rami1992','Rami','Guniem','rami@yahoo.no',004777665544);
 
-/*
-INSERT INTO Maps(map_creater, title, description, end_date, geo_boundery) 
-VALUES('Mohammed','My map title','my map description','2018-05-15',GEOMFROMTEXT('POLYGON((-10 0, -10 -10, 0 -10, 10 10, 0 10, 10 10, 0 10, -10 10, -10 0))'));
+SELECT * FROM Maps_Categories;
 
+INSERT INTO Shapes(category_ID, shape_creater, center, title, description, rate)
+VALUES (001, 'Mohammed', POINT(58.969975, 5.73), 'HER TEST', 'BESKRIVELSE TESt', 3);
 
-INSERT INTO Maps(map_creater, title, description, end_date, geo_boundery) 
-VALUES('Mohammed','My map title','my map description','2018-05-15',GEOMFROMTEXT('POLYGON((51.42318883058882 -0.3079609008789248, 51.594134820664564 -0.3079609008789248, 51.42318883058882 -0.3079609008789248))'));
+SELECT *, astext(center) FROM Shapes;
 
+DELETE FROM Shapes WHERE shape_id = 16;
 
-INSERT INTO Maps_Users(username, map_id) VALUES('Mohammed',001);
-INSERT INTO Maps_Users(username, map_id) VALUES('Rami',001);
-
-INSERT INTO Shapes(shape_creater, map_id, icon, shape_type, center, area_or_path, title, description, rate) 
-VALUES('Mohammed',001,'icon_url_or_image','Point', GEOMFROMTEXT('POINT(0,0)'),NULL, 'The center','The center of the earth cord. system',5);
-
-INSERT INTO Shapes(shape_creater, map_id, icon, shape_type, center, area_or_path, title, description, rate) 
-VALUES('Rami',001,'icon_url_or_image','Area',POINT(0,0),GEOMFROMTEXT('LineString(-10 -10,10 10,-10 10,-10 -10)'), 'An area','this is an area in the sea',5);
-
-INSERT INTO Shapes(shape_creater, map_id, icon, shape_type, center, area_or_path, title, description, rate) 
-VALUES('Rami',001,'icon_url_or_image','Path',POINT(0,0),GEOMFROMTEXT('LineString(-10 -10,0 0,10 10)'), 'NorthEAST Direction','Going north east',3);
-*/
-
-/*
-INSERT INTO Shapes(shape_creater, map_id, icon, shape_type, center, area_or_path, title, description, rate) 
-VALUES('Mohammed',001,'icon_url_or_image','Point', POINT(41,11),NULL, 'east','The center of the earth cord. system',5);
-INSERT INTO Shapes(shape_creater, map_id, icon, shape_type, center, area_or_path, title, description, rate) 
-VALUES('Mohammed',001,'icon_url_or_image','Point', POINT(42,14),NULL, 'west','The center of the earth cord. system',5);
-INSERT INTO Shapes(shape_creater, map_id, icon, shape_type, center, area_or_path, title, description, rate) 
-VALUES('Mohammed',001,'icon_url_or_image','Point', POINT(43,11),NULL, 'north','The center of the earth cord. system',5);
-INSERT INTO Shapes(shape_creater, map_id, icon, shape_type, center, area_or_path, title, description, rate) 
-VALUES('Mohammed',001,'icon_url_or_image','Point', POINT(41,14),NULL, 'south','The center of the earth cord. system',5);
-INSERT INTO Shapes(shape_creater, map_id, icon, shape_type, center, area_or_path, title, description, rate) 
-VALUES('Mohammed',001,'icon_url_or_image','Area',POINT(41.75,12.5),GEOMFROMTEXT('LineString(41 11,42 14,43 11,41 14,41 11)'), 'An area','this is an area in italy',5);
-INSERT INTO Shapes(shape_creater, map_id, icon, shape_type, center, area_or_path, title, description, rate) 
-VALUES('Mohammed',001,'icon_url_or_image','Road',POINT(35,10),GEOMFROMTEXT('LineString(35 0,35 5,35 10,35 15,25 20)'), 'A Road','this is an area in italy',5);
-
-
-SELECT * FROM Persons;
-SELECT *, astext(geo_boundery) FROM Maps;
-SELECT * FROM Maps_Users;
-SELECT shape_id, shape_creater, map_id, icon, shape_type, astext(center), astext(area_or_path), title, description, rate FROM Shapes;
-SELECT astext(center), astext(area_or_path)FROM Shapes WHERE map_id = 001;
-
-SELECT * FROM Maps WHERE  INTERSECTS(geo_boundery, GEOMFROMTEXT('LineString(-10 -10,0 0,10 10)')) = 1;
-SELECT * FROM Maps WHERE  intersects(geo_boundery, GEOMFROMTEXT('LineString(-11 -11,-20 -20,-30 -30)')) = 1;
-SELECT * FROM Maps WHERE  MBRCONTAINS(geo_boundery, GEOMFROMTEXT('LineString(-9 -9,-20 -20,-30 -30)')) = 1;
-SELECT * FROM Maps WHERE  INTERSECTS(geo_boundery, GEOMFROMTEXT('LineString(-9 -9,-20 -20,-30 -30)')) = 1;
-
-
-SELECT shape_id, shape_creater, icon, shape_type, astext(center), astext(area_or_path), title, description, rate FROM Shapes WHERE map_id = 2
-
-
-INSERT INTO Maps_Categories(category_name, category_type, category_image_or_color, map_id) 
-VALUES('black','Road','#000000', 001);
-
-
-select * from Maps_Categories;
-select * from Maps_Users;
-
-SELECT * FROM Maps_Categories WHERE category_type = 'POINT' AND map_id = 10; 
-SELECT * FROM Maps_Categories WHERE category_type = 'Road' AND map_id = 10; 
-SELECT * FROM Maps_Categories WHERE category_type = 'Area' AND map_id = 10;
-*/
+UPDATE Shapes 
+SET title = 'hello', description = 'heihei', rate = 2
+WHERE shape_id = 1;
