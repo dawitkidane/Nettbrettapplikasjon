@@ -1,12 +1,12 @@
 from flask import Flask, render_template, url_for, request, json, g, session
-import mysql.connector
+import pymysql
 
 app = Flask(__name__)
 app.secret_key = "any random string"
 
 def get_db():
     if not hasattr(g,'_database'):
-        g._database = mysql.connector.connect(host='sql2.freemysqlhosting.net',
+        g._database = pymysql.connect(host='sql2.freemysqlhosting.net',
                                                 user='sql2217838',
                                                 passwd='cR3!bC4!',
                                                 db='sql2217838')
@@ -39,7 +39,7 @@ def signup():
             session["Logged_in"] = username
             return render_template("home.html")
 
-        except mysql.connector.Error as err:
+        except pymysql.connections.Error as err:
             conn.close()
             if err.msg == "Duplicate entry '"+username+"' for key 'PRIMARY'":
                 return render_template("signup.html", fail=True, msg="Brukernavn er allerede tatt, prøv en annen!")
@@ -71,7 +71,7 @@ def login():
         else:
             session["Logged_in"] = "Feil brukernavn eller passord"
 
-    except mysql.connector.Error as err:
+    except pymysql.connections.Error as err:
         conn.close()
         print(err.msg)
         session['Logged_in'] = "Database feil"
@@ -94,7 +94,7 @@ def search_for_users():
         users = []
         for entry in data:
             users.append(entry)
-    except mysql.connector.Error as err:
+    except pymysql.connections.Error as err:
         conn.close()
         print(err.msg)
     finally:
@@ -154,7 +154,7 @@ def add_new_map():
             conn.commit()
             Map_id = cursor.lastrowid
 
-        except mysql.connector.Error as err:
+        except pymysql.connections.Error as err:
             conn.close()
             print(err.msg)
             return render_template("new_map.html")
@@ -166,7 +166,7 @@ def add_new_map():
                 sql = "INSERT INTO Maps_Users(username, map_id) VALUES(%s,%s);"
                 cursor.execute(sql, (user, Map_id))
                 conn.commit()
-        except mysql.connector.Error as err:
+        except pymysql.connections.Error as err:
             print(err.msg)
 
         cursor = conn.cursor()
@@ -178,7 +178,7 @@ def add_new_map():
                       "VALUES(%s,%s,%s,%s);"
                 cursor.execute(sql, (cat[0], cat[1], cat[2], Map_id))
                 conn.commit()
-        except mysql.connector.Error as err:
+        except pymysql.connections.Error as err:
             conn.close()
             print(err.msg)
         finally:
@@ -224,11 +224,11 @@ def show_maps():
                 maps.append(map)
 
 
-            except mysql.connector.Error as err:
+            except pymysql.connections.Error as err:
                 conn.close()
                 print(err.msg)
 
-    except mysql.connector.Error as err:
+    except pymysql.connections.Error as err:
         conn.close()
         print(err.msg)
     finally:
@@ -322,7 +322,7 @@ def edit_map():
             return render_template("edit_map.html", map={}, shapes=[],
                                    Fail="Du har ingen tilgang til dette kartet, kontakt administrator")
 
-    except mysql.connector.Error as err:
+    except pymysql.connections.Error as err:
         conn.close()
         print(err.msg)
         return render_template("edit_map.html", map={}, shapes=[], Fail=err.msg)
@@ -353,7 +353,7 @@ def registerShape():
         cursor.execute(sql, (category_id, username, title, description, rating))
         Shape_id = cursor.lastrowid
         conn.commit()
-    except mysql.connector.Error as err:
+    except pymysql.connections.Error as err:
         conn.close()
         print(err.msg)
         return "Failed"
@@ -380,7 +380,7 @@ def updateShape():
     try:
         cursor.execute(sql)
         conn.commit()
-    except mysql.connector.Error as err:
+    except pymysql.connections.Error as err:
         conn.close()
         print(err.msg)
         return "Failed"
@@ -447,7 +447,7 @@ def show_map():
         else:
             return render_template("ViewMap.html", map={}, shapes=[], Fail="Du har ingen tilgang til dette kartet, kontakt administrator")
 
-    except mysql.connector.Error as err:
+    except pymysql.connections.Error as err:
         conn.close()
         print(err.msg)
         return render_template("ViewMap.html", map={}, shapes=[], Fail=err.msg)
@@ -512,7 +512,7 @@ def add_point_to_map():
                 return render_template("AddPointToMap.html", map={}, shapes=[],
                                        Fail="Du har ingen tilgang til dette kartet, kontakt administrator")
 
-        except mysql.connector.Error as err:
+        except pymysql.connections.Error as err:
             conn.close()
             print(err.msg)
             return render_template("AddPointToMap.html", map={}, shapes=[], Fail=err.msg)
@@ -578,7 +578,7 @@ def add_road_or_area_to_map():
                 return render_template("AddRoadOrAreaToMap.html", map={}, shapes=[],
                                        Fail="Du har ingen tilgang til dette kartet, kontakt administrator")
 
-        except mysql.connector.Error as err:
+        except pymysql.connections.Error as err:
             conn.close()
             print(err.msg)
             return render_template("AddRoadOrAreaToMap.html", map={}, shapes=[], Fail=err.msg)
