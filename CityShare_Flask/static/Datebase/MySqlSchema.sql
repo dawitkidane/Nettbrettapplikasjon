@@ -16,8 +16,8 @@ mohammed?!?!?
 */
 
 CREATE TABLE Persons (
-username VARCHAR(30),
-login_pass VARCHAR(25),
+username VARCHAR(30) BINARY,
+login_pass VARCHAR(25) BINARY,
 first_name VARCHAR(15),
 last_name VARCHAR(15),
 e_post VARCHAR(30),
@@ -81,6 +81,9 @@ VALUES('Dawit','Dawit1995','Dawit','Kidane','d_kzzz@yahoo.com',0047450088910,TRU
 INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone) 
 VALUES('Rami','Rami1992','Rami','Guniem','rami@yahoo.no',004777665544);
 
+SELECT * FROM Persons WHERE username = 'mohammed' AND login_pass = 'Mohammed1992';
+
+/*
 SELECT * FROM Maps_Categories;
 
 INSERT INTO Shapes(category_ID, shape_creater, center, title, description, rate)
@@ -88,8 +91,29 @@ VALUES (001, 'Mohammed', POINT(58.969975, 5.73), 'HER TEST', 'BESKRIVELSE TESt',
 
 SELECT *, astext(center) FROM Shapes;
 
+
 DELETE FROM Shapes WHERE shape_id = 16;
 
 UPDATE Shapes 
 SET title = 'hello', description = 'heihei', rate = 2
 WHERE shape_id = 1;
+
+
+SELECT *, astext(area_or_path), astext(center) FROM Shapes;
+
+INSERT INTO Shapes(category_ID, shape_creater, center, area_or_path, title, description, rate)
+VALUES(2, 'Mohammed', POINT(0, 0), geomfromtext('LINESTRING(0 0,1 1,2 2)'), 'TITLE', 'DESC', 0);
+
+
+SELECT S.shape_id, S.shape_creater, astext(S.center), astext(S.area_or_path), S.title, S.description, S.rate, M.category_type, M.category_image_or_color 
+FROM Shapes S JOIN Maps_Categories M 
+ON S.category_ID = M.category_ID
+WHERE map_id = 001;
+
+SELECT * FROM Maps;
+
+
+SELECT S.shape_id, S.shape_creater, astext(S.center), astext(S.area_or_path), S.title, S.description, S.rate, M.category_type, 
+M.category_image_or_color 
+FROM Shapes S JOIN Maps_Categories M ON S.category_ID = M.category_ID WHERE map_id = 1;
+*/
