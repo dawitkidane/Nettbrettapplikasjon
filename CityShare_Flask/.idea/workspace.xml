@@ -19,11 +19,10 @@
       <file leaf-file-name="CityShare.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CityShare.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="195" column="28" lean-forward="false" selection-start-line="195" selection-start-column="28" selection-end-line="195" selection-end-column="28" />
+            <state relative-caret-position="460">
+              <caret line="432" column="20" lean-forward="false" selection-start-line="432" selection-start-column="20" selection-end-line="432" selection-end-column="20" />
               <folding>
                 <element signature="e#0#76#0" expanded="true" />
-                <element signature="e#179#511#0" expanded="false" />
                 <element signature="e#546#581#0" expanded="false" />
                 <element signature="e#648#1830#0" expanded="false" />
                 <element signature="e#1874#1978#0" expanded="false" />
@@ -35,6 +34,18 @@
                 <element signature="e#12736#13924#0" expanded="false" />
                 <element signature="e#13994#14642#0" expanded="false" />
                 <element signature="e#14712#15100#0" expanded="false" />
+                <marker date="1519374571089" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
+                <marker date="1519374571089" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
+                <marker date="1519374571089" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
+                <marker date="1519374571089" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
+                <marker date="1519374571089" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
+                <marker date="1519374571089" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
+                <marker date="1519374571089" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
+                <marker date="1519374571089" expanded="true" signature="8372:8496" ph="SELECT COUNT... Maps_Users" />
+                <marker date="1519374571089" expanded="true" signature="8715:8875" ph="SELECT map_c... " />
+                <marker date="1519374571089" expanded="true" signature="9565:9901" ph="SELECT S.sha... Shapes" />
+                <marker date="1519374571089" expanded="true" signature="11112:11222" ph="SELECT categ... Maps_Categories" />
+                <marker date="1519374571089" expanded="true" signature="14811:14849" ph="DELETE FROM Shapes... " />
               </folding>
             </state>
           </provider>
@@ -112,7 +123,7 @@
         <option value="$PROJECT_DIR$/static/scripts/javascriptnewmap.js" />
         <option value="$PROJECT_DIR$/cast_files/html-select.html" />
         <option value="$PROJECT_DIR$/templates/read_icons.py" />
-        <option value="$USER_HOME$/Desktop/jscolor-example.html" />
+        <option value="$PROJECT_DIR$/../../../jscolor-example.html" />
         <option value="$PROJECT_DIR$/read_icons.py" />
         <option value="$PROJECT_DIR$/cast_files/test_select.html" />
         <option value="$PROJECT_DIR$/templates/home.html" />
@@ -121,8 +132,8 @@
         <option value="$PROJECT_DIR$/templates/new_map.html" />
         <option value="$PROJECT_DIR$/templates/AddPointToMap.html" />
         <option value="$PROJECT_DIR$/templates/edit_map_cast.html" />
-        <option value="$PROJECT_DIR$/CityShare.py" />
         <option value="$PROJECT_DIR$/templates/edit_map.html" />
+        <option value="$PROJECT_DIR$/CityShare.py" />
       </list>
     </option>
   </component>
@@ -132,7 +143,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="888" />
@@ -174,15 +185,16 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/Github/Nettbrettapplikasjon/CityShare_Flask" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -283,22 +295,22 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2985318" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2985318" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17170954" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17397882" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24962178" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39967373" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -351,7 +363,6 @@
           <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
           <folding>
             <element signature="e#0#76#0" expanded="true" />
-            <element signature="e#179#511#0" expanded="false" />
             <element signature="e#546#581#0" expanded="false" />
             <element signature="e#648#1830#0" expanded="false" />
             <element signature="e#1874#1978#0" expanded="false" />
@@ -363,6 +374,18 @@
             <element signature="e#12736#13924#0" expanded="false" />
             <element signature="e#13994#14642#0" expanded="false" />
             <element signature="e#14712#15100#0" expanded="false" />
+            <marker date="1519374571089" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
+            <marker date="1519374571089" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
+            <marker date="1519374571089" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
+            <marker date="1519374571089" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
+            <marker date="1519374571089" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1519374571089" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
+            <marker date="1519374571089" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
+            <marker date="1519374571089" expanded="true" signature="8372:8496" ph="SELECT COUNT... Maps_Users" />
+            <marker date="1519374571089" expanded="true" signature="8715:8875" ph="SELECT map_c... " />
+            <marker date="1519374571089" expanded="true" signature="9565:9901" ph="SELECT S.sha... Shapes" />
+            <marker date="1519374571089" expanded="true" signature="11112:11222" ph="SELECT categ... Maps_Categories" />
+            <marker date="1519374571089" expanded="true" signature="14811:14849" ph="DELETE FROM Shapes... " />
           </folding>
         </state>
       </provider>
@@ -381,7 +404,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Desktop/Webprogrammering DAT310/Frivillige Oppgaver/Bootstrap and Grid_Systems/exercise8.html">
+    <entry file="file://$PROJECT_DIR$/../../../Webprogrammering DAT310/Frivillige Oppgaver/Bootstrap and Grid_Systems/exercise8.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="46" column="10" lean-forward="true" selection-start-line="46" selection-start-column="10" selection-end-line="46" selection-end-column="10" />
@@ -397,13 +420,7 @@
     <entry file="file://$PROJECT_DIR$/cast_files/cast.html" />
     <entry file="file://$PROJECT_DIR$/static/scripts/jsscript.js" />
     <entry file="file://$PROJECT_DIR$/static/scripts/javascriptnewmapb.js" />
-    <entry file="file://$PROJECT_DIR$/../WordSpell/WordSpell.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="103">
-          <caret line="196" column="64" lean-forward="false" selection-start-line="196" selection-start-column="57" selection-end-line="196" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../WordSpell/WordSpell.py" />
     <entry file="file://$PROJECT_DIR$/static/stylesheets/styles.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
@@ -458,11 +475,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cast_files/jquerynewmap.js" />
-    <entry file="file://$USER_HOME$/Desktop/jscolor-example.html" />
+    <entry file="file://$PROJECT_DIR$/../../../jscolor-example.html" />
     <entry file="file://$PROJECT_DIR$/static/jsscripts_plugins/jscolor.min.js" />
     <entry file="file://$PROJECT_DIR$/static/jsscripts_plugins/jscolor.js" />
     <entry file="file://$PROJECT_DIR$/templates/jscolor.min.js" />
-    <entry file="file://$USER_HOME$/Desktop/Ny mappe/index.html" />
+    <entry file="file://$PROJECT_DIR$/../../../Ny mappe/index.html" />
     <entry file="file://$PROJECT_DIR$/templates/dist/js/bootstrap-colorpicker.js" />
     <entry file="file://$PROJECT_DIR$/static/Datebase/MySqlSchema.sql">
       <provider selected="true" editor-type-id="text-editor">
@@ -540,11 +557,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/CityShare.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="195" column="28" lean-forward="false" selection-start-line="195" selection-start-column="28" selection-end-line="195" selection-end-column="28" />
+        <state relative-caret-position="460">
+          <caret line="432" column="20" lean-forward="false" selection-start-line="432" selection-start-column="20" selection-end-line="432" selection-end-column="20" />
           <folding>
             <element signature="e#0#76#0" expanded="true" />
-            <element signature="e#179#511#0" expanded="false" />
             <element signature="e#546#581#0" expanded="false" />
             <element signature="e#648#1830#0" expanded="false" />
             <element signature="e#1874#1978#0" expanded="false" />
@@ -556,6 +572,18 @@
             <element signature="e#12736#13924#0" expanded="false" />
             <element signature="e#13994#14642#0" expanded="false" />
             <element signature="e#14712#15100#0" expanded="false" />
+            <marker date="1519374571089" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
+            <marker date="1519374571089" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
+            <marker date="1519374571089" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
+            <marker date="1519374571089" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
+            <marker date="1519374571089" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1519374571089" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
+            <marker date="1519374571089" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
+            <marker date="1519374571089" expanded="true" signature="8372:8496" ph="SELECT COUNT... Maps_Users" />
+            <marker date="1519374571089" expanded="true" signature="8715:8875" ph="SELECT map_c... " />
+            <marker date="1519374571089" expanded="true" signature="9565:9901" ph="SELECT S.sha... Shapes" />
+            <marker date="1519374571089" expanded="true" signature="11112:11222" ph="SELECT categ... Maps_Categories" />
+            <marker date="1519374571089" expanded="true" signature="14811:14849" ph="DELETE FROM Shapes... " />
           </folding>
         </state>
       </provider>
