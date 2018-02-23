@@ -13,7 +13,7 @@ def get_db():
     return g._database
 
 @app.route('/')
-def index():
+def hello_world():
     return render_template("home.html")
 
 @app.route('/signup', methods=['POST','GET'])
@@ -51,7 +51,6 @@ def signup():
 @app.route('/signout')
 def signout():
     session.pop('Logged_in', None)
-    session.pop('is_Admin', None)
     return render_template('home.html')
 
 @app.route('/login', methods=['POST','GET'])
@@ -61,19 +60,13 @@ def login():
 
     conn = get_db()
     cursor = conn.cursor()
-    sql = "SELECT COUNT(username), is_admin FROM Persons WHERE BINARY username = %s AND BINARY login_pass = %s LIMIT 0, 1;"
+    sql = "SELECT COUNT(username) FROM Persons WHERE username = %s AND login_pass = %s LIMIT 0, 1;"
     try:
         cursor.execute(sql, (username, password))
-        row = cursor.fetchone()
-        does_exist = row[0]
-        is_admin = row[1] #cursor.fetchone()[1]
+        does_exist = cursor.fetchone()[0]
 
         if does_exist == 1:
             session["Logged_in"] = username
-
-            if is_admin == 1:
-                session["is_Admin"] = is_admin
-
             return render_template("home.html")
         else:
             session["Logged_in"] = "Feil brukernavn eller passord"
@@ -86,6 +79,7 @@ def login():
         conn.close()
 
     return render_template("home.html")
+
 
 @app.route("/searchUsers", methods=['POST'])
 def search_for_users():
@@ -242,6 +236,7 @@ def show_maps():
 
     return render_template("allmaps.html", maps=maps)
 
+
 @app.route("/EditMap", methods=['GET'])
 def edit_map():
     mapid = request.args.get('mapid')
@@ -277,43 +272,33 @@ def edit_map():
                 "southwestcorner": bounds[1].replace(" ", ",")
             }
 
-
+            """
             ## Reading already registered shapes on map
-            sql = "SELECT S.shape_id, S.shape_creater, astext(S.center), astext(S.area_or_path), S.title, S.description, " \
-                  "S.rate, M.category_type, M.category_image_or_color " \
-                  "FROM Shapes S JOIN Maps_Categories M " \
-                  "ON S.category_ID = M.category_ID " \
-                  "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+            sql = "SELECT shape_id, shape_creater, icon, shape_type, astext(center), astext(area_or_path), title, description, rate " \
+                  "FROM Shapes WHERE map_id = " + str(mapid) + ";"
             cursor.execute(sql)
             data = cursor.fetchall()
-            points = []
-            roads = []
-            areas = []
+            shapes = []
             for entry in data:
                 shape = {
-                    "shape_id": entry[0],
-                    "shape_creater": entry[1],
-                    "shape_center": str(entry[2]).strip('POINT').replace(" ", ", "),
-                    "area_or_path": str(entry[3]).strip("LINESTRING").strip("(").strip(")"),
-                    "title": entry[4],
-                    "description": str((entry[5])).replace("\n","{n}"),
-                    "rating": entry[6],
-                    "category_type": entry[7],
-                    "icon": entry[8]
+                    "shapeid": entry[0],
+                    "shapecreater": entry[1],
+                    "icon": entry[2],
+                    "shapetype": entry[3],
+                    "center": str(entry[4]).strip('POINT').replace(" ", ", "),
+                    "areaorpath": str(entry[5]).strip("LINESTRING").strip("(").strip(")"),
+                    "title": entry[6],
+                    "description": entry[7],
+                    "rate": entry[8]
                 }
-
-                if shape['shape_creater'] == username or session.get("is_Admin") == 1:
-                    if shape['category_type'] == "Point":
-                        points.append(shape)
-                    elif shape['category_type'] == "Road":
-                        roads.append(shape)
-                    elif shape['category_type'] == "Area":
-                        areas.append(shape)
+                shapes.append(shape)
+            """
 
             ## Reading registered Categories
             sql = "SELECT category_ID, category_name, category_type, category_image_or_color FROM Maps_Categories WHERE map_id = "+str(mapid)+";"
             cursor.execute(sql)
             data = cursor.fetchall()
+            categories = []
             points_categories = []
             areas_categories = []
             roads_categories = []
@@ -334,7 +319,7 @@ def edit_map():
 
 
         else:
-            return render_template("edit_map.html", map={}, points=[], roads=[], area=[],
+            return render_template("edit_map.html", map={}, shapes=[],
                                    Fail="Du har ingen tilgang til dette kartet, kontakt administrator")
 
     except pymysql.connections.Error as err:
@@ -344,9 +329,10 @@ def edit_map():
     finally:
         conn.close()
         return render_template("edit_map.html", map=map, points_categories=points_categories, roads_categories=roads_categories,
-                               areas_categories=areas_categories, points=points, roads=roads, area=areas)
+                               areas_categories=areas_categories, shapes=[])
 
     return render_template("edit_map.html", mapid=mapid)
+
 
 @app.route("/registerShape", methods=['POST'])
 def registerShape():
@@ -354,23 +340,15 @@ def registerShape():
     username = session.get('Logged_in')
     category_id = request.form.get("categoryID")
     center = "POINT"+request.form.get("center")
-    area_or_path = request.form.get("area_or_path")
+    #area_or_path = "GEOMFROMTEXT('LineString("+request.form.get("area_or_path")+")')"
     title = request.form.get("title")
     description = request.form.get("description")
     rating = request.form.get("rating")
 
     conn = get_db()
     cursor = conn.cursor()
-
-    sql = ""
-    if area_or_path is None:
-        sql = "INSERT INTO Shapes(category_ID, shape_creater, center, title, description, rate)" \
-              "VALUES(%s,%s," + center + ",%s,%s,%s);"
-    else:
-        area_or_path_coordinates = "geomfromtext('LINESTRING("+request.form.get("area_or_path")+")')"
-        sql = "INSERT INTO Shapes(category_ID, shape_creater, center, area_or_path, title, description, rate)" \
-              "VALUES(%s,%s," + center + "," + area_or_path_coordinates + ",%s,%s,%s);"
-
+    sql = "INSERT INTO Shapes(category_ID, shape_creater, center, title, description, rate)" \
+          "VALUES(%s,%s,"+center+",%s,%s,%s);"
     try:
         cursor.execute(sql, (category_id, username, title, description, rating))
         Shape_id = cursor.lastrowid
@@ -383,6 +361,7 @@ def registerShape():
         conn.close()
 
     return str(Shape_id)
+
 
 @app.route("/updateShape", methods=['POST'])
 def updateShape():
@@ -410,19 +389,19 @@ def updateShape():
 
     return "OK"
 
-@app.route("/deleteShape", methods=['POST'])
-def deleteShape():
-    shape_id = request.form.get('shape_id')
 
+
+@app.route("/ShowMap", methods=['GET'])
+def show_map():
+    mapid = request.args.get('mapid')
+    username = session.get("Logged_in")
+
+    ## TODO: check if the user have right to enter this map
     conn = get_db()
     cursor = conn.cursor()
-    sql = "DELETE FROM Shapes WHERE shape_id = ID;".replace("ID", shape_id);
+    sql = "SELECT COUNT(*) from Maps_Users WHERE username = '"+str(username)+"' AND map_id = "+str(mapid)+" LIMIT 0, 1;"
     try:
         cursor.execute(sql)
-<<<<<<< HEAD
-        conn.commit()
-    except mysql.connector.Error as err:
-=======
         have_right = cursor.fetchone()[0]
         if have_right == 1:
             ## TODO: read map details from data base and return render template with results
@@ -469,14 +448,11 @@ def deleteShape():
             return render_template("ViewMap.html", map={}, shapes=[], Fail="Du har ingen tilgang til dette kartet, kontakt administrator")
 
     except pymysql.connections.Error as err:
->>>>>>> 8eb6f04c4a6b1b14c6a3cd9d63c932d9cf3fc688
         conn.close()
         print(err.msg)
-        return "Failed"
+        return render_template("ViewMap.html", map={}, shapes=[], Fail=err.msg)
     finally:
         conn.close()
-<<<<<<< HEAD
-=======
         return render_template("ViewMap.html", map=map, shapes=shapes)
 
 @app.route("/AddPointToMap", methods=['GET'])
@@ -610,9 +586,7 @@ def add_road_or_area_to_map():
             conn.close()
             return render_template("AddRoadOrAreaToMap.html", map=map, shapes=shapes)
 
->>>>>>> 8eb6f04c4a6b1b14c6a3cd9d63c932d9cf3fc688
 
-    return "Deleted"
 
 if __name__ == '__main__':
     app.run()
