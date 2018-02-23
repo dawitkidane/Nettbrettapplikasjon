@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CityShare</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Link to static/styles.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='stylesheets/styles.css') }}">
+    <!-- Link to font-awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="http://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
+
+    {% block stylingblock %}
+
+    {% endblock %}
+
+    {% block scriptblock %}
+
+    {% endblock %}
+
+</head>
+<body>
+
+    <div>
+                <header>
+                    <ul class="topnav">
+                        <li><a class="active" href="#home">Home</a></li>
+                        <li><a href="#profil">Min Profil</a></li>
+                        <li><a href="#maps">Mine Kart</a></li>
+                        <li><a href="#settings">Innstillinger</a></li>
+                        <li><a href="#notifications">Ny</a></li>
+                        <li><a href="#about">Om</a></li>
+                        <li class="right">
+
+                            {% if session.get('Logged_in') == "Feil brukernavn eller passord" or session.get('Logged_in') == "Database feil" or session.get('Logged_in') is none %}
+
+                                <form action="/login" method="post" class="navbar-form navbar-right">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="username" placeholder="Brukernavn">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" name="password" placeholder="Passord">
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Logg inn</button>
+                                    <button type="button" class="btn btn-primary" onclick="window.location='/signup'">Registrer deg</button>
+                                </form>
+
+                            {% elif session.get('Logged_in') is not none %}
+
+                                <a style="display: inline-block" href="/signout">Log ut <i class="fa fa-sign-out" style="font-size:24px"></i></a>
+
+                            {% endif %}
+
+                      </li>
+                    </ul>
+                </header>
+    </div>
+
+    {% block content  %}
+
+
+
+
+    {% endblock %}
+
+    <!-- <footer>
+
+                <div id="contact">
+                    <h4>Kontakt oss</h4>
+                    <h5>Telefon: 0047-48338891</h5>
+                    <h5>CityShare@uis.ux.no</h5>
+                </div>
+
+                <img src="https://static1.squarespace.com/static/58c6a3ace4fcb5898b3643c3/t/592eae8529687f8352c13b28/1515833138330/?format=1500w"alt="" style="width:200px;height:80px;">
+
+                <div id="social_media">
+                    <i class="fa fa-facebook-official" style="font-size:60px;color:darkblue;opacity:0.7;text-shadow:2px 2px 4px #000000;"></i>
+                    <i class="fa fa-instagram" style="font-size:60px;color:#ff1493;text-shadow:2px 2px 4px #000000;"></i>
+                    <i class="fa fa-twitter" style="font-size:60px;color:#05ffff;text-shadow:2px 2px 4px #000000;"></i>
+                    <i class="fa fa-snapchat-square" style="font-size:60px;color:#ffe905;text-shadow:2px 2px 4px #000000;"></i>
+                </div>
+
+    </footer>
+-->
+
+</body>
+</html>

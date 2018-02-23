@@ -1,0 +1,1239 @@
+{% extends 'index.html' %}
+
+{% block stylingblock %}
+    <style>
+        #Map {
+            width: 70%;
+        }
+
+        #ChoicePanel {
+            width: 30%;
+            padding: 10px;
+            overflow: auto;
+            max-height: 100vh;
+        }
+
+        .part {
+            height: 550px;
+            display: inline-block;
+            vertical-align: top;
+            margin-left:-5px;
+        }
+
+        a, a:hover, a:active, a:visited, a:focus {
+            text-decoration:none;
+        }
+
+        #form {
+            position: relative; z-index: 9999;
+        }
+
+        .btn-success, .btn-danger {
+            width: 49%;
+        }
+
+        .btn-info {
+            width: 100%;
+            padding: 5px;
+            margin: 5px 0px 5px 0px;
+        }
+
+        .input-group, .form-group {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+    body {
+        height: 100%;
+    }
+
+
+      </style>
+{% endblock %}
+
+
+
+{% block scriptblock %}
+
+    <!-- icon select plugin links -->
+    <link rel="stylesheet" href="../static/css_plugins/chosen.css">
+    <link rel="stylesheet" href="../static/css_plugins/ImageSelect.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="../static/jsscripts_plugins/jquery-1.11.0.min.js"></script>
+    <script src="../static/jsscripts_plugins/chosen.jquery.js"></script>
+    <script src="../static/jsscripts_plugins/ImageSelect.jquery.js"></script>
+
+    <!-- date picker plugin links -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- Modal plugins -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <script>
+
+        var map = null;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('Map'), {
+              zoom: 11,
+              center: {lat: 58.969975, lng: 5.733107}
+            });
+
+            //var image = '../static/icons/barber.png';
+            //var image = '2hand.png';
+            var beachMarker = new google.maps.Marker({
+              position: {lat: -33.890, lng: 151.274},
+              map: map //, icon: image
+            });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    map.setCenter(pos);
+                    map.setZoom(11);
+                    }, function() {
+                    // bruker ønsker ikke å dele sin posisjon
+
+                    });
+            } else {
+                // Browser doesn't support Geolocation
+                alert("Din browser støtter ikke geografisk gjenfinning");
+            }
+
+            // saving the map bounds
+            map.addListener('bounds_changed', function() {
+                $('#geo_boundery').val(map.getBounds());
+                $('#geo_zoom').val(map.getZoom());
+            });
+
+        }
+
+        $(document).ready(function () {
+
+            // Adding users / jQuery
+            $('#SearchUsersButton').on('click', function (e) {
+                var username = $('#searchUsers').val();
+
+                if (username != '') {
+                    $.post("/searchUsers",{ username: username }, function(data,status){
+                        if (status === "success") {
+                            var results = JSON.parse(data);
+                            var user = results[0];
+
+                            if (results.length > 0) {
+                                var addedusers = $("#category_body_users").children().text();
+                                if (addedusers.includes(username) || addedusers.includes(user)) return;
+                                $('#AddUserButton').show();
+                                $('#AddUserButton').off('click');
+                                $('#AddUserButton').on('click', function(e) {
+                                    var newelement = "<li class='list-group-item'>"+user
+                                                        +"<span id='"+user+"' class='badge'>"
+                                                            +"<i class='fa fa-minus'></i>"
+                                                        +"</span>"
+                                                        +"<input name='users' value='"+user+"' type='hidden' class='form-control'>"
+                                                        +"</li>";
+                                    $('#category_body_users').append(newelement);
+                                    $('#AddUserButton').hide();
+                                    $('#searchUsers').empty();
+                                    $('#'+user+'').off('click');
+                                    $('#'+user+'').on('click', function(e) {
+                                        $(this).parent().remove();
+                                    });
+                                });
+                            }
+
+                        } else {
+                            alert("Database Connection failure");
+                        }
+                    });
+                }
+            });
+            $('#AddUserButton').hide();
+
+            // Datepicker - jQuery
+            var dateToday = new Date();
+            var dates = $("#date").datepicker({
+                defaultDate: "+3m",
+                changeMonth: true,
+                numberOfMonths: 1,
+                minDate: dateToday,
+                onSelect: function(selectedDate) {
+                    var option = this.id == "from" ? "minDate" : "maxDate",
+                        instance = $(this).data("datepicker")//.css({"position": "relative", "z-index": 999999});
+                    date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
+                    dates.not(this).datepicker("option", option, date);
+                    $(this).blur();
+                }
+            });
+
+            // Checking that users are added to the map before submitting
+            $("#form").submit(function(){
+                if ( $("#category_body_users").children().length === 0) {
+                    alert("Du må legge til minst en bruker !");
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+            // Method to add Point categories
+            $("#add_point_category").on('click', function () {
+               var icon_name = $('#point_name').val();
+               var icon_type = "Point";
+               var icon_img = $( "#point_icon option:selected" ).val();
+               var icon = "<img src='../static/icons/"+icon_img+"'>";
+
+               var text = icon+" <strong>Name</strong>: "+icon_name+", <strong>Type</strong>: "+icon_type;
+               var value = icon_name+","+icon_type+","+icon_img;
+
+               var new_category = "<li class='list-group-item'>"+text
+                                        +"<span class='badge delete_cat'>"
+                                        +"<i class='fa fa-minus'></i>"
+                                        +"</span>"
+                                        +"<input name='point_categories' value='"+value+"' type='hidden' class='form-control'>" +
+                                "</li>";
+
+                var brukt = false;
+                $("#category_body_point :input[name~='point_categories']").each(function(){
+                    var string_elements = $(this).val().split(",");
+                    var compared_elements = value.split(",");
+                    if(string_elements[0] == compared_elements[0] || string_elements[2] == compared_elements[2]) {
+                        brukt = true;
+                        return;
+                    }
+                });
+
+               if (icon_name != "" && brukt != true) {
+                   var list = $('#category_body_point');
+                   list.append(new_category);
+
+                   $('.delete_cat').off();
+                   $('.delete_cat').on('click', function () {
+                       $(this).parent().remove();
+                   });
+               } else if (brukt == true) {
+                   alert("dette ikonet og/eller kategorinavnet er allerede brukt");
+               } else {
+                   alert("Fyll ut alle felter");
+               }
+
+            });
+
+            // Method to add Road categories
+            $("#add_road_category").on('click', function () {
+               var icon_name = $('#road_name').val();
+               var icon_type = "Road";
+               var road_color = $( "#road_color input" ).val();
+               var color_div = "<div style='background-color:"+road_color+"; width: 30px; height: 30px'></div>";
+
+               var text = color_div+" <strong>Name</strong>: "+icon_name+", <strong>Type</strong>: "+icon_type;
+               var value = icon_name+","+icon_type+","+road_color;
+
+               var new_category = "<li class='list-group-item'>"+text
+                                        +"<span class='badge delete_cat'>"
+                                        +"<i class='fa fa-minus'></i>"
+                                        +"</span>"
+                                        +"<input name='road_categories' value='"+value+"' type='hidden' class='form-control'>" +
+                                "</li>";
+
+                var brukt = false;
+                $("#category_body_Road :input[name~='road_categories']").each(function(){
+                    var string_elements = $(this).val().split(",");
+                    var compared_elements = value.split(",");
+                    if(string_elements[0] == compared_elements[0] || string_elements[2] == compared_elements[2]) {
+                        brukt = true;
+                        return;
+                    }
+                });
+
+               if (icon_name != "" && brukt != true) {
+                   var list = $('#category_body_Road');
+                   list.append(new_category);
+
+                   $('.delete_cat').off();
+                   $('.delete_cat').on('click', function () {
+                       $(this).parent().remove();
+                   });
+               } else if (brukt == true) {
+                   alert("denne fargen og/eller kategorinavnet er allerede brukt");
+               } else {
+                   alert("Fyll ut alle felter");
+               }
+
+            });
+
+            // Method to add Area categories
+            $("#add_area_category").on('click', function () {
+               var icon_name = $('#area_name').val();
+               var icon_type = "Area";
+               var area_color = $( "#area_color input" ).val();
+               var color_div = "<div style='background-color:"+area_color+"; width: 30px; height: 30px'></div>";
+
+               var text = color_div+" <strong>Name</strong>: "+icon_name+", <strong>Type</strong>: "+icon_type;
+               var value = icon_name+","+icon_type+","+area_color;
+
+               var new_category = "<li class='list-group-item'>"+text
+                                        +"<span class='badge delete_cat'>"
+                                        +"<i class='fa fa-minus'></i>"
+                                        +"</span>"
+                                        +"<input name='area_categories' value='"+value+"' type='hidden' class='form-control'>" +
+                                "</li>";
+
+                var brukt = false;
+                $("#category_body_area :input[name~='area_categories']").each(function(){
+                    var string_elements = $(this).val().split(",");
+                    var compared_elements = value.split(",");
+                    if(string_elements[0] == compared_elements[0] || string_elements[2] == compared_elements[2]) {
+                        brukt = true;
+                        return;
+                    }
+                });
+
+               if (icon_name != "" && brukt != true) {
+                   var list = $('#category_body_area');
+                   list.append(new_category);
+
+                   $('.delete_cat').off();
+                   $('.delete_cat').on('click', function () {
+                       $(this).parent().remove();
+                   });
+               } else if (brukt == true) {
+                   alert("denne fargen og/eller kategorinavnet er allerede brukt");
+               } else {
+                   alert("Fyll ut alle felter");
+               }
+
+            });
+
+        });
+
+
+    </script>
+
+{% endblock %}
+
+
+
+
+
+{% block content %}
+
+
+    <div id="ChoicePanel" class="part">
+
+        <form id="form" action='/addnewmap' method="post">
+
+            <div>
+                <button id="submitbutton" type="submit" class="btn btn-success">Bekreft</button>
+                <button type="button" onclick="location.href='/'" class="btn btn-danger">Avbryt</button>
+            </div>
+
+            <div id="additional_inputs" class="form-group">
+                <input name="geo_boundery" type="hidden" value="the map bounds" id="geo_boundery">
+                <input name="geo_zoom" type="hidden" value="the map zoom" id="geo_zoom">
+            </div>
+
+            <div class="form-group">
+                <label for="title">Kart Tittel:</label>
+                <input type="title" class="form-control" id="title" placeholder="Tittel" name="title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Utløpsdato:</label>
+                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Kart Beskrivelse:</label>
+                <textarea type="description" id="description" name="description" placeholder="Beskrivelse" class="form-control" rows="3" required></textarea>
+            </div>
+
+
+            <div class="form-group">
+                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#PointModal" data-backdrop="false">
+                    Legg til Punkt Kategorier
+                </button>
+
+                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#RoadModal" data-backdrop="false">
+                    Legg til Vei Kategorier
+                </button>
+
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#AreaModal" data-backdrop="false">
+                    Legg til Område Kategorier
+                </button>
+
+                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#UsersModal" data-backdrop="false">
+                    Legg til Brukere
+                </button>
+            </div>
+
+            <div class="modal fade" id="PointModal" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Legg til punkt kategorier</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="input-group">
+                            <span id="add_point_category" class="input-group-addon"><span class="badge"><i class="fa fa-plus"></i></span></span>
+                            <input type="text" id="point_name" name="category" class="form-control" placeholder="Kategori Navn" required>
+                        </div>
+
+                        <div class="input-group" id="point_icon">
+                            <select name="icon" class="my-select" style="height: 50px">
+                                <option value='2hand.png' data-img-src='../static/icons/2hand.png' selected>2hand</option>
+                                <option value='360degrees.png' data-img-src='../static/icons/360degrees.png'>360degrees</option>
+                                <option value='abduction.png' data-img-src='../static/icons/abduction.png'>abductio</option>
+                                <option value='aboriginal.png' data-img-src='../static/icons/aboriginal.png'>aboriginal</option>
+                                <option value='accesdenied.png' data-img-src='../static/icons/accesdenied.png'>accesdenied</option>
+                                <option value='acupuncture.png' data-img-src='../static/icons/acupuncture.png'>acupuncture</option>
+                                <option value='administration.png' data-img-src='../static/icons/administration.png'>administratio</option>
+                                <option value='administrativeboundary.png' data-img-src='../static/icons/administrativeboundary.png'>administrativeboundary</option>
+                                <option value='aed-2.png' data-img-src='../static/icons/aed-2.png'>aed-2</option>
+                                <option value='agritourism.png' data-img-src='../static/icons/agritourism.png'>agritourism</option>
+                                <option value='aircraftcarrier.png' data-img-src='../static/icons/aircraftcarrier.png'>aircraftcarrier</option>
+                                <option value='aircraftsmall.png' data-img-src='../static/icons/aircraftsmall.png'>aircraftsmall</option>
+                                <option value='airport.png' data-img-src='../static/icons/airport.png'>airport</option>
+                                <option value='airport_apron.png' data-img-src='../static/icons/airport_apron.png'>airport_apro</option>
+                                <option value='airport_runway.png' data-img-src='../static/icons/airport_runway.png'>airport_runway</option>
+                                <option value='airport_terminal.png' data-img-src='../static/icons/airport_terminal.png'>airport_terminal</option>
+                                <option value='airshow-2.png' data-img-src='../static/icons/airshow-2.png'>airshow-2</option>
+                                <option value='air_fixwing.png' data-img-src='../static/icons/air_fixwing.png'>air_fixwi</option>
+                                <option value='algae.png' data-img-src='../static/icons/algae.png'>algae</option>
+                                <option value='alien.png' data-img-src='../static/icons/alien.png'>alie</option>
+                                <option value='alligator.png' data-img-src='../static/icons/alligator.png'>alligator</option>
+                                <option value='amphitheater-2.png' data-img-src='../static/icons/amphitheater-2.png'>amphitheater-2</option>
+                                <option value='amphitheater.png' data-img-src='../static/icons/amphitheater.png'>amphitheater</option>
+                                <option value='anchorpier.png' data-img-src='../static/icons/anchorpier.png'>anchorpier</option>
+                                <option value='anemometer_mono.png' data-img-src='../static/icons/anemometer_mono.png'>anemometer_mono</option>
+                                <option value='animal-shelter-export.png' data-img-src='../static/icons/animal-shelter-export.png'>animal-shelter-export</option>
+                                <option value='anniversary.png' data-img-src='../static/icons/anniversary.png'>anniversary</option>
+                                <option value='ant-export.png' data-img-src='../static/icons/ant-export.png'>ant-export</option>
+                                <option value='anthropo.png' data-img-src='../static/icons/anthropo.png'>anthropo</option>
+                                <option value='apartment-3.png' data-img-src='../static/icons/apartment-3.png'>apartment-3</option>
+                                <option value='apple.png' data-img-src='../static/icons/apple.png'>apple</option>
+                                <option value='aquarium.png' data-img-src='../static/icons/aquarium.png'>aquarium</option>
+                                <option value='arch.png' data-img-src='../static/icons/arch.png'>arch</option>
+                                <option value='archery.png' data-img-src='../static/icons/archery.png'>archery</option>
+                                <option value='army.png' data-img-src='../static/icons/army.png'>army</option>
+                                <option value='art-museum-2.png' data-img-src='../static/icons/art-museum-2.png'>art-museum-2</option>
+                                <option value='artgallery.png' data-img-src='../static/icons/artgallery.png'>artgallery</option>
+                                <option value='atm-2.png' data-img-src='../static/icons/atm-2.png'>atm-2</option>
+                                <option value='atv.png' data-img-src='../static/icons/atv.png'>atv</option>
+                                <option value='audio.png' data-img-src='../static/icons/audio.png'>audio</option>
+                                <option value='australianfootball.png' data-img-src='../static/icons/australianfootball.png'>australianfootball</option>
+                                <option value='avalanche1.png' data-img-src='../static/icons/avalanche1.png'>avalanche1</option>
+                                <option value='award.png' data-img-src='../static/icons/award.png'>award</option>
+                                <option value='badminton-2.png' data-img-src='../static/icons/badminton-2.png'>badminton-2</option>
+                                <option value='bags.png' data-img-src='../static/icons/bags.png'>bags</option>
+                                <option value='bank.png' data-img-src='../static/icons/bank.png'>bank</option>
+                                <option value='bar.png' data-img-src='../static/icons/bar.png'>bar</option>
+                                <option value='barbecue.png' data-img-src='../static/icons/barbecue.png'>barbecue</option>
+                                <option value='barber.png' data-img-src='../static/icons/barber.png'>barber</option>
+                                <option value='barrier.png' data-img-src='../static/icons/barrier.png'>barrier</option>
+                                <option value='bar_coktail.png' data-img-src='../static/icons/bar_coktail.png'>bar_coktail</option>
+                                <option value='bar_juice.png' data-img-src='../static/icons/bar_juice.png'>bar_juice</option>
+                                <option value='baseball.png' data-img-src='../static/icons/baseball.png'>baseball</option>
+                                <option value='basketball.png' data-img-src='../static/icons/basketball.png'>basketball</option>
+                                <option value='bats.png' data-img-src='../static/icons/bats.png'>bats</option>
+                                <option value='battlefield.png' data-img-src='../static/icons/battlefield.png'>battlefield</option>
+                                <option value='battleship-3.png' data-img-src='../static/icons/battleship-3.png'>battleship-3</option>
+                                <option value='beach.png' data-img-src='../static/icons/beach.png'>beach</option>
+                                <option value='beachvolleyball.png' data-img-src='../static/icons/beachvolleyball.png'>beachvolleyball</option>
+                                <option value='beautifulview.png' data-img-src='../static/icons/beautifulview.png'>beautifulview</option>
+                                <option value='beautysalon.png' data-img-src='../static/icons/beautysalon.png'>beautysalo</option>
+                                <option value='bed_breakfast1-2.png' data-img-src='../static/icons/bed_breakfast1-2.png'>bed_breakfast1-2</option>
+                                <option value='beergarden.png' data-img-src='../static/icons/beergarden.png'>beergarde</option>
+                                <option value='bicycle_shop.png' data-img-src='../static/icons/bicycle_shop.png'>bicycle_sho</option>
+                                <option value='bigcity.png' data-img-src='../static/icons/bigcity.png'>bigcity</option>
+                                <option value='bike_downhill.png' data-img-src='../static/icons/bike_downhill.png'>bike_downhill</option>
+                                <option value='bike_rising.png' data-img-src='../static/icons/bike_rising.png'>bike_risi</option>
+                                <option value='billiard-2.png' data-img-src='../static/icons/billiard-2.png'>billiard-2</option>
+                                <option value='binoculars.png' data-img-src='../static/icons/binoculars.png'>binoculars</option>
+                                <option value='birds-2.png' data-img-src='../static/icons/birds-2.png'>birds-2</option>
+                                <option value='blast.png' data-img-src='../static/icons/blast.png'>blast</option>
+                                <option value='boardercross.png' data-img-src='../static/icons/boardercross.png'>boardercross</option>
+                                <option value='boat.png' data-img-src='../static/icons/boat.png'>boat</option>
+                                <option value='boatcrane.png' data-img-src='../static/icons/boatcrane.png'>boatcrane</option>
+                                <option value='bobsleigh.png' data-img-src='../static/icons/bobsleigh.png'>bobsleigh</option>
+                                <option value='bollie.png' data-img-src='../static/icons/bollie.png'>bollie</option>
+                                <option value='bomb.png' data-img-src='../static/icons/bomb.png'>bomb</option>
+                                <option value='bomber-2.png' data-img-src='../static/icons/bomber-2.png'>bomber-2</option>
+                                <option value='bouddha.png' data-img-src='../static/icons/bouddha.png'>bouddha</option>
+                                <option value='bowling.png' data-img-src='../static/icons/bowling.png'>bowli</option>
+                                <option value='boxing.png' data-img-src='../static/icons/boxing.png'>boxi</option>
+                                <option value='bread.png' data-img-src='../static/icons/bread.png'>bread</option>
+                                <option value='brewery1.png' data-img-src='../static/icons/brewery1.png'>brewery1</option>
+                                <option value='bridge_modern.png' data-img-src='../static/icons/bridge_modern.png'>bridge_moder</option>
+                                <option value='bridge_old.png' data-img-src='../static/icons/bridge_old.png'>bridge_old</option>
+                                <option value='bulldozer.png' data-img-src='../static/icons/bulldozer.png'>bulldozer</option>
+                                <option value='bullfight.png' data-img-src='../static/icons/bullfight.png'>bullfight</option>
+                                <option value='bunker-2-2.png' data-img-src='../static/icons/bunker-2-2.png'>bunker-2-2</option>
+                                <option value='bus.png' data-img-src='../static/icons/bus.png'>bus</option>
+                                <option value='busstop.png' data-img-src='../static/icons/busstop.png'>bussto</option>
+                                <option value='bustour.png' data-img-src='../static/icons/bustour.png'>bustour</option>
+                                <option value='butcher-2.png' data-img-src='../static/icons/butcher-2.png'>butcher-2</option>
+                                <option value='butterfly-2.png' data-img-src='../static/icons/butterfly-2.png'>butterfly-2</option>
+                                <option value='cabin-2.png' data-img-src='../static/icons/cabin-2.png'>cabin-2</option>
+                                <option value='cablecar.png' data-img-src='../static/icons/cablecar.png'>cablecar</option>
+                                <option value='cafetaria.png' data-img-src='../static/icons/cafetaria.png'>cafetaria</option>
+                                <option value='calendar-3.png' data-img-src='../static/icons/calendar-3.png'>calendar-3</option>
+                                <option value='campfire-2.png' data-img-src='../static/icons/campfire-2.png'>campfire-2</option>
+                                <option value='camping-2.png' data-img-src='../static/icons/camping-2.png'>camping-2</option>
+                                <option value='candy.png' data-img-src='../static/icons/candy.png'>candy</option>
+                                <option value='canyon-2.png' data-img-src='../static/icons/canyon-2.png'>canyon-2</option>
+                                <option value='car.png' data-img-src='../static/icons/car.png'>car</option>
+                                <option value='caraccident.png' data-img-src='../static/icons/caraccident.png'>caraccident</option>
+                                <option value='carrental.png' data-img-src='../static/icons/carrental.png'>carrental</option>
+                                <option value='carwash.png' data-img-src='../static/icons/carwash.png'>carwash</option>
+                                <option value='casino-2.png' data-img-src='../static/icons/casino-2.png'>casino-2</option>
+                                <option value='castle-2.png' data-img-src='../static/icons/castle-2.png'>castle-2</option>
+                                <option value='cathedral.png' data-img-src='../static/icons/cathedral.png'>cathedral</option>
+                                <option value='catholicgrave.png' data-img-src='../static/icons/catholicgrave.png'>catholicgrave</option>
+                                <option value='caution.png' data-img-src='../static/icons/caution.png'>cautio</option>
+                                <option value='cave-2.png' data-img-src='../static/icons/cave-2.png'>cave-2</option>
+                                <option value='cctv.png' data-img-src='../static/icons/cctv.png'>cctv</option>
+                                <option value='cemetary.png' data-img-src='../static/icons/cemetary.png'>cemetary</option>
+                                <option value='channelchange.png' data-img-src='../static/icons/channelchange.png'>channelchange</option>
+                                <option value='chapel-2.png' data-img-src='../static/icons/chapel-2.png'>chapel-2</option>
+                                <option value='chart-2.png' data-img-src='../static/icons/chart-2.png'>chart-2</option>
+                                <option value='cheese.png' data-img-src='../static/icons/cheese.png'>cheese</option>
+                                <option value='chemistry-2.png' data-img-src='../static/icons/chemistry-2.png'>chemistry-2</option>
+                                <option value='chicken-2.png' data-img-src='../static/icons/chicken-2.png'>chicken-2</option>
+                                <option value='childmuseum01.png' data-img-src='../static/icons/childmuseum01.png'>childmuseum01</option>
+                                <option value='chiropractor.png' data-img-src='../static/icons/chiropractor.png'>chiropractor</option>
+                                <option value='christmasmarket.png' data-img-src='../static/icons/christmasmarket.png'>christmasmarket</option>
+                                <option value='church-2.png' data-img-src='../static/icons/church-2.png'>church-2</option>
+                                <option value='cinema.png' data-img-src='../static/icons/cinema.png'>cinema</option>
+                                <option value='circus.png' data-img-src='../static/icons/circus.png'>circus</option>
+                                <option value='citysquare.png' data-img-src='../static/icons/citysquare.png'>citysquare</option>
+                                <option value='citywalls.png' data-img-src='../static/icons/citywalls.png'>citywalls</option>
+                                <option value='climbing.png' data-img-src='../static/icons/climbing.png'>climbi</option>
+                                <option value='clock.png' data-img-src='../static/icons/clock.png'>clock</option>
+                                <option value='closedroad.png' data-img-src='../static/icons/closedroad.png'>closedroad</option>
+                                <option value='clothers_female.png' data-img-src='../static/icons/clothers_female.png'>clothers_female</option>
+                                <option value='clothers_male.png' data-img-src='../static/icons/clothers_male.png'>clothers_male</option>
+                                <option value='cloudy.png' data-img-src='../static/icons/cloudy.png'>cloudy</option>
+                                <option value='cloudysunny.png' data-img-src='../static/icons/cloudysunny.png'>cloudysunny</option>
+                                <option value='coffee.png' data-img-src='../static/icons/coffee.png'>coffee</option>
+                                <option value='coins.png' data-img-src='../static/icons/coins.png'>coins</option>
+                                <option value='comedyclub.png' data-img-src='../static/icons/comedyclub.png'>comedyclub</option>
+                                <option value='comics.png' data-img-src='../static/icons/comics.png'>comics</option>
+                                <option value='comment-map-icon.png' data-img-src='../static/icons/comment-map-icon.png'>comment-map-ico</option>
+                                <option value='communitycentre.png' data-img-src='../static/icons/communitycentre.png'>communitycentre</option>
+                                <option value='company.png' data-img-src='../static/icons/company.png'>company</option>
+                                <option value='compost.png' data-img-src='../static/icons/compost.png'>compost</option>
+                                <option value='computers.png' data-img-src='../static/icons/computers.png'>computers</option>
+                                <option value='condominium.png' data-img-src='../static/icons/condominium.png'>condominium</option>
+                                <option value='conference.png' data-img-src='../static/icons/conference.png'>conference</option>
+                                <option value='congress.png' data-img-src='../static/icons/congress.png'>congress</option>
+                                <option value='construction.png' data-img-src='../static/icons/construction.png'>constructio</option>
+                                <option value='constructioncrane.png' data-img-src='../static/icons/constructioncrane.png'>constructioncrane</option>
+                                <option value='contract.png' data-img-src='../static/icons/contract.png'>contract</option>
+                                <option value='conveniencestore.png' data-img-src='../static/icons/conveniencestore.png'>conveniencestore</option>
+                                <option value='convent-2.png' data-img-src='../static/icons/convent-2.png'>convent-2</option>
+                                <option value='conversation-map-icon.png' data-img-src='../static/icons/conversation-map-icon.png'>conversation-map-ico</option>
+                                <option value='convertible.png' data-img-src='../static/icons/convertible.png'>convertible</option>
+                                <option value='corral.png' data-img-src='../static/icons/corral.png'>corral</option>
+                                <option value='country.png' data-img-src='../static/icons/country.png'>country</option>
+                                <option value='court.png' data-img-src='../static/icons/court.png'>court</option>
+                                <option value='cow-export.png' data-img-src='../static/icons/cow-export.png'>cow-export</option>
+                                <option value='cowabduction.png' data-img-src='../static/icons/cowabduction.png'>cowabductio</option>
+                                <option value='craftstore.png' data-img-src='../static/icons/craftstore.png'>craftstore</option>
+                                <option value='cramschool.png' data-img-src='../static/icons/cramschool.png'>cramschool</option>
+                                <option value='cricket.png' data-img-src='../static/icons/cricket.png'>cricket</option>
+                                <option value='crimescene.png' data-img-src='../static/icons/crimescene.png'>crimescene</option>
+                                <option value='cromlech.png' data-img-src='../static/icons/cromlech.png'>cromlech</option>
+                                <option value='cropcircles.png' data-img-src='../static/icons/cropcircles.png'>cropcircles</option>
+                                <option value='cross-2.png' data-img-src='../static/icons/cross-2.png'>cross-2</option>
+                                <option value='crossingguard.png' data-img-src='../static/icons/crossingguard.png'>crossingguard</option>
+                                <option value='cruiseship.png' data-img-src='../static/icons/cruiseship.png'>cruiseshi</option>
+                                <option value='cup.png' data-img-src='../static/icons/cup.png'>cu</option>
+                                <option value='curling-2.png' data-img-src='../static/icons/curling-2.png'>curling-2</option>
+                                <option value='currencyexchange.png' data-img-src='../static/icons/currencyexchange.png'>currencyexchange</option>
+                                <option value='customs.png' data-img-src='../static/icons/customs.png'>customs</option>
+                                <option value='cycling.png' data-img-src='../static/icons/cycling.png'>cycli</option>
+                                <option value='cycling_feed.png' data-img-src='../static/icons/cycling_feed.png'>cycling_feed</option>
+                                <option value='cycling_sprint.png' data-img-src='../static/icons/cycling_sprint.png'>cycling_sprint</option>
+                                <option value='dam.png' data-img-src='../static/icons/dam.png'>dam</option>
+                                <option value='dance_class.png' data-img-src='../static/icons/dance_class.png'>dance_class</option>
+                                <option value='dancinghall.png' data-img-src='../static/icons/dancinghall.png'>dancinghall</option>
+                                <option value='database.png' data-img-src='../static/icons/database.png'>database</option>
+                                <option value='daycare.png' data-img-src='../static/icons/daycare.png'>daycare</option>
+                                <option value='deepseafishing.png' data-img-src='../static/icons/deepseafishing.png'>deepseafishi</option>
+                                <option value='deer.png' data-img-src='../static/icons/deer.png'>deer</option>
+                                <option value='dentist.png' data-img-src='../static/icons/dentist.png'>dentist</option>
+                                <option value='departmentstore.png' data-img-src='../static/icons/departmentstore.png'>departmentstore</option>
+                                <option value='desert-2.png' data-img-src='../static/icons/desert-2.png'>desert-2</option>
+                                <option value='dinopark.png' data-img-src='../static/icons/dinopark.png'>dinopark</option>
+                                <option value='direction_down.png' data-img-src='../static/icons/direction_down.png'>direction_dow</option>
+                                <option value='disability.png' data-img-src='../static/icons/disability.png'>disability</option>
+                                <option value='diving.png' data-img-src='../static/icons/diving.png'>divi</option>
+                                <option value='dogs_leash.png' data-img-src='../static/icons/dogs_leash.png'>dogs_leash</option>
+                                <option value='dolphins.png' data-img-src='../static/icons/dolphins.png'>dolphins</option>
+                                <option value='doublebendright.png' data-img-src='../static/icons/doublebendright.png'>doublebendright</option>
+                                <option value='downloadicon.png' data-img-src='../static/icons/downloadicon.png'>downloadico</option>
+                                <option value='drinkingfountain.png' data-img-src='../static/icons/drinkingfountain.png'>drinkingfountai</option>
+                                <option value='drinkingwater.png' data-img-src='../static/icons/drinkingwater.png'>drinkingwater</option>
+                                <option value='drugstore.png' data-img-src='../static/icons/drugstore.png'>drugstore</option>
+                                <option value='duck-export.png' data-img-src='../static/icons/duck-export.png'>duck-export</option>
+                                <option value='earthquake-3.png' data-img-src='../static/icons/earthquake-3.png'>earthquake-3</option>
+                                <option value='eggs.png' data-img-src='../static/icons/eggs.png'>eggs</option>
+                                <option value='elephants.png' data-img-src='../static/icons/elephants.png'>elephants</option>
+                                <option value='elevator.png' data-img-src='../static/icons/elevator.png'>elevator</option>
+                                <option value='elevator_down.png' data-img-src='../static/icons/elevator_down.png'>elevator_dow</option>
+                                <option value='elevator_up.png' data-img-src='../static/icons/elevator_up.png'>elevator_u</option>
+                                <option value='embassy.png' data-img-src='../static/icons/embassy.png'>embassy</option>
+                                <option value='entrance.png' data-img-src='../static/icons/entrance.png'>entrance</option>
+                                <option value='exchequer.png' data-img-src='../static/icons/exchequer.png'>exchequer</option>
+                                <option value='exit.png' data-img-src='../static/icons/exit.png'>exit</option>
+                                <option value='expert.png' data-img-src='../static/icons/expert.png'>expert</option>
+                                <option value='factory.png' data-img-src='../static/icons/factory.png'>factory</option>
+                                <option value='fallingrocks.png' data-img-src='../static/icons/fallingrocks.png'>fallingrocks</option>
+                                <option value='family.png' data-img-src='../static/icons/family.png'>family</option>
+                                <option value='farm-2.png' data-img-src='../static/icons/farm-2.png'>farm-2</option>
+                                <option value='farmstand.png' data-img-src='../static/icons/farmstand.png'>farmstand</option>
+                                <option value='fastfood.png' data-img-src='../static/icons/fastfood.png'>fastfood</option>
+                                <option value='female-2.png' data-img-src='../static/icons/female-2.png'>female-2</option>
+                                <option value='ferriswheel.png' data-img-src='../static/icons/ferriswheel.png'>ferriswheel</option>
+                                <option value='ferry.png' data-img-src='../static/icons/ferry.png'>ferry</option>
+                                <option value='festival.png' data-img-src='../static/icons/festival.png'>festival</option>
+                                <option value='fetalalcoholsyndrom.png' data-img-src='../static/icons/fetalalcoholsyndrom.png'>fetalalcoholsyndrom</option>
+                                <option value='field.png' data-img-src='../static/icons/field.png'>field</option>
+                                <option value='fillingstation.png' data-img-src='../static/icons/fillingstation.png'>fillingstatio</option>
+                                <option value='findajob.png' data-img-src='../static/icons/findajob.png'>findajob</option>
+                                <option value='finish.png' data-img-src='../static/icons/finish.png'>finish</option>
+                                <option value='fire-hydrant-2.png' data-img-src='../static/icons/fire-hydrant-2.png'>fire-hydrant-2</option>
+                                <option value='fire.png' data-img-src='../static/icons/fire.png'>fire</option>
+                                <option value='fireexstinguisher.png' data-img-src='../static/icons/fireexstinguisher.png'>fireexstinguisher</option>
+                                <option value='firemen.png' data-img-src='../static/icons/firemen.png'>fireme</option>
+                                <option value='fireworks.png' data-img-src='../static/icons/fireworks.png'>fireworks</option>
+                                <option value='firstaid.png' data-img-src='../static/icons/firstaid.png'>firstaid</option>
+                                <option value='fishchips.png' data-img-src='../static/icons/fishchips.png'>fishchips</option>
+                                <option value='fishing.png' data-img-src='../static/icons/fishing.png'>fishi</option>
+                                <option value='fishingboat.png' data-img-src='../static/icons/fishingboat.png'>fishingboat</option>
+                                <option value='fishingstore.png' data-img-src='../static/icons/fishingstore.png'>fishingstore</option>
+                                <option value='fitness.png' data-img-src='../static/icons/fitness.png'>fitness</option>
+                                <option value='fjord-2.png' data-img-src='../static/icons/fjord-2.png'>fjord-2</option>
+                                <option value='flag-export.png' data-img-src='../static/icons/flag-export.png'>flag-export</option>
+                                <option value='flood.png' data-img-src='../static/icons/flood.png'>flood</option>
+                                <option value='flowers.png' data-img-src='../static/icons/flowers.png'>flowers</option>
+                                <option value='folder-2.png' data-img-src='../static/icons/folder-2.png'>folder-2</option>
+                                <option value='fooddeliveryservice.png' data-img-src='../static/icons/fooddeliveryservice.png'>fooddeliveryservice</option>
+                                <option value='foodtruck.png' data-img-src='../static/icons/foodtruck.png'>foodtruck</option>
+                                <option value='footprint.png' data-img-src='../static/icons/footprint.png'>footprint</option>
+                                <option value='ford-2.png' data-img-src='../static/icons/ford-2.png'>ford-2</option>
+                                <option value='forest.png' data-img-src='../static/icons/forest.png'>forest</option>
+                                <option value='forest2.png' data-img-src='../static/icons/forest2.png'>forest2</option>
+                                <option value='fossils.png' data-img-src='../static/icons/fossils.png'>fossils</option>
+                                <option value='foundry-2.png' data-img-src='../static/icons/foundry-2.png'>foundry-2</option>
+                                <option value='fountain-2.png' data-img-src='../static/icons/fountain-2.png'>fountain-2</option>
+                                <option value='fourbyfour.png' data-img-src='../static/icons/fourbyfour.png'>fourbyfour</option>
+                                <option value='freqchg.png' data-img-src='../static/icons/freqchg.png'>freqch</option>
+                                <option value='frog-2.png' data-img-src='../static/icons/frog-2.png'>frog-2</option>
+                                <option value='fruits.png' data-img-src='../static/icons/fruits.png'>fruits</option>
+                                <option value='ft.png' data-img-src='../static/icons/ft.png'>ft</option>
+                                <option value='funicolar-22x22.png' data-img-src='../static/icons/funicolar-22x22.png'>funicolar-22x22</option>
+                                <option value='gas_cylinder1.png' data-img-src='../static/icons/gas_cylinder1.png'>as_cylinder1</option>
+                                <option value='gay-female.png' data-img-src='../static/icons/gay-female.png'>ay-female</option>
+                                <option value='gay-male.png' data-img-src='../static/icons/gay-male.png'>ay-male</option>
+                                <option value='geocaching-3.png' data-img-src='../static/icons/geocaching-3.png'>eocaching-3</option>
+                                <option value='geothermal-site.png' data-img-src='../static/icons/geothermal-site.png'>eothermal-site</option>
+                                <option value='geyser-2.png' data-img-src='../static/icons/geyser-2.png'>eyser-2</option>
+                                <option value='ghosttown.png' data-img-src='../static/icons/ghosttown.png'>hosttow</option>
+                                <option value='gifts.png' data-img-src='../static/icons/gifts.png'>ifts</option>
+                                <option value='glacier-2.png' data-img-src='../static/icons/glacier-2.png'>lacier-2</option>
+                                <option value='glasses.png' data-img-src='../static/icons/glasses.png'>lasses</option>
+                                <option value='golfing.png' data-img-src='../static/icons/golfing.png'>olfi</option>
+                                <option value='gondola-2.png' data-img-src='../static/icons/gondola-2.png'>ondola-2</option>
+                                <option value='gourmet_0star.png' data-img-src='../static/icons/gourmet_0star.png'>ourmet_0star</option>
+                                <option value='grass.png' data-img-src='../static/icons/grass.png'>rass</option>
+                                <option value='grocery.png' data-img-src='../static/icons/grocery.png'>rocery</option>
+                                <option value='group-2.png' data-img-src='../static/icons/group-2.png'>roup-2</option>
+                                <option value='gumball_machine.png' data-img-src='../static/icons/gumball_machine.png'>umball_machine</option>
+                                <option value='handball.png' data-img-src='../static/icons/handball.png'>handball</option>
+                                <option value='hanggliding.png' data-img-src='../static/icons/hanggliding.png'>hangglidi</option>
+                                <option value='harbor.png' data-img-src='../static/icons/harbor.png'>harbor</option>
+                                <option value='hare1.png' data-img-src='../static/icons/hare1.png'>hare1</option>
+                                <option value='hats.png' data-img-src='../static/icons/hats.png'>hats</option>
+                                <option value='haybale.png' data-img-src='../static/icons/haybale.png'>haybale</option>
+                                <option value='headstone-2.png' data-img-src='../static/icons/headstone-2.png'>headstone-2</option>
+                                <option value='helicopter.png' data-img-src='../static/icons/helicopter.png'>helicopter</option>
+                                <option value='highhills.png' data-img-src='../static/icons/highhills.png'>highhills</option>
+                                <option value='highschool.png' data-img-src='../static/icons/highschool.png'>highschool</option>
+                                <option value='highway.png' data-img-src='../static/icons/highway.png'>highway</option>
+                                <option value='hiking.png' data-img-src='../static/icons/hiking.png'>hiki</option>
+                                <option value='historicalquarter.png' data-img-src='../static/icons/historicalquarter.png'>historicalquarter</option>
+                                <option value='historical_museum.png' data-img-src='../static/icons/historical_museum.png'>historical_museum</option>
+                                <option value='hoergeraeteakustiker_22px.png' data-img-src='../static/icons/hoergeraeteakustiker_22px.png'>hoergeraeteakustiker_22px</option>
+                                <option value='home-2.png' data-img-src='../static/icons/home-2.png'>home-2</option>
+                                <option value='homecenter.png' data-img-src='../static/icons/homecenter.png'>homecenter</option>
+                                <option value='honeycomb.png' data-img-src='../static/icons/honeycomb.png'>honeycomb</option>
+                                <option value='hookah_final.png' data-img-src='../static/icons/hookah_final.png'>hookah_final</option>
+                                <option value='horseriding.png' data-img-src='../static/icons/horseriding.png'>horseridi</option>
+                                <option value='hospital-building.png' data-img-src='../static/icons/hospital-building.png'>hospital-buildi</option>
+                                <option value='hostel_0star.png' data-img-src='../static/icons/hostel_0star.png'>hostel_0star</option>
+                                <option value='hotairbaloon.png' data-img-src='../static/icons/hotairbaloon.png'>hotairbaloo</option>
+                                <option value='hotel_0star.png' data-img-src='../static/icons/hotel_0star.png'>hotel_0star</option>
+                                <option value='hotspring.png' data-img-src='../static/icons/hotspring.png'>hotspri</option>
+                                <option value='house.png' data-img-src='../static/icons/house.png'>house</option>
+                                <option value='hunting.png' data-img-src='../static/icons/hunting.png'>hunti</option>
+                                <option value='hut.png' data-img-src='../static/icons/hut.png'>hut</option>
+                                <option value='icecream.png' data-img-src='../static/icons/icecream.png'>icecream</option>
+                                <option value='icehockey.png' data-img-src='../static/icons/icehockey.png'>icehockey</option>
+                                <option value='iceskating.png' data-img-src='../static/icons/iceskating.png'>iceskati</option>
+                                <option value='icy_road.png' data-img-src='../static/icons/icy_road.png'>icy_road</option>
+                                <option value='indoor-arena.png' data-img-src='../static/icons/indoor-arena.png'>indoor-arena</option>
+                                <option value='information.png' data-img-src='../static/icons/information.png'>informatio</option>
+                                <option value='iobridge.png' data-img-src='../static/icons/iobridge.png'>iobridge</option>
+                                <option value='jacuzzi.png' data-img-src='../static/icons/jacuzzi.png'>jacuzzi</option>
+                                <option value='japanese-food.png' data-img-src='../static/icons/japanese-food.png'>japanese-food</option>
+                                <option value='japanese-lantern.png' data-img-src='../static/icons/japanese-lantern.png'>japanese-lanter</option>
+                                <option value='japanese-sake.png' data-img-src='../static/icons/japanese-sake.png'>japanese-sake</option>
+                                <option value='japanese-sweet-2.png' data-img-src='../static/icons/japanese-sweet-2.png'>japanese-sweet-2</option>
+                                <option value='japanese-temple.png' data-img-src='../static/icons/japanese-temple.png'>japanese-temple</option>
+                                <option value='jazzclub.png' data-img-src='../static/icons/jazzclub.png'>jazzclub</option>
+                                <option value='jeep.png' data-img-src='../static/icons/jeep.png'>jee</option>
+                                <option value='jetfighter.png' data-img-src='../static/icons/jetfighter.png'>jetfighter</option>
+                                <option value='jewelry.png' data-img-src='../static/icons/jewelry.png'>jewelry</option>
+                                <option value='jewishgrave.png' data-img-src='../static/icons/jewishgrave.png'>jewishgrave</option>
+                                <option value='jewishquarter.png' data-img-src='../static/icons/jewishquarter.png'>jewishquarter</option>
+                                <option value='jogging.png' data-img-src='../static/icons/jogging.png'>joggi</option>
+                                <option value='judo.png' data-img-src='../static/icons/judo.png'>judo</option>
+                                <option value='junction.png' data-img-src='../static/icons/junction.png'>junctio</option>
+                                <option value='karate.png' data-img-src='../static/icons/karate.png'>karate</option>
+                                <option value='karting.png' data-img-src='../static/icons/karting.png'>karti</option>
+                                <option value='kayak1.png' data-img-src='../static/icons/kayak1.png'>kayak1</option>
+                                <option value='kayaking.png' data-img-src='../static/icons/kayaking.png'>kayaki</option>
+                                <option value='kebab.png' data-img-src='../static/icons/kebab.png'>kebab</option>
+                                <option value='kingair.png' data-img-src='../static/icons/kingair.png'>kingair</option>
+                                <option value='kiosk.png' data-img-src='../static/icons/kiosk.png'>kiosk</option>
+                                <option value='kitesurfing.png' data-img-src='../static/icons/kitesurfing.png'>kitesurfi</option>
+                                <option value='laboratory.png' data-img-src='../static/icons/laboratory.png'>laboratory</option>
+                                <option value='lake.png' data-img-src='../static/icons/lake.png'>lake</option>
+                                <option value='landfill.png' data-img-src='../static/icons/landfill.png'>landfill</option>
+                                <option value='landmark.png' data-img-src='../static/icons/landmark.png'>landmark</option>
+                                <option value='laterne.png' data-img-src='../static/icons/laterne.png'>laterne</option>
+                                <option value='laundromat.png' data-img-src='../static/icons/laundromat.png'>laundromat</option>
+                                <option value='levelcrossing.png' data-img-src='../static/icons/levelcrossing.png'>levelcrossi</option>
+                                <option value='library.png' data-img-src='../static/icons/library.png'>library</option>
+                                <option value='lifeguard-2.png' data-img-src='../static/icons/lifeguard-2.png'>lifeguard-2</option>
+                                <option value='lighthouse-2.png' data-img-src='../static/icons/lighthouse-2.png'>lighthouse-2</option>
+                                <option value='linedown.png' data-img-src='../static/icons/linedown.png'>linedow</option>
+                                <option value='lingerie.png' data-img-src='../static/icons/lingerie.png'>lingerie</option>
+                                <option value='liquor.png' data-img-src='../static/icons/liquor.png'>liquor</option>
+                                <option value='lobster-export.png' data-img-src='../static/icons/lobster-export.png'>lobster-export</option>
+                                <option value='lock.png' data-img-src='../static/icons/lock.png'>lock</option>
+                                <option value='lockerrental.png' data-img-src='../static/icons/lockerrental.png'>lockerrental</option>
+                                <option value='lodging_0star.png' data-img-src='../static/icons/lodging_0star.png'>lodging_0star</option>
+                                <option value='loveinterest.png' data-img-src='../static/icons/loveinterest.png'>loveinterest</option>
+                                <option value='love_date.png' data-img-src='../static/icons/love_date.png'>love_date</option>
+                                <option value='magicshow.png' data-img-src='../static/icons/magicshow.png'>magicshow</option>
+                                <option value='mainroad.png' data-img-src='../static/icons/mainroad.png'>mainroad</option>
+                                <option value='male-2.png' data-img-src='../static/icons/male-2.png'>male-2</option>
+                                <option value='mall.png' data-img-src='../static/icons/mall.png'>mall</option>
+                                <option value='map.png' data-img-src='../static/icons/map.png'>ma</option>
+                                <option value='mapicon.png' data-img-src='../static/icons/mapicon.png'>mapico</option>
+                                <option value='marina-2.png' data-img-src='../static/icons/marina-2.png'>marina-2</option>
+                                <option value='market.png' data-img-src='../static/icons/market.png'>market</option>
+                                <option value='massage.png' data-img-src='../static/icons/massage.png'>massage</option>
+                                <option value='mastcrane1.png' data-img-src='../static/icons/mastcrane1.png'>mastcrane1</option>
+                                <option value='medicalstore.png' data-img-src='../static/icons/medicalstore.png'>medicalstore</option>
+                                <option value='medicine.png' data-img-src='../static/icons/medicine.png'>medicine</option>
+                                <option value='megalith.png' data-img-src='../static/icons/megalith.png'>megalith</option>
+                                <option value='memorial.png' data-img-src='../static/icons/memorial.png'>memorial</option>
+                                <option value='metronetwork.png' data-img-src='../static/icons/metronetwork.png'>metronetwork</option>
+                                <option value='military.png' data-img-src='../static/icons/military.png'>military</option>
+                                <option value='mine.png' data-img-src='../static/icons/mine.png'>mine</option>
+                                <option value='missile-2.png' data-img-src='../static/icons/missile-2.png'>missile-2</option>
+                                <option value='mobilephonetower.png' data-img-src='../static/icons/mobilephonetower.png'>mobilephonetower</option>
+                                <option value='modernmonument.png' data-img-src='../static/icons/modernmonument.png'>modernmonument</option>
+                                <option value='moderntower.png' data-img-src='../static/icons/moderntower.png'>moderntower</option>
+                                <option value='monkey-export.png' data-img-src='../static/icons/monkey-export.png'>monkey-export</option>
+                                <option value='monument-historique-icon-white-22x22.png' data-img-src='../static/icons/monument-historique-icon-white-22x22.png'>monument-historique-icon-white-22x22</option>
+                                <option value='monument.png' data-img-src='../static/icons/monument.png'>monument</option>
+                                <option value='moonstar.png' data-img-src='../static/icons/moonstar.png'>moonstar</option>
+                                <option value='mosquee.png' data-img-src='../static/icons/mosquee.png'>mosquee</option>
+                                <option value='mosquito-2.png' data-img-src='../static/icons/mosquito-2.png'>mosquito-2</option>
+                                <option value='motel-2.png' data-img-src='../static/icons/motel-2.png'>motel-2</option>
+                                <option value='motorbike.png' data-img-src='../static/icons/motorbike.png'>motorbike</option>
+                                <option value='motorcycle.png' data-img-src='../static/icons/motorcycle.png'>motorcycle</option>
+                                <option value='mountain-pass-locator-diagonal-reverse-export.png' data-img-src='../static/icons/mountain-pass-locator-diagonal-reverse-export.png'>mountain-pass-locator-diagonal-reverse-export</option>
+                                <option value='mountainbiking-3.png' data-img-src='../static/icons/mountainbiking-3.png'>mountainbiking-3</option>
+                                <option value='mountains.png' data-img-src='../static/icons/mountains.png'>mountains</option>
+                                <option value='movierental.png' data-img-src='../static/icons/movierental.png'>movierental</option>
+                                <option value='moving-walkway-enter-export.png' data-img-src='../static/icons/moving-walkway-enter-export.png'>moving-walkway-enter-export</option>
+                                <option value='muffin_bagle.png' data-img-src='../static/icons/muffin_bagle.png'>muffin_bagle</option>
+                                <option value='mural.png' data-img-src='../static/icons/mural.png'>mural</option>
+                                <option value='museum_archeological.png' data-img-src='../static/icons/museum_archeological.png'>museum_archeological</option>
+                                <option value='museum_art.png' data-img-src='../static/icons/museum_art.png'>museum_art</option>
+                                <option value='museum_crafts.png' data-img-src='../static/icons/museum_crafts.png'>museum_crafts</option>
+                                <option value='museum_industry.png' data-img-src='../static/icons/museum_industry.png'>museum_industry</option>
+                                <option value='museum_naval.png' data-img-src='../static/icons/museum_naval.png'>museum_naval</option>
+                                <option value='museum_openair.png' data-img-src='../static/icons/museum_openair.png'>museum_openair</option>
+                                <option value='museum_science.png' data-img-src='../static/icons/museum_science.png'>museum_science</option>
+                                <option value='museum_war.png' data-img-src='../static/icons/museum_war.png'>museum_war</option>
+                                <option value='mushroom.png' data-img-src='../static/icons/mushroom.png'>mushroom</option>
+                                <option value='music.png' data-img-src='../static/icons/music.png'>music</option>
+                                <option value='music_choral.png' data-img-src='../static/icons/music_choral.png'>music_choral</option>
+                                <option value='music_classical.png' data-img-src='../static/icons/music_classical.png'>music_classical</option>
+                                <option value='music_hiphop.png' data-img-src='../static/icons/music_hiphop.png'>music_hipho</option>
+                                <option value='music_live.png' data-img-src='../static/icons/music_live.png'>music_live</option>
+                                <option value='music_rock.png' data-img-src='../static/icons/music_rock.png'>music_rock</option>
+                                <option value='nanny.png' data-img-src='../static/icons/nanny.png'>anny</option>
+                                <option value='newsagent.png' data-img-src='../static/icons/newsagent.png'>ewsagent</option>
+                                <option value='ne_barn-2.png' data-img-src='../static/icons/ne_barn-2.png'>e_barn-2</option>
+                                <option value='no-nuke-export.png' data-img-src='../static/icons/no-nuke-export.png'>o-nuke-export</option>
+                                <option value='nordicski.png' data-img-src='../static/icons/nordicski.png'>ordicski</option>
+                                <option value='notvisited.png' data-img-src='../static/icons/notvisited.png'>otvisited</option>
+                                <option value='nursery.png' data-img-src='../static/icons/nursery.png'>ursery</option>
+                                <option value='nursing_home_icon.png' data-img-src='../static/icons/nursing_home_icon.png'>ursing_home_ico</option>
+                                <option value='observatory.png' data-img-src='../static/icons/observatory.png'>observatory</option>
+                                <option value='office-building.png' data-img-src='../static/icons/office-building.png'>office-buildi</option>
+                                <option value='oil-2.png' data-img-src='../static/icons/oil-2.png'>oil-2</option>
+                                <option value='oilpumpjack.png' data-img-src='../static/icons/oilpumpjack.png'>oilpumpjack</option>
+                                <option value='oilrig2.png' data-img-src='../static/icons/oilrig2.png'>oilrig2</option>
+                                <option value='olympicsite.png' data-img-src='../static/icons/olympicsite.png'>olympicsite</option>
+                                <option value='ophthalmologist.png' data-img-src='../static/icons/ophthalmologist.png'>ophthalmologist</option>
+                                <option value='outlet2.png' data-img-src='../static/icons/outlet2.png'>outlet2</option>
+                                <option value='oyster-3.png' data-img-src='../static/icons/oyster-3.png'>oyster-3</option>
+                                <option value='pagoda-2.png' data-img-src='../static/icons/pagoda-2.png'>agoda-2</option>
+                                <option value='paint.png' data-img-src='../static/icons/paint.png'>aint</option>
+                                <option value='paintball.png' data-img-src='../static/icons/paintball.png'>aintball</option>
+                                <option value='palace-2.png' data-img-src='../static/icons/palace-2.png'>alace-2</option>
+                                <option value='palm-tree-export.png' data-img-src='../static/icons/palm-tree-export.png'>alm-tree-export</option>
+                                <option value='panoramicview.png' data-img-src='../static/icons/panoramicview.png'>anoramicview</option>
+                                <option value='paragliding.png' data-img-src='../static/icons/paragliding.png'>araglidi</option>
+                                <option value='parasailing.png' data-img-src='../static/icons/parasailing.png'>arasaili</option>
+                                <option value='parkandride.png' data-img-src='../static/icons/parkandride.png'>arkandride</option>
+                                <option value='parking-meter-export.png' data-img-src='../static/icons/parking-meter-export.png'>arking-meter-export</option>
+                                <option value='parkinggarage.png' data-img-src='../static/icons/parkinggarage.png'>arkinggarage</option>
+                                <option value='party-2.png' data-img-src='../static/icons/party-2.png'>arty-2</option>
+                                <option value='patisserie.png' data-img-src='../static/icons/patisserie.png'>atisserie</option>
+                                <option value='peace.png' data-img-src='../static/icons/peace.png'>eace</option>
+                                <option value='pedestriancrossing.png' data-img-src='../static/icons/pedestriancrossing.png'>edestriancrossi</option>
+                                <option value='penguin-2.png' data-img-src='../static/icons/penguin-2.png'>enguin-2</option>
+                                <option value='pens.png' data-img-src='../static/icons/pens.png'>ens</option>
+                                <option value='perfumery.png' data-img-src='../static/icons/perfumery.png'>erfumery</option>
+                                <option value='petanque.png' data-img-src='../static/icons/petanque.png'>etanque</option>
+                                <option value='petroglyphs-2.png' data-img-src='../static/icons/petroglyphs-2.png'>etroglyphs-2</option>
+                                <option value='pets.png' data-img-src='../static/icons/pets.png'>ets</option>
+                                <option value='phantom.png' data-img-src='../static/icons/phantom.png'>hantom</option>
+                                <option value='phones.png' data-img-src='../static/icons/phones.png'>hones</option>
+                                <option value='photo.png' data-img-src='../static/icons/photo.png'>hoto</option>
+                                <option value='photography.png' data-img-src='../static/icons/photography.png'>hotography</option>
+                                <option value='picnic-2.png' data-img-src='../static/icons/picnic-2.png'>icnic-2</option>
+                                <option value='pig.png' data-img-src='../static/icons/pig.png'>i</option>
+                                <option value='pin-export.png' data-img-src='../static/icons/pin-export.png'>in-export</option>
+                                <option value='pirates.png' data-img-src='../static/icons/pirates.png'>irates</option>
+                                <option value='pizzaria.png' data-img-src='../static/icons/pizzaria.png'>izzaria</option>
+                                <option value='planecrash.png' data-img-src='../static/icons/planecrash.png'>lanecrash</option>
+                                <option value='planetarium-2.png' data-img-src='../static/icons/planetarium-2.png'>lanetarium-2</option>
+                                <option value='playground.png' data-img-src='../static/icons/playground.png'>layground</option>
+                                <option value='pleasurepier.png' data-img-src='../static/icons/pleasurepier.png'>leasurepier</option>
+                                <option value='poker.png' data-img-src='../static/icons/poker.png'>oker</option>
+                                <option value='police.png' data-img-src='../static/icons/police.png'>olice</option>
+                                <option value='postal.png' data-img-src='../static/icons/postal.png'>ostal</option>
+                                <option value='powerlinepole.png' data-img-src='../static/icons/powerlinepole.png'>owerlinepole</option>
+                                <option value='poweroutage.png' data-img-src='../static/icons/poweroutage.png'>oweroutage</option>
+                                <option value='powerplant.png' data-img-src='../static/icons/powerplant.png'>owerplant</option>
+                                <option value='powersubstation.png' data-img-src='../static/icons/powersubstation.png'>owersubstatio</option>
+                                <option value='prayer.png' data-img-src='../static/icons/prayer.png'>rayer</option>
+                                <option value='presentation.png' data-img-src='../static/icons/presentation.png'>resentatio</option>
+                                <option value='price-tag-export.png' data-img-src='../static/icons/price-tag-export.png'>rice-tag-export</option>
+                                <option value='printer-2.png' data-img-src='../static/icons/printer-2.png'>rinter-2</option>
+                                <option value='prison.png' data-img-src='../static/icons/prison.png'>riso</option>
+                                <option value='publicart.png' data-img-src='../static/icons/publicart.png'>ublicart</option>
+                                <option value='pyramid.png' data-img-src='../static/icons/pyramid.png'>yramid</option>
+                                <option value='quadrifoglio.png' data-img-src='../static/icons/quadrifoglio.png'>quadrifoglio</option>
+                                <option value='radar.png' data-img-src='../static/icons/radar.png'>radar</option>
+                                <option value='radiation.png' data-img-src='../static/icons/radiation.png'>radiatio</option>
+                                <option value='radio-control-model-car.png' data-img-src='../static/icons/radio-control-model-car.png'>radio-control-model-car</option>
+                                <option value='radio-station-2.png' data-img-src='../static/icons/radio-station-2.png'>radio-station-2</option>
+                                <option value='rainy.png' data-img-src='../static/icons/rainy.png'>rainy</option>
+                                <option value='rape.png' data-img-src='../static/icons/rape.png'>rape</option>
+                                <option value='reatorlogowhite-22x22.png' data-img-src='../static/icons/reatorlogowhite-22x22.png'>reatorlogowhite-22x22</option>
+                                <option value='recycle.png' data-img-src='../static/icons/recycle.png'>recycle</option>
+                                <option value='regroup.png' data-img-src='../static/icons/regroup.png'>regrou</option>
+                                <option value='repair.png' data-img-src='../static/icons/repair.png'>repair</option>
+                                <option value='rescue-2.png' data-img-src='../static/icons/rescue-2.png'>rescue-2</option>
+                                <option value='resort.png' data-img-src='../static/icons/resort.png'>resort</option>
+                                <option value='restaurant.png' data-img-src='../static/icons/restaurant.png'>restaurant</option>
+                                <option value='restaurant_african.png' data-img-src='../static/icons/restaurant_african.png'>restaurant_africa</option>
+                                <option value='restaurant_breakfast.png' data-img-src='../static/icons/restaurant_breakfast.png'>restaurant_breakfast</option>
+                                <option value='restaurant_buffet.png' data-img-src='../static/icons/restaurant_buffet.png'>restaurant_buffet</option>
+                                <option value='restaurant_chinese.png' data-img-src='../static/icons/restaurant_chinese.png'>restaurant_chinese</option>
+                                <option value='restaurant_fish.png' data-img-src='../static/icons/restaurant_fish.png'>restaurant_fish</option>
+                                <option value='restaurant_greek.png' data-img-src='../static/icons/restaurant_greek.png'>restaurant_greek</option>
+                                <option value='restaurant_indian.png' data-img-src='../static/icons/restaurant_indian.png'>restaurant_india</option>
+                                <option value='restaurant_italian.png' data-img-src='../static/icons/restaurant_italian.png'>restaurant_italia</option>
+                                <option value='restaurant_korean.png' data-img-src='../static/icons/restaurant_korean.png'>restaurant_korea</option>
+                                <option value='restaurant_mediterranean.png' data-img-src='../static/icons/restaurant_mediterranean.png'>restaurant_mediterranea</option>
+                                <option value='restaurant_mexican.png' data-img-src='../static/icons/restaurant_mexican.png'>restaurant_mexica</option>
+                                <option value='restaurant_romantic.png' data-img-src='../static/icons/restaurant_romantic.png'>restaurant_romantic</option>
+                                <option value='restaurant_steakhouse.png' data-img-src='../static/icons/restaurant_steakhouse.png'>restaurant_steakhouse</option>
+                                <option value='restaurant_tapas.png' data-img-src='../static/icons/restaurant_tapas.png'>restaurant_tapas</option>
+                                <option value='restaurant_thai.png' data-img-src='../static/icons/restaurant_thai.png'>restaurant_thai</option>
+                                <option value='restaurant_turkish.png' data-img-src='../static/icons/restaurant_turkish.png'>restaurant_turkish</option>
+                                <option value='restaurant_vegetarian.png' data-img-src='../static/icons/restaurant_vegetarian.png'>restaurant_vegetaria</option>
+                                <option value='revolt.png' data-img-src='../static/icons/revolt.png'>revolt</option>
+                                <option value='riparianhabitat.png' data-img-src='../static/icons/riparianhabitat.png'>riparianhabitat</option>
+                                <option value='river-2.png' data-img-src='../static/icons/river-2.png'>river-2</option>
+                                <option value='road.png' data-img-src='../static/icons/road.png'>road</option>
+                                <option value='roadtype_gravel.png' data-img-src='../static/icons/roadtype_gravel.png'>roadtype_gravel</option>
+                                <option value='rockhouse.png' data-img-src='../static/icons/rockhouse.png'>rockhouse</option>
+                                <option value='rodent.png' data-img-src='../static/icons/rodent.png'>rodent</option>
+                                <option value='rollerskate.png' data-img-src='../static/icons/rollerskate.png'>rollerskate</option>
+                                <option value='ropescourse.png' data-img-src='../static/icons/ropescourse.png'>ropescourse</option>
+                                <option value='rowboat.png' data-img-src='../static/icons/rowboat.png'>rowboat</option>
+                                <option value='rugbyfield.png' data-img-src='../static/icons/rugbyfield.png'>rugbyfield</option>
+                                <option value='ruins-2.png' data-img-src='../static/icons/ruins-2.png'>ruins-2</option>
+                                <option value='sailing.png' data-img-src='../static/icons/sailing.png'>saili</option>
+                                <option value='sandwich-2.png' data-img-src='../static/icons/sandwich-2.png'>sandwich-2</option>
+                                <option value='sauna.png' data-img-src='../static/icons/sauna.png'>sauna</option>
+                                <option value='sawmill-2.png' data-img-src='../static/icons/sawmill-2.png'>sawmill-2</option>
+                                <option value='school.png' data-img-src='../static/icons/school.png'>school</option>
+                                <option value='schreibwaren_web.png' data-img-src='../static/icons/schreibwaren_web.png'>schreibwaren_web</option>
+                                <option value='scoutgroup.png' data-img-src='../static/icons/scoutgroup.png'>scoutgrou</option>
+                                <option value='scubadiving.png' data-img-src='../static/icons/scubadiving.png'>scubadivi</option>
+                                <option value='seals.png' data-img-src='../static/icons/seals.png'>seals</option>
+                                <option value='segway.png' data-img-src='../static/icons/segway.png'>segway</option>
+                                <option value='seniorsite.png' data-img-src='../static/icons/seniorsite.png'>seniorsite</option>
+                                <option value='septic_tank.png' data-img-src='../static/icons/septic_tank.png'>septic_tank</option>
+                                <option value='share.png' data-img-src='../static/icons/share.png'>share</option>
+                                <option value='shark-export.png' data-img-src='../static/icons/shark-export.png'>shark-export</option>
+                                <option value='shintoshrine.png' data-img-src='../static/icons/shintoshrine.png'>shintoshrine</option>
+                                <option value='shipwreck.png' data-img-src='../static/icons/shipwreck.png'>shipwreck</option>
+                                <option value='shoes.png' data-img-src='../static/icons/shoes.png'>shoes</option>
+                                <option value='shooting.png' data-img-src='../static/icons/shooting.png'>shooti</option>
+                                <option value='shootingrange.png' data-img-src='../static/icons/shootingrange.png'>shootingrange</option>
+                                <option value='shore-2.png' data-img-src='../static/icons/shore-2.png'>shore-2</option>
+                                <option value='shower.png' data-img-src='../static/icons/shower.png'>shower</option>
+                                <option value='sight-2.png' data-img-src='../static/icons/sight-2.png'>sight-2</option>
+                                <option value='signpost-2.png' data-img-src='../static/icons/signpost-2.png'>signpost-2</option>
+                                <option value='sikh.png' data-img-src='../static/icons/sikh.png'>sikh</option>
+                                <option value='skiing.png' data-img-src='../static/icons/skiing.png'>skii</option>
+                                <option value='skijump.png' data-img-src='../static/icons/skijump.png'>skijum</option>
+                                <option value='skilifting.png' data-img-src='../static/icons/skilifting.png'>skilifti</option>
+                                <option value='skis.png' data-img-src='../static/icons/skis.png'>skis</option>
+                                <option value='ski_shoe1.png' data-img-src='../static/icons/ski_shoe1.png'>ski_shoe1</option>
+                                <option value='skull.png' data-img-src='../static/icons/skull.png'>skull</option>
+                                <option value='sledge.png' data-img-src='../static/icons/sledge.png'>sledge</option>
+                                <option value='sledgerental.png' data-img-src='../static/icons/sledgerental.png'>sledgerental</option>
+                                <option value='sledge_summer.png' data-img-src='../static/icons/sledge_summer.png'>sledge_summer</option>
+                                <option value='slipway.png' data-img-src='../static/icons/slipway.png'>slipway</option>
+                                <option value='smallcity.png' data-img-src='../static/icons/smallcity.png'>smallcity</option>
+                                <option value='smiley_happy.png' data-img-src='../static/icons/smiley_happy.png'>smiley_happy</option>
+                                <option value='smoking.png' data-img-src='../static/icons/smoking.png'>smoki</option>
+                                <option value='snail.png' data-img-src='../static/icons/snail.png'>snail</option>
+                                <option value='snakes.png' data-img-src='../static/icons/snakes.png'>snakes</option>
+                                <option value='sneakers.png' data-img-src='../static/icons/sneakers.png'>sneakers</option>
+                                <option value='snorkeling.png' data-img-src='../static/icons/snorkeling.png'>snorkeli</option>
+                                <option value='snowboarding.png' data-img-src='../static/icons/snowboarding.png'>snowboardi</option>
+                                <option value='snowmobiling.png' data-img-src='../static/icons/snowmobiling.png'>snowmobili</option>
+                                <option value='snowpark_arc.png' data-img-src='../static/icons/snowpark_arc.png'>snowpark_arc</option>
+                                <option value='snowshoeing.png' data-img-src='../static/icons/snowshoeing.png'>snowshoei</option>
+                                <option value='snowy-2.png' data-img-src='../static/icons/snowy-2.png'>snowy-2</option>
+                                <option value='soccer.png' data-img-src='../static/icons/soccer.png'>soccer</option>
+                                <option value='solarenergy.png' data-img-src='../static/icons/solarenergy.png'>solarenergy</option>
+                                <option value='sozialeeinrichtung.png' data-img-src='../static/icons/sozialeeinrichtung.png'>sozialeeinrichtu</option>
+                                <option value='spa.png' data-img-src='../static/icons/spa.png'>spa</option>
+                                <option value='spaceport-2.png' data-img-src='../static/icons/spaceport-2.png'>spaceport-2</option>
+                                <option value='speedhump.png' data-img-src='../static/icons/speedhump.png'>speedhum</option>
+                                <option value='speedriding.png' data-img-src='../static/icons/speedriding.png'>speedridi</option>
+                                <option value='speed_50.png' data-img-src='../static/icons/speed_50.png'>speed_50</option>
+                                <option value='spelunking.png' data-img-src='../static/icons/spelunking.png'>spelunki</option>
+                                <option value='spider.png' data-img-src='../static/icons/spider.png'>spider</option>
+                                <option value='splice.png' data-img-src='../static/icons/splice.png'>splice</option>
+                                <option value='sportscar.png' data-img-src='../static/icons/sportscar.png'>sportscar</option>
+                                <option value='sportutilityvehicle.png' data-img-src='../static/icons/sportutilityvehicle.png'>sportutilityvehicle</option>
+                                <option value='square-compass.png' data-img-src='../static/icons/square-compass.png'>square-compass</option>
+                                <option value='squash-2.png' data-img-src='../static/icons/squash-2.png'>squash-2</option>
+                                <option value='stadium.png' data-img-src='../static/icons/stadium.png'>stadium</option>
+                                <option value='stairs.png' data-img-src='../static/icons/stairs.png'>stairs</option>
+                                <option value='star-3.png' data-img-src='../static/icons/star-3.png'>star-3</option>
+                                <option value='stargate-raw.png' data-img-src='../static/icons/stargate-raw.png'>stargate-raw</option>
+                                <option value='start-race-2.png' data-img-src='../static/icons/start-race-2.png'>start-race-2</option>
+                                <option value='statue-2.png' data-img-src='../static/icons/statue-2.png'>statue-2</option>
+                                <option value='steamtrain.png' data-img-src='../static/icons/steamtrain.png'>steamtrai</option>
+                                <option value='stop.png' data-img-src='../static/icons/stop.png'>sto</option>
+                                <option value='strike.png' data-img-src='../static/icons/strike.png'>strike</option>
+                                <option value='stripclub2.png' data-img-src='../static/icons/stripclub2.png'>stripclub2</option>
+                                <option value='submarine-2.png' data-img-src='../static/icons/submarine-2.png'>submarine-2</option>
+                                <option value='sugar-shack.png' data-img-src='../static/icons/sugar-shack.png'>sugar-shack</option>
+                                <option value='summercamp.png' data-img-src='../static/icons/summercamp.png'>summercam</option>
+                                <option value='sumo-2.png' data-img-src='../static/icons/sumo-2.png'>sumo-2</option>
+                                <option value='sunny.png' data-img-src='../static/icons/sunny.png'>sunny</option>
+                                <option value='sunsetland.png' data-img-src='../static/icons/sunsetland.png'>sunsetland</option>
+                                <option value='supermarket.png' data-img-src='../static/icons/supermarket.png'>supermarket</option>
+                                <option value='surfacelift.png' data-img-src='../static/icons/surfacelift.png'>surfacelift</option>
+                                <option value='surfing.png' data-img-src='../static/icons/surfing.png'>surfi</option>
+                                <option value='surfpaddle.png' data-img-src='../static/icons/surfpaddle.png'>surfpaddle</option>
+                                <option value='surveying-2.png' data-img-src='../static/icons/surveying-2.png'>surveying-2</option>
+                                <option value='swimming.png' data-img-src='../static/icons/swimming.png'>swimmi</option>
+                                <option value='synagogue-2.png' data-img-src='../static/icons/synagogue-2.png'>synagogue-2</option>
+                                <option value='taekwondo-2.png' data-img-src='../static/icons/taekwondo-2.png'>taekwondo-2</option>
+                                <option value='tailor.png' data-img-src='../static/icons/tailor.png'>tailor</option>
+                                <option value='takeaway.png' data-img-src='../static/icons/takeaway.png'>takeaway</option>
+                                <option value='targ.png' data-img-src='../static/icons/targ.png'>tar</option>
+                                <option value='taxi.png' data-img-src='../static/icons/taxi.png'>taxi</option>
+                                <option value='taxiboat.png' data-img-src='../static/icons/taxiboat.png'>taxiboat</option>
+                                <option value='taxiway.png' data-img-src='../static/icons/taxiway.png'>taxiway</option>
+                                <option value='teahouse.png' data-img-src='../static/icons/teahouse.png'>teahouse</option>
+                                <option value='tebletennis.png' data-img-src='../static/icons/tebletennis.png'>tebletennis</option>
+                                <option value='telephone.png' data-img-src='../static/icons/telephone.png'>telephone</option>
+                                <option value='temple-2.png' data-img-src='../static/icons/temple-2.png'>temple-2</option>
+                                <option value='templehindu.png' data-img-src='../static/icons/templehindu.png'>templehindu</option>
+                                <option value='tennis.png' data-img-src='../static/icons/tennis.png'>tennis</option>
+                                <option value='terrace.png' data-img-src='../static/icons/terrace.png'>terrace</option>
+                                <option value='text.png' data-img-src='../static/icons/text.png'>text</option>
+                                <option value='textiles.png' data-img-src='../static/icons/textiles.png'>textiles</option>
+                                <option value='theater.png' data-img-src='../static/icons/theater.png'>theater</option>
+                                <option value='theft.png' data-img-src='../static/icons/theft.png'>theft</option>
+                                <option value='themepark.png' data-img-src='../static/icons/themepark.png'>themepark</option>
+                                <option value='therapy.png' data-img-src='../static/icons/therapy.png'>therapy</option>
+                                <option value='theravadapagoda.png' data-img-src='../static/icons/theravadapagoda.png'>theravadapagoda</option>
+                                <option value='theravadatemple.png' data-img-src='../static/icons/theravadatemple.png'>theravadatemple</option>
+                                <option value='thunderstorm.png' data-img-src='../static/icons/thunderstorm.png'>thunderstorm</option>
+                                <option value='ticket_office2.png' data-img-src='../static/icons/ticket_office2.png'>ticket_office2</option>
+                                <option value='tidaldiamond.png' data-img-src='../static/icons/tidaldiamond.png'>tidaldiamond</option>
+                                <option value='tiger-2.png' data-img-src='../static/icons/tiger-2.png'>tiger-2</option>
+                                <option value='tires.png' data-img-src='../static/icons/tires.png'>tires</option>
+                                <option value='toilets.png' data-img-src='../static/icons/toilets.png'>toilets</option>
+                                <option value='tollstation.png' data-img-src='../static/icons/tollstation.png'>tollstatio</option>
+                                <option value='tools.png' data-img-src='../static/icons/tools.png'>tools</option>
+                                <option value='tornado-2.png' data-img-src='../static/icons/tornado-2.png'>tornado-2</option>
+                                <option value='torture.png' data-img-src='../static/icons/torture.png'>torture</option>
+                                <option value='tower.png' data-img-src='../static/icons/tower.png'>tower</option>
+                                <option value='townhouse.png' data-img-src='../static/icons/townhouse.png'>townhouse</option>
+                                <option value='toys.png' data-img-src='../static/icons/toys.png'>toys</option>
+                                <option value='trafficcamera.png' data-img-src='../static/icons/trafficcamera.png'>trafficcamera</option>
+                                <option value='trafficlight.png' data-img-src='../static/icons/trafficlight.png'>trafficlight</option>
+                                <option value='train.png' data-img-src='../static/icons/train.png'>trai</option>
+                                <option value='tramway.png' data-img-src='../static/icons/tramway.png'>tramway</option>
+                                <option value='trash.png' data-img-src='../static/icons/trash.png'>trash</option>
+                                <option value='travel_agency.png' data-img-src='../static/icons/travel_agency.png'>travel_agency</option>
+                                <option value='treasure-mark.png' data-img-src='../static/icons/treasure-mark.png'>treasure-mark</option>
+                                <option value='treedown.png' data-img-src='../static/icons/treedown.png'>treedow</option>
+                                <option value='triskelion.png' data-img-src='../static/icons/triskelion.png'>triskelio</option>
+                                <option value='trolley.png' data-img-src='../static/icons/trolley.png'>trolley</option>
+                                <option value='truck3.png' data-img-src='../static/icons/truck3.png'>truck3</option>
+                                <option value='tsunami.png' data-img-src='../static/icons/tsunami.png'>tsunami</option>
+                                <option value='tunnel.png' data-img-src='../static/icons/tunnel.png'>tunnel</option>
+                                <option value='turtle-2.png' data-img-src='../static/icons/turtle-2.png'>turtle-2</option>
+                                <option value='tweet.png' data-img-src='../static/icons/tweet.png'>tweet</option>
+                                <option value='u-pick_stand.png' data-img-src='../static/icons/u-pick_stand.png'>u-pick_stand</option>
+                                <option value='ufo.png' data-img-src='../static/icons/ufo.png'>ufo</option>
+                                <option value='umbrella-2.png' data-img-src='../static/icons/umbrella-2.png'>umbrella-2</option>
+                                <option value='underground.png' data-img-src='../static/icons/underground.png'>underground</option>
+                                <option value='university.png' data-img-src='../static/icons/university.png'>university</option>
+                                <option value='usfootball.png' data-img-src='../static/icons/usfootball.png'>usfootball</option>
+                                <option value='van.png' data-img-src='../static/icons/van.png'>va</option>
+                                <option value='vespa.png' data-img-src='../static/icons/vespa.png'>vespa</option>
+                                <option value='veterinary.png' data-img-src='../static/icons/veterinary.png'>veterinary</option>
+                                <option value='video.png' data-img-src='../static/icons/video.png'>video</option>
+                                <option value='videogames.png' data-img-src='../static/icons/videogames.png'>videogames</option>
+                                <option value='villa.png' data-img-src='../static/icons/villa.png'>villa</option>
+                                <option value='vineyard-2.png' data-img-src='../static/icons/vineyard-2.png'>vineyard-2</option>
+                                <option value='volcano-2.png' data-img-src='../static/icons/volcano-2.png'>volcano-2</option>
+                                <option value='volleyball.png' data-img-src='../static/icons/volleyball.png'>volleyball</option>
+                                <option value='waiting.png' data-img-src='../static/icons/waiting.png'>waiti</option>
+                                <option value='walkingtour.png' data-img-src='../static/icons/walkingtour.png'>walkingtour</option>
+                                <option value='war.png' data-img-src='../static/icons/war.png'>war</option>
+                                <option value='warehouse-2.png' data-img-src='../static/icons/warehouse-2.png'>warehouse-2</option>
+                                <option value='water.png' data-img-src='../static/icons/water.png'>water</option>
+                                <option value='watercraft.png' data-img-src='../static/icons/watercraft.png'>watercraft</option>
+                                <option value='waterfall-2.png' data-img-src='../static/icons/waterfall-2.png'>waterfall-2</option>
+                                <option value='watermill-2.png' data-img-src='../static/icons/watermill-2.png'>watermill-2</option>
+                                <option value='waterpark.png' data-img-src='../static/icons/waterpark.png'>waterpark</option>
+                                <option value='waterskiing.png' data-img-src='../static/icons/waterskiing.png'>waterskii</option>
+                                <option value='watertower.png' data-img-src='../static/icons/watertower.png'>watertower</option>
+                                <option value='waterwell.png' data-img-src='../static/icons/waterwell.png'>waterwell</option>
+                                <option value='waterwellpump.png' data-img-src='../static/icons/waterwellpump.png'>waterwellpum</option>
+                                <option value='webcam.png' data-img-src='../static/icons/webcam.png'>webcam</option>
+                                <option value='wedding.png' data-img-src='../static/icons/wedding.png'>weddi</option>
+                                <option value='weights.png' data-img-src='../static/icons/weights.png'>weights</option>
+                                <option value='wetlands.png' data-img-src='../static/icons/wetlands.png'>wetlands</option>
+                                <option value='whale-2.png' data-img-src='../static/icons/whale-2.png'>whale-2</option>
+                                <option value='wifi.png' data-img-src='../static/icons/wifi.png'>wifi</option>
+                                <option value='wiki-export.png' data-img-src='../static/icons/wiki-export.png'>wiki-export</option>
+                                <option value='wildlifecrossing.png' data-img-src='../static/icons/wildlifecrossing.png'>wildlifecrossi</option>
+                                <option value='wind-2.png' data-img-src='../static/icons/wind-2.png'>wind-2</option>
+                                <option value='windmill-2.png' data-img-src='../static/icons/windmill-2.png'>windmill-2</option>
+                                <option value='windsurfing.png' data-img-src='../static/icons/windsurfing.png'>windsurfi</option>
+                                <option value='windturbine.png' data-img-src='../static/icons/windturbine.png'>windturbine</option>
+                                <option value='winebar.png' data-img-src='../static/icons/winebar.png'>winebar</option>
+                                <option value='winetasting.png' data-img-src='../static/icons/winetasting.png'>winetasti</option>
+                                <option value='woodshed.png' data-img-src='../static/icons/woodshed.png'>woodshed</option>
+                                <option value='workoffice.png' data-img-src='../static/icons/workoffice.png'>workoffice</option>
+                                <option value='workshop.png' data-img-src='../static/icons/workshop.png'>worksho</option>
+                                <option value='world.png' data-img-src='../static/icons/world.png'>world</option>
+                                <option value='worldwildway.png' data-img-src='../static/icons/worldwildway.png'>worldwildway</option>
+                                <option value='wrestling-2.png' data-img-src='../static/icons/wrestling-2.png'>wrestling-2</option>
+                                <option value='yoga.png' data-img-src='../static/icons/yoga.png'>yoga</option>
+                                <option value='yooner.png' data-img-src='../static/icons/yooner.png'>yooner</option>
+                                <option value='you-are-here-2.png' data-img-src='../static/icons/you-are-here-2.png'>you-are-here-2</option>
+                                <option value='youthhostel.png' data-img-src='../static/icons/youthhostel.png'>youthhostel</option>
+                                <option value='zombie-outbreak1.png' data-img-src='../static/icons/zombie-outbreak1.png'>zombie-outbreak1</option>
+                                <option value='zoo.png' data-img-src='../static/icons/zoo.png'>zoo</option>
+                                <option value='zoom.png' data-img-src='../static/icons/zoom.png'>zoom</option>
+                            </select>
+                            <script>$('.my-select').chosen({width:'100%'});</script>
+                        </div>
+
+                        <div class="input-group">
+                            <h3>Dine Punkt Kategorier</h3>
+                            <ul id="category_body_point" class="list-group">
+
+                            </ul>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="RoadModal" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Legg til Vei Kategorier</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="input-group">
+                            <span id="add_road_category" class="input-group-addon"><span class="badge"><i class="fa fa-plus"></i></span></span>
+                            <input type="text" id="road_name" name="category" class="form-control" placeholder="Kategori Navn" required>
+                        </div>
+
+                        <div class="input-group">
+                            <div class="input-group" id="road_color">
+                                Velg farge: <input type="color" class="form-group">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <h3>Dine Vei Kategorier</h3>
+                            <ul id="category_body_Road" class="list-group">
+
+                            </ul>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="AreaModal" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Legg til Område Kategorier</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="input-group">
+                            <span id="add_area_category" class="input-group-addon"><span class="badge"><i class="fa fa-plus"></i></span></span>
+                            <input type="text" id="area_name" name="category" class="form-control" placeholder="Kategori Navn" required>
+                        </div>
+
+                        <div class="input-group">
+                            <div class="input-group" id="area_color">
+                                Velg farge: <input type="color" class="form-group">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <h3>Dine Område Kategorier</h3>
+                            <ul id="category_body_area" class="list-group">
+
+                            </ul>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="UsersModal" role="dialog">
+                <div class="modal-dialog">
+
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Legg til Brukere</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="input-group">
+                            <input id="searchUsers" type="text" class="form-control" placeholder="Søk blant brukere">
+                            <div class="input-group-btn">
+                                <button id="AddUserButton" class="btn btn-default" type="button">
+                                    <span></span><i class="glyphicon fa fa-plus"></i></span>
+                                </button>
+                                <button id="SearchUsersButton" class="btn btn-default" type="button">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <h3>Dine Brukere</h3>
+                            <ul id="category_body_users" class="list-group">
+                                <!--
+                                <li class="list-group-item">New <span class="badge"><i class="fa fa-plus"></i></span></li>
+                                -->
+                            </ul>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">lukk</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div id="Map" class="part"></div>
+
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY&callback=initMap">
+    </script>
+
+
+
+
+
+{% endblock %}
