@@ -429,7 +429,12 @@ def deleteShape():
 
     return "Deleted"
 
+<<<<<<< HEAD
 #comment dawit
+=======
+
+### comment mohammed
+>>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
 
 if __name__ == '__main__':
 
