@@ -10,70 +10,62 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/CityShare$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1518127835022" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/CityShare_Flask$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1519374372881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/CityShare_Flask$read_icons.coverage" NAME="read_icons Coverage Results" MODIFIED="1518386603211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CityShare$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1518127835022" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/CityShare_Flask$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1519428388765" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="CityShare.py" pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="CityShare.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CityShare.py">
           <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-            <state relative-caret-position="409">
-=======
-<<<<<<< HEAD
-            <state relative-caret-position="369">
-              <caret line="431" column="14" lean-forward="false" selection-start-line="431" selection-start-column="14" selection-end-line="431" selection-end-column="14" />
-=======
-            <state relative-caret-position="460">
->>>>>>> 70f528bc6db16feafb353b799644c41361042fe9
-              <caret line="432" column="20" lean-forward="false" selection-start-line="432" selection-start-column="20" selection-end-line="432" selection-end-column="20" />
->>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
+            <state relative-caret-position="273">
+              <caret line="242" column="37" lean-forward="false" selection-start-line="242" selection-start-column="37" selection-end-line="242" selection-end-column="37" />
               <folding>
-                <element signature="e#0#76#0" expanded="true" />
+                <element signature="e#179#511#0" expanded="false" />
                 <element signature="e#546#581#0" expanded="false" />
-                <element signature="e#740#1742#0" expanded="false" />
+                <element signature="e#648#1830#0" expanded="false" />
                 <element signature="e#1874#1978#0" expanded="false" />
                 <element signature="e#2042#2953#0" expanded="false" />
                 <element signature="e#3028#3559#0" expanded="false" />
                 <element signature="e#3634#6740#0" expanded="false" />
-                <element signature="e#6804#8117#0" expanded="false" />
-                <element signature="e#8179#12661#0" expanded="false" />
-                <element signature="e#12736#13924#0" expanded="false" />
-                <element signature="e#13994#14642#0" expanded="false" />
-                <element signature="e#14712#15100#0" expanded="false" />
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-                <marker date="1519374584802" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-                <marker date="1519374584802" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-                <marker date="1519374584802" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
-                <marker date="1519374584802" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
-                <marker date="1519374584802" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
-                <marker date="1519374584802" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
-                <marker date="1519374584802" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
-                <marker date="1519374584802" expanded="true" signature="8372:8496" ph="SELECT COUNT... Maps_Users" />
-                <marker date="1519374584802" expanded="true" signature="8715:8875" ph="SELECT map_c... " />
-                <marker date="1519374584802" expanded="true" signature="9565:9901" ph="SELECT S.sha... Shapes" />
-                <marker date="1519374584802" expanded="true" signature="11112:11222" ph="SELECT categ... Maps_Categories" />
-                <marker date="1519374584802" expanded="true" signature="14811:14849" ph="DELETE FROM Shapes... " />
-=======
-                <marker date="1519374571089" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-                <marker date="1519374571089" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-                <marker date="1519374571089" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
-                <marker date="1519374571089" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
-                <marker date="1519374571089" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
-                <marker date="1519374571089" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
-                <marker date="1519374571089" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
-                <marker date="1519374571089" expanded="true" signature="8372:8496" ph="SELECT COUNT... Maps_Users" />
-                <marker date="1519374571089" expanded="true" signature="8715:8875" ph="SELECT map_c... " />
-                <marker date="1519374571089" expanded="true" signature="9565:9901" ph="SELECT S.sha... Shapes" />
-                <marker date="1519374571089" expanded="true" signature="11112:11222" ph="SELECT categ... Maps_Categories" />
-                <marker date="1519374571089" expanded="true" signature="14811:14849" ph="DELETE FROM Shapes... " />
->>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
->>>>>>> 70f528bc6db16feafb353b799644c41361042fe9
+                <element signature="e#8181#12663#0" expanded="false" />
+                <element signature="e#12738#13926#0" expanded="false" />
+                <element signature="e#13996#14644#0" expanded="false" />
+                <element signature="e#14714#15102#0" expanded="false" />
+                <marker date="1519424793814" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
+                <marker date="1519424793814" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
+                <marker date="1519424793814" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
+                <marker date="1519424793814" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
+                <marker date="1519424793814" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
+                <marker date="1519424793814" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
+                <marker date="1519424793814" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
+                <marker date="1519424793814" expanded="true" signature="8374:8498" ph="SELECT COUNT... Maps_Users" />
+                <marker date="1519424793814" expanded="true" signature="8717:8877" ph="SELECT map_c... " />
+                <marker date="1519424793814" expanded="true" signature="9567:9903" ph="SELECT S.sha... Shapes" />
+                <marker date="1519424793814" expanded="true" signature="11114:11224" ph="SELECT categ... Maps_Categories" />
+                <marker date="1519424793814" expanded="true" signature="14813:14851" ph="DELETE FROM Shapes... " />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="home.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/home.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="209">
+              <caret line="88" column="26" lean-forward="true" selection-start-line="83" selection-start-column="20" selection-end-line="88" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="view_maps.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/templates/view_maps.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="209">
+              <caret line="47" column="75" lean-forward="false" selection-start-line="47" selection-start-column="75" selection-end-line="47" selection-end-column="75" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -93,7 +85,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>map</find>
       <find>users</find>
       <find>name=</find>
       <find>form</find>
@@ -123,6 +114,7 @@
       <find>map.html</find>
       <find>Signup.html</find>
       <find>lagre</find>
+      <find>allmaps</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -135,7 +127,6 @@
         <option value="$PROJECT_DIR$/static/scripts/javascriptnewmapb.js" />
         <option value="$PROJECT_DIR$/templates/new.html" />
         <option value="$PROJECT_DIR$/cast_files/castcss.css" />
-        <option value="$PROJECT_DIR$/static/stylesheets/styles.css" />
         <option value="$PROJECT_DIR$/templates/signup.html" />
         <option value="$PROJECT_DIR$/static/scripts/javascripteditmap.js" />
         <option value="$PROJECT_DIR$/cast_files/footer.html" />
@@ -145,22 +136,24 @@
         <option value="$PROJECT_DIR$/templates/MapChoices.html" />
         <option value="$PROJECT_DIR$/templates/AddRoadOrAreaToMap.html" />
         <option value="$PROJECT_DIR$/templates/ViewMap.html" />
-        <option value="$PROJECT_DIR$/templates/index.html" />
         <option value="$PROJECT_DIR$/static/scripts/jquerynewmap.js" />
         <option value="$PROJECT_DIR$/static/scripts/javascriptnewmap.js" />
         <option value="$PROJECT_DIR$/cast_files/html-select.html" />
         <option value="$PROJECT_DIR$/templates/read_icons.py" />
-        <option value="$PROJECT_DIR$/../../../jscolor-example.html" />
+        <option value="$USER_HOME$/Desktop/jscolor-example.html" />
         <option value="$PROJECT_DIR$/read_icons.py" />
         <option value="$PROJECT_DIR$/cast_files/test_select.html" />
-        <option value="$PROJECT_DIR$/templates/home.html" />
         <option value="$PROJECT_DIR$/templates/allmaps.html" />
         <option value="$PROJECT_DIR$/cast_files/icons.html" />
         <option value="$PROJECT_DIR$/templates/new_map.html" />
         <option value="$PROJECT_DIR$/templates/AddPointToMap.html" />
         <option value="$PROJECT_DIR$/templates/edit_map_cast.html" />
         <option value="$PROJECT_DIR$/templates/edit_map.html" />
+        <option value="$PROJECT_DIR$/templates/index.html" />
+        <option value="$PROJECT_DIR$/static/stylesheets/styles.css" />
+        <option value="$PROJECT_DIR$/templates/home.html" />
         <option value="$PROJECT_DIR$/CityShare.py" />
+        <option value="$PROJECT_DIR$/templates/view_maps.html" />
       </list>
     </option>
   </component>
@@ -170,18 +163,11 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-<<<<<<< HEAD
-  <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="965" />
-    <option name="height" value="837" />
-=======
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="888" />
     <option name="height" value="576" />
->>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -199,6 +185,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -214,17 +201,24 @@
             <path>
               <item name="CityShare_Flask" type="b2602c69:ProjectViewProjectNode" />
               <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="images" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CityShare_Flask" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="stylesheets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CityShare_Flask" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-<<<<<<< HEAD
-=======
-      <pane id="Scope" />
->>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -232,7 +226,6 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -333,34 +326,16 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-<<<<<<< HEAD
-    <frame x="0" y="23" width="965" height="837" extended-state="0" />
-=======
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
->>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952693" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-<<<<<<< HEAD
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2985318" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1762481" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-=======
-<<<<<<< HEAD
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29784366" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26327193" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="R Packages" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-=======
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17397882" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
->>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
->>>>>>> 70f528bc6db16feafb353b799644c41361042fe9
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18835099" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="R Graphics" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24962178" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -412,57 +387,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CityShare.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#76#0" expanded="true" />
-            <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#740#1742#0" expanded="false" />
-            <element signature="e#1874#1978#0" expanded="false" />
-            <element signature="e#2042#2953#0" expanded="false" />
-            <element signature="e#3028#3559#0" expanded="false" />
-            <element signature="e#3634#6740#0" expanded="false" />
-            <element signature="e#6804#8117#0" expanded="false" />
-            <element signature="e#8179#12661#0" expanded="false" />
-            <element signature="e#12736#13924#0" expanded="false" />
-            <element signature="e#13994#14642#0" expanded="false" />
-            <element signature="e#14712#15100#0" expanded="false" />
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-            <marker date="1519374584802" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1519374584802" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1519374584802" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
-            <marker date="1519374584802" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
-            <marker date="1519374584802" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1519374584802" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
-            <marker date="1519374584802" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
-            <marker date="1519374584802" expanded="true" signature="8372:8496" ph="SELECT COUNT... Maps_Users" />
-            <marker date="1519374584802" expanded="true" signature="8715:8875" ph="SELECT map_c... " />
-            <marker date="1519374584802" expanded="true" signature="9565:9901" ph="SELECT S.sha... Shapes" />
-            <marker date="1519374584802" expanded="true" signature="11112:11222" ph="SELECT categ... Maps_Categories" />
-            <marker date="1519374584802" expanded="true" signature="14811:14849" ph="DELETE FROM Shapes... " />
-=======
-            <marker date="1519374571089" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1519374571089" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1519374571089" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
-            <marker date="1519374571089" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
-            <marker date="1519374571089" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1519374571089" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
-            <marker date="1519374571089" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
-            <marker date="1519374571089" expanded="true" signature="8372:8496" ph="SELECT COUNT... Maps_Users" />
-            <marker date="1519374571089" expanded="true" signature="8715:8875" ph="SELECT map_c... " />
-            <marker date="1519374571089" expanded="true" signature="9565:9901" ph="SELECT S.sha... Shapes" />
-            <marker date="1519374571089" expanded="true" signature="11112:11222" ph="SELECT categ... Maps_Categories" />
-            <marker date="1519374571089" expanded="true" signature="14811:14849" ph="DELETE FROM Shapes... " />
->>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
->>>>>>> 70f528bc6db16feafb353b799644c41361042fe9
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="714">
@@ -477,17 +401,13 @@
         </state>
       </provider>
     </entry>
-<<<<<<< HEAD
-    <entry file="file://$USER_HOME$/Desktop/Webprogrammering DAT310/Frivillige Oppgaver/Bootstrap and Grid_Systems/exercise8.html" />
-=======
-    <entry file="file://$PROJECT_DIR$/../../../Webprogrammering DAT310/Frivillige Oppgaver/Bootstrap and Grid_Systems/exercise8.html">
+    <entry file="file://$USER_HOME$/Desktop/Webprogrammering DAT310/Frivillige Oppgaver/Bootstrap and Grid_Systems/exercise8.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="46" column="10" lean-forward="true" selection-start-line="46" selection-start-column="10" selection-end-line="46" selection-end-column="10" />
         </state>
       </provider>
     </entry>
->>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
     <entry file="file://$PROJECT_DIR$/static/images/cityshare.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -497,11 +417,10 @@
     <entry file="file://$PROJECT_DIR$/cast_files/cast.html" />
     <entry file="file://$PROJECT_DIR$/static/scripts/jsscript.js" />
     <entry file="file://$PROJECT_DIR$/static/scripts/javascriptnewmapb.js" />
-    <entry file="file://$PROJECT_DIR$/../WordSpell/WordSpell.py" />
-    <entry file="file://$PROJECT_DIR$/static/stylesheets/styles.css">
+    <entry file="file://$PROJECT_DIR$/../WordSpell/WordSpell.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="120" column="1" lean-forward="false" selection-start-line="120" selection-start-column="1" selection-end-line="120" selection-end-column="1" />
+        <state relative-caret-position="103">
+          <caret line="196" column="64" lean-forward="false" selection-start-line="196" selection-start-column="57" selection-end-line="196" selection-end-column="64" />
         </state>
       </provider>
     </entry>
@@ -529,13 +448,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/static/scripts/javascripteditmap.js" />
-    <entry file="file://$PROJECT_DIR$/templates/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="69" column="8" lean-forward="true" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cast_files/javascriptnewmap.js" />
     <entry file="file://$PROJECT_DIR$/static/jsscripts_plugins/ImageSelect.jquery.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -552,11 +464,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cast_files/jquerynewmap.js" />
-    <entry file="file://$PROJECT_DIR$/../../../jscolor-example.html" />
+    <entry file="file://$USER_HOME$/Desktop/jscolor-example.html" />
     <entry file="file://$PROJECT_DIR$/static/jsscripts_plugins/jscolor.min.js" />
     <entry file="file://$PROJECT_DIR$/static/jsscripts_plugins/jscolor.js" />
     <entry file="file://$PROJECT_DIR$/templates/jscolor.min.js" />
-    <entry file="file://$PROJECT_DIR$/../../../Ny mappe/index.html" />
+    <entry file="file://$USER_HOME$/Desktop/Ny mappe/index.html" />
     <entry file="file://$PROJECT_DIR$/templates/dist/js/bootstrap-colorpicker.js" />
     <entry file="file://$PROJECT_DIR$/static/Datebase/MySqlSchema.sql">
       <provider selected="true" editor-type-id="text-editor">
@@ -583,20 +495,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cast_files/html-select.html" />
     <entry file="file://$PROJECT_DIR$/templates/MapChoices.html" />
-    <entry file="file://$PROJECT_DIR$/templates/allmaps.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="21" column="54" lean-forward="false" selection-start-line="21" selection-start-column="54" selection-end-line="21" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="54" column="54" lean-forward="true" selection-start-line="54" selection-start-column="54" selection-end-line="54" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cast_files/icons.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
@@ -632,63 +530,75 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="24" column="12" lean-forward="false" selection-start-line="24" selection-start-column="12" selection-end-line="30" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/allmaps.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="19" lean-forward="true" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/stylesheets/styles.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="731">
+          <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="88" column="26" lean-forward="true" selection-start-line="83" selection-start-column="20" selection-end-line="88" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CityShare.py">
       <provider selected="true" editor-type-id="text-editor">
-<<<<<<< HEAD
-        <state relative-caret-position="409">
-=======
-<<<<<<< HEAD
-        <state relative-caret-position="369">
-          <caret line="431" column="14" lean-forward="false" selection-start-line="431" selection-start-column="14" selection-end-line="431" selection-end-column="14" />
-=======
-        <state relative-caret-position="460">
->>>>>>> 70f528bc6db16feafb353b799644c41361042fe9
-          <caret line="432" column="20" lean-forward="false" selection-start-line="432" selection-start-column="20" selection-end-line="432" selection-end-column="20" />
->>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
+        <state relative-caret-position="273">
+          <caret line="242" column="37" lean-forward="false" selection-start-line="242" selection-start-column="37" selection-end-line="242" selection-end-column="37" />
           <folding>
-            <element signature="e#0#76#0" expanded="true" />
+            <element signature="e#179#511#0" expanded="false" />
             <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#740#1742#0" expanded="false" />
+            <element signature="e#648#1830#0" expanded="false" />
             <element signature="e#1874#1978#0" expanded="false" />
             <element signature="e#2042#2953#0" expanded="false" />
             <element signature="e#3028#3559#0" expanded="false" />
             <element signature="e#3634#6740#0" expanded="false" />
-            <element signature="e#6804#8117#0" expanded="false" />
-            <element signature="e#8179#12661#0" expanded="false" />
-            <element signature="e#12736#13924#0" expanded="false" />
-            <element signature="e#13994#14642#0" expanded="false" />
-            <element signature="e#14712#15100#0" expanded="false" />
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-            <marker date="1519374584802" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1519374584802" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1519374584802" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
-            <marker date="1519374584802" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
-            <marker date="1519374584802" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1519374584802" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
-            <marker date="1519374584802" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
-            <marker date="1519374584802" expanded="true" signature="8372:8496" ph="SELECT COUNT... Maps_Users" />
-            <marker date="1519374584802" expanded="true" signature="8715:8875" ph="SELECT map_c... " />
-            <marker date="1519374584802" expanded="true" signature="9565:9901" ph="SELECT S.sha... Shapes" />
-            <marker date="1519374584802" expanded="true" signature="11112:11222" ph="SELECT categ... Maps_Categories" />
-            <marker date="1519374584802" expanded="true" signature="14811:14849" ph="DELETE FROM Shapes... " />
-=======
-            <marker date="1519374571089" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1519374571089" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1519374571089" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
-            <marker date="1519374571089" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
-            <marker date="1519374571089" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1519374571089" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
-            <marker date="1519374571089" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
-            <marker date="1519374571089" expanded="true" signature="8372:8496" ph="SELECT COUNT... Maps_Users" />
-            <marker date="1519374571089" expanded="true" signature="8715:8875" ph="SELECT map_c... " />
-            <marker date="1519374571089" expanded="true" signature="9565:9901" ph="SELECT S.sha... Shapes" />
-            <marker date="1519374571089" expanded="true" signature="11112:11222" ph="SELECT categ... Maps_Categories" />
-            <marker date="1519374571089" expanded="true" signature="14811:14849" ph="DELETE FROM Shapes... " />
->>>>>>> c60f5a0f84299a8e4716c1c35f85de0d8f7ba9b4
->>>>>>> 70f528bc6db16feafb353b799644c41361042fe9
+            <element signature="e#8181#12663#0" expanded="false" />
+            <element signature="e#12738#13926#0" expanded="false" />
+            <element signature="e#13996#14644#0" expanded="false" />
+            <element signature="e#14714#15102#0" expanded="false" />
+            <marker date="1519424793814" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
+            <marker date="1519424793814" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
+            <marker date="1519424793814" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
+            <marker date="1519424793814" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
+            <marker date="1519424793814" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1519424793814" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
+            <marker date="1519424793814" expanded="true" signature="7437:7510" ph="SELECT map_c... Maps" />
+            <marker date="1519424793814" expanded="true" signature="8374:8498" ph="SELECT COUNT... Maps_Users" />
+            <marker date="1519424793814" expanded="true" signature="8717:8877" ph="SELECT map_c... " />
+            <marker date="1519424793814" expanded="true" signature="9567:9903" ph="SELECT S.sha... Shapes" />
+            <marker date="1519424793814" expanded="true" signature="11114:11224" ph="SELECT categ... Maps_Categories" />
+            <marker date="1519424793814" expanded="true" signature="14813:14851" ph="DELETE FROM Shapes... " />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/view_maps.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="47" column="75" lean-forward="false" selection-start-line="47" selection-start-column="75" selection-end-line="47" selection-end-column="75" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -240,7 +240,7 @@ def show_maps():
     finally:
         conn.close()
 
-    return render_template("allmaps.html", maps=maps)
+    return render_template("view_maps.html", maps=maps)
 
 @app.route("/EditMap", methods=['GET'])
 def edit_map():
@@ -429,7 +429,5 @@ def deleteShape():
 
     return "Deleted"
 
-
 if __name__ == '__main__':
     app.run()
-

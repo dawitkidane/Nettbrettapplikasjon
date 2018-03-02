@@ -1,0 +1,55 @@
+{% extends 'index.html' %}
+
+{% block stylingblock %}
+
+    <style>
+        iframe {
+            width: -moz-available;
+        }
+        .navbar-right {
+            margin: 5px;
+        }
+        .formbuttons {
+            width: -moz-available;
+        }
+
+        .map_box {
+            display: inline-block;
+            position: relative;
+            width: 45%;
+            height: 100%;
+            box-shadow: 5px 5px grey;
+            border: 1px solid grey;
+            margin: 10px;
+            vertical-align: middle;
+
+        }
+
+        .map_img {
+            width: 100%;
+            height: 250px;
+            display: inline-block;
+        }
+
+    .map_info {
+        padding: 5px;
+    }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="map_box">
+            <!--
+            <img class="map_img" src="https://www.w3schools.com/w3css/img_london.jpg">
+            -->
+            <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x300&amp;zoom=19&amp;language=en&amp;markers=size:normal%7ccolor:blue%7Clabel:T%7cPiazza Mattei,+Rome+Italy&amp;maptype=satellite" alt="Rome, Piazza Mattei">
+            <div class="map_info">
+                <h3>Kart Titel</h3>
+                <p>kart titel kommer her</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
