@@ -2,54 +2,74 @@
 
 {% block stylingblock %}
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <style>
-        iframe {
-            width: -moz-available;
-        }
-        .navbar-right {
-            margin: 5px;
-        }
-        .formbuttons {
-            width: -moz-available;
-        }
 
-        .map_box {
-            display: inline-block;
-            position: relative;
-            width: 45%;
-            height: 100%;
-            box-shadow: 5px 5px grey;
-            border: 1px solid grey;
-            margin: 10px;
-            vertical-align: middle;
-
-        }
-
-        .map_img {
-            width: 100%;
-            height: 250px;
-            display: inline-block;
-        }
-
-    .map_info {
-        padding: 5px;
+    #maps {
+        text-align: center;
     }
 
+    .map_box {
+        display: inline-block;
+        width: 45%;
+        margin: 5px;
+        padding: 5px;
+        height: 200px;
+        border: 1px solid black;
+        /*box-shadow: grey 5px 5px;*/
+    }
+
+    .map_box:hover {
+        box-shadow: orange 5px 5px;
+    }
+
+    @media only screen and (max-width: 800px) {
+        .map_box {
+            width: 90%;
+        }
+    }
+
+    .map_info_box, .static_map_box {
+        vertical-align: middle;
+        display: inline-block;
+        width: 49%;
+        height: 190px;
+        overflow: scroll;
+    }
+    .map_info_box {
+        text-align: left;
+        padding: 5px;
+    }
+    strong {
+        color: #2a62bc;
+    }
     </style>
 {% endblock %}
 
 {% block content %}
-    <div class="container">
 
-        <div class="map_box">
-            <!--
-            <img class="map_img" src="https://www.w3schools.com/w3css/img_london.jpg">
-            -->
-            <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x300&amp;zoom=19&amp;language=en&amp;markers=size:normal%7ccolor:blue%7Clabel:T%7cPiazza Mattei,+Rome+Italy&amp;maptype=satellite" alt="Rome, Piazza Mattei">
-            <div class="map_info">
-                <h3>Kart Titel</h3>
-                <p>kart titel kommer her</p>
+    <div id="maps">
+
+        {% for map in maps %}
+
+            <div class="map_box" onclick="location.href='/EditMap?mapid={{ map.mapid }}'">
+                <img class="static_map_box"  src="https://maps.googleapis.com/maps/api/staticmap?center={{ map.center }}&zoom={{ map.zoom }}&size=400x400&key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY"/>
+                <div class="map_info_box">
+                    <p><strong>Laget av: </strong>{{ map.creater }}</p>
+                    <p><strong>Tittel: </strong>{{ map.title }}</p>
+                    <p><strong>Utstedet den: </strong>{{ map.issuedate }}</p>
+                    <p><strong>Gyldig til: </strong>{{ map.expirydate }}</p>
+                    <p><strong>Beskrivelse: </strong>{{ map.description }}</p>
+                </div>
             </div>
-        </div>
+
+        {% endfor %}
+
+
+
     </div>
 {% endblock %}

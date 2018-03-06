@@ -112,7 +112,7 @@ def search_for_users():
 def add_new_map():
 
     if request.method == 'GET':
-        return render_template("new_map.html")
+        return render_template("test_new_map.html")
 
     else:
         map_creater = session.get("Logged_in")
@@ -210,15 +210,11 @@ def show_maps():
         for mapid in mapids:
             map = {
                 "mapid": mapid,
-                "creater": '',
-                "title": '',
-                "issuedate": '',
-                "expirydate": ''
             }
             conn = get_db()
             cursor = conn.cursor()
 
-            sql = "SELECT map_creater, title, start_date, end_date FROM Maps WHERE map_id = "+str(mapid)+";"
+            sql = "SELECT map_creater, title, date(start_date), end_date, description, astext(Centroid(geo_boundery)), zoom FROM Maps WHERE map_id = "+str(mapid)+";"
             try:
                 cursor.execute(sql)
                 data = cursor.fetchone()
@@ -226,6 +222,9 @@ def show_maps():
                 map['title'] = data[1]
                 map['issuedate'] = str(data[2])
                 map['expirydate'] = str(data[3])
+                map['description'] = str(data[4])
+                map['center'] = (str(data[5]).strip("POINT(").strip(")")).replace(" ",",")
+                map['zoom'] = str(data[6])
 
                 maps.append(map)
 
