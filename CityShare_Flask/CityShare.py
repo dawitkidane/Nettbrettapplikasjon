@@ -112,7 +112,7 @@ def search_for_users():
 def add_new_map():
 
     if request.method == 'GET':
-        return render_template("test_new_map.html")
+        return render_template("new_map.html")
 
     else:
         map_creater = session.get("Logged_in")
