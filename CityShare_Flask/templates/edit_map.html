@@ -32,13 +32,6 @@
             text-decoration:none;
         }
 
-        /*
-        .input-group, .form-group {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        */
-
         #description {
             font-family: Roboto;
             font-size: 15px;
@@ -91,11 +84,16 @@
             border-radius: 25px;
         }
 
+
+
+        #info_window {
+            position: absolute;
+            z-index: 1;
+        }
+
     </style>
 
 {% endblock %}
-
-
 
 {% block scriptblock %}
 
@@ -122,110 +120,65 @@
         // function to load the registered shapes on this map
         function loadShapes() {
 
-            {% for shape_point in points %}
+            {% for point in points %}
 
-                if (open_info_window != null) {
-                    open_info_window.close();
-                }
-
-                var marker_{{ shape_point.shape_id }} = new google.maps.Marker({
-                    position: new google.maps.LatLng{{ shape_point.shape_center }},
-                    icon: "../static/icons/{{ shape_point.icon }}"
+                var marker_{{ point.shape_id }} = new google.maps.Marker({
+                    position: new google.maps.LatLng{{ point.shape_center }},
+                    icon: "../static/icons/{{ point.icon }}"
                 });
-
-                var content_window_{{ shape_point.shape_id }} = $('#info_window').html();
-                var infowindow_{{ shape_point.shape_id }} = new google.maps.InfoWindow({
-                    content: content_window_{{ shape_point.shape_id }}
+                var content_window_{{ point.shape_id }} = $('#info_window').html();
+                var infowindow_{{ point.shape_id }} = new google.maps.InfoWindow({
+                    content: content_window_{{ point.shape_id }}
                 });
-
-
-                var new_point_{{ shape_point.shape_id }} = {
+                var new_point_{{ point.shape_id }} = {
                     "type": "POINT",
-                    "marker": marker_{{ shape_point.shape_id }},
-                    "infowindow": infowindow_{{ shape_point.shape_id }},
-                    "center": marker_{{ shape_point.shape_id }}.getPosition().toString(),
+                    "marker": marker_{{ point.shape_id }},
+                    "infowindow": infowindow_{{ point.shape_id }},
+                    "center": marker_{{ point.shape_id }}.getPosition().toString(),
                     "area_or_path": "",
-                    "title": "{{ shape_point.title }}",
-                    "description": "{{ shape_point.description }}".replace("{n}","\n"),
-                    "rating": "{{ shape_point.rating }}"
+                    "title": "{{ point.title }}",
+                    "description": "{{ point.description }}".replace("{n}","\n"),
+                    "rating": "{{ point.rating }}"
                 };
+                shapes["{{ point.shape_id }}"] = new_point_{{ point.shape_id }};
+                marker_{{ point.shape_id }}.setMap(map);
+                infowindow_{{ point.shape_id }}.open(map, marker_{{ point.shape_id }});
+                open_info_window = infowindow_{{ point.shape_id }};
+                infowindow_{{ point.shape_id }}.close();
 
-                shapes["{{ shape_point.shape_id }}"] = new_point_{{ shape_point.shape_id }};
-                marker_{{ shape_point.shape_id }}.setMap(map);
-                infowindow_{{ shape_point.shape_id }}.open(map, marker_{{ shape_point.shape_id }});
-                open_info_window = infowindow_{{ shape_point.shape_id }};
-                infowindow_{{ shape_point.shape_id }}.close();
+                shapes[{{ point.shape_id }}] = new_point_{{ point.shape_id }};
 
-                shapes["{{ shape_point.shape_id }}"] = new_point_{{ shape_point.shape_id }};
+                if (clicklistener_{{ point.shape_id }} == undefined) var first_time_{{ point.shape_id }} = true;
+                var clicklistener_{{ point.shape_id }} = google.maps.event.addListener(marker_{{ point.shape_id }}, 'click', function (event) {
+                    handle_marker_click(infowindow_{{ point.shape_id }}, marker_{{ point.shape_id }});
 
-                if (clicklistener_{{ shape_point.shape_id }} == undefined) var first_time_{{ shape_point.shape_id }} = true;
-                var clicklistener_{{ shape_point.shape_id }} = google.maps.event.addListener(marker_{{ shape_point.shape_id }}, 'click', function (event) {
-                    if (open_info_window != null) {
-                        open_info_window.close();
-                    }
-                    infowindow_{{ shape_point.shape_id }}.open(map, marker_{{ shape_point.shape_id }});
-                    open_info_window = infowindow_{{ shape_point.shape_id }};
-
-                    if (first_time_{{ shape_point.shape_id }})
+                    if (first_time_{{ point.shape_id }})
                     {
-                        $("input[name~='title']").val(shapes[{{ shape_point.shape_id }}]['title']);
-                        $("textarea[name~='description']").val(shapes[{{ shape_point.shape_id }}]['description']);
-                        $("input[name~='rating']").val(shapes[{{ shape_point.shape_id }}]['rating']);
-                        first_time_{{ shape_point.shape_id }} = false;
+                        $("input[name~='title']").val(shapes[{{ point.shape_id }}]['title']);
+                        $("textarea[name~='description']").val(shapes[{{ point.shape_id }}]['description']);
+                        $("input[name~='rating']").val(shapes[{{ point.shape_id }}]['rating']);
+                        first_time_{{ point.shape_id }} = false;
                     }
                 });
 
-                google.maps.event.addListener(infowindow_{{ shape_point.shape_id }}, 'domready', function () {
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
-                                            for (var key in shapes) {
-                                                if (shapes[key]["marker"] == marker_{{ shape_point.shape_id }}) {
-                                                    $.post("/updateShape",{
-                                                        title: $("input[name~='title']").val(),
-                                                        description: $("textarea[name~='description']").val(),
-                                                        rating: $("input[name~='rating']").val(),
-                                                        shape_id: key.toString()
-                                                    }, function(data,status){
-                                                        if (data == "Failed") {
-                                                            alert("Ingen forbindelse, prøv igjen");
-                                                        } else {
-                                                            shapes[key]['title'] = $("input[name~='title']").val();
-                                                            shapes[key]['description'] = $("textarea[name~='description']").val();
-                                                            shapes[key]['rating'] = $("input[name~='rating']").val();
-                                                        }
-                                                        return;
-                                                    });
-                                                }
-                                            }
-                                    });
+                google.maps.event.addListener(infowindow_{{ point.shape_id }}, 'domready', function () {
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
+                        shapes[{{ point.shape_id }}]['title'] = $("input[name~='title']").val();
+                        shapes[{{ point.shape_id }}]['description'] = $("textarea[name~='description']").val();
+                        shapes[{{ point.shape_id }}]['rating'] = $("input[name~='rating']").val();
+                    });
 
                     $("#delete_btn").off('click');
                     $("#delete_btn").on('click', function() {
-                                        for (var key in shapes) {
-                                            if (shapes[key]["marker"] == marker_{{ shape_point.shape_id }}) {
-                                                $.post("/deleteShape",{
-                                                    shape_id: key
-                                                },
-                                                function(data,status){
-                                                    if (data === "Failed" && status === "success") {
-                                                        alert("Kunne ikke slette, prøv igjen");
-                                                    } else {
-                                                        alert("Slettet");
-                                                        infowindow_{{ shape_point.shape_id }}.close();
-                                                        marker_{{ shape_point.shape_id }}.setMap(null);
-                                                        map.setZoom({{ map.zoom }});
-                                                        map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    });
+                        delete_shape({{ point.shape_id }});
+                    });
                 });
 
-                google.maps.event.addListener(infowindow_{{ shape_point.shape_id }}, 'closeclick', function () {
-                    map.setZoom({{ map.zoom }});
-                    map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                google.maps.event.addListener(infowindow_{{ point.shape_id }}, 'closeclick', function () {
+                    handle_on_close_info_window(marker_{{ point.shape_id }});
                 });
+
 
             {% endfor %}
 
@@ -247,25 +200,14 @@
                     position: points_array[Math.round(points_array.length/2)]
                 });
 
+
                 var content_window_{{ road.shape_id }} = $('#info_window').html();
                 var infowindow_{{ road.shape_id }} = new google.maps.InfoWindow({
                     content: content_window_{{ road.shape_id }}
                 });
 
                 var theline_{{ road.shape_id }} = Road_{{ road.shape_id }};
-                new_road_{{ road.shape_id }} = {
-                    "shape": theline_{{ road.shape_id }},
-                    "marker": marker_{{ road.shape_id }},
-                    "type": "ROAD",
-                    "infowindow": "",
-                    "center": (points_array[Math.round(points_array.length/2)]).toString(),
-                    "title": "{{ road.title }}",
-                    "description": "{{ road.description }}".replace("{n}","\n"),
-                    "rating": "{{ road.rating }}",
-                    "area_or_path": "{{ road.area_or_path }}"
-                };
 
-                shapes[{{ road.shape_id }}] = new_road_{{ road.shape_id }};
                 points_array = [];
                 Road_{{ road.shape_id }}.setMap(map);
                 marker_{{ road.shape_id }}.setMap(map);
@@ -273,13 +215,23 @@
                 infowindow_{{ road.shape_id }}.close();
                 line_{{ road.shape_id }} = null;
 
+                new_road_{{ road.shape_id }} = {
+                    "shape": theline_{{ road.shape_id }},
+                    "marker": marker_{{ road.shape_id }},
+                    "type": "ROAD",
+                    "infowindow": infowindow_{{ road.shape_id }},
+                    "center": {{ road.shape_center }},
+                    "title": "{{ road.title }}",
+                    "description": "{{ road.description }}".replace("{n}","\n"),
+                    "rating": "{{ road.rating }}",
+                    "area_or_path": "{{ road.area_or_path }}",
+                    "road": Road_{{ road.shape_id }}
+                };
+                shapes[{{ road.shape_id }}] = new_road_{{ road.shape_id }};
+
                 if (clicklistener_{{ road.shape_id }} == undefined) var first_time_{{ road.shape_id }} = true;
                 var clicklistener_{{ road.shape_id }} = google.maps.event.addListener(marker_{{ road.shape_id }}, 'click', function (event) {
-                    if (open_info_window != null) {
-                        open_info_window.close();
-                    }
-                    infowindow_{{ road.shape_id }}.open(map, marker_{{ road.shape_id }});
-                    open_info_window = infowindow_{{ road.shape_id }};
+                    handle_marker_click(infowindow_{{ road.shape_id }}, marker_{{ road.shape_id }});
 
                     if (first_time_{{ road.shape_id }})
                     {
@@ -292,62 +244,27 @@
                 });
 
                 google.maps.event.addListener(infowindow_{{ road.shape_id }}, 'closeclick', function () {
-                    map.setZoom({{ map.zoom }});
-                    map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                    handle_on_close_info_window(marker_{{ road.shape_id }});
                 });
 
                 google.maps.event.addListener(infowindow_{{ road.shape_id }}, 'domready', function () {
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
-                        for (var key in shapes) {
-                            if (shapes[key]["marker"] == marker_{{ road.shape_id }}) {
-                                $.post("/updateShape",{
-                                    title: $("input[name~='title']").val(),
-                                    description: $("textarea[name~='description']").val(),
-                                    rating: $("input[name~='rating']").val(),
-                                    shape_id: key.toString()
-                                }, function(data,status){
-                                    if (data == "Failed") {
-                                        alert("Ingen forbindelse, prøv igjen");
-                                    } else {
-                                        shapes[key]['title'] = $("input[name~='title']").val();
-                                        shapes[key]['description'] = $("textarea[name~='description']").val();
-                                        shapes[key]['rating'] = $("input[name~='rating']").val();
-                                    }
-                                    return;
-                                });
-                            }
-                        }
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
+                        shapes[{{ road.shape_id }}]['title'] = $("input[name~='title']").val();
+                        shapes[{{ road.shape_id }}]['description'] = $("textarea[name~='description']").val();
+                        shapes[{{ road.shape_id }}]['rating'] = $("input[name~='rating']").val();
                     });
 
                     $("#delete_btn").off('click');
                     $("#delete_btn").on('click', function() {
-                        for (var key in shapes) {
-                            if (shapes[key]["marker"] == marker_{{ road.shape_id }}) {
-                                $.post("/deleteShape",{
-                                        shape_id: key
-                                    },
-                                    function(data,status){
-                                        if (data === "Failed" && status === "success") {
-                                            alert("Kunne ikke slette, prøv igjen");
-                                        } else {
-                                            alert("Slettet");
-                                            theline_{{ road.shape_id }}.setMap(null);
-                                            infowindow_{{ road.shape_id }}.close();
-                                            marker_{{ road.shape_id }}.setMap(null);
-                                            open_info_window = null;
-                                            map.setZoom({{ map.zoom }});
-                                            map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
-                                        }
-                                    });
-                            }
-                        }
+                        delete_shape({{ road.shape_id }});
                     });
                 });
 
             {% endfor %}
 
             var area_{{ area.shape_id }} = null;
+
             {% for area in area %}
                 color = "{{ area.icon }}";
                 var points_array = makearrayfromstring("{{ area.area_or_path }}");
@@ -371,19 +288,7 @@
                 });
 
                 var thearea_{{ area.shape_id }} = Area_{{ area.shape_id }};
-                new_area_{{ area.shape_id }} = {
-                    "shape": thearea_{{ area.shape_id }},
-                    "marker": marker_{{ area.shape_id }},
-                    "type": "AREA",
-                    "infowindow": "",
-                    "center": (points_array[Math.round(points_array.length/2)]).toString(),
-                    "title": "{{ area.title }}",
-                    "description": "{{ area.description }}".replace("{n}","\n"),
-                    "rating": "{{ area.rating }}",
-                    "area_or_path": "{{ area.area_or_path }}"
-                };
 
-                shapes[{{ area.shape_id }}] = new_area_{{ area.shape_id }};
                 points_array = [];
                 Area_{{ area.shape_id }}.setMap(map);
                 marker_{{ area.shape_id }}.setMap(map);
@@ -391,13 +296,23 @@
                 infowindow_{{ area.shape_id }}.close();
                 area_{{ area.shape_id }} = null;
 
+                new_area_{{ area.shape_id }} = {
+                    "shape": thearea_{{ area.shape_id }},
+                    "marker": marker_{{ area.shape_id }},
+                    "type": "AREA",
+                    "infowindow": infowindow_{{ area.shape_id }},
+                    "center": {{ area.shape_center }},
+                    "title": "{{ area.title }}",
+                    "description": "{{ area.description }}".replace("{n}","\n"),
+                    "rating": "{{ area.rating }}",
+                    "area_or_path": "{{ area.area_or_path }}",
+                    "road": Area_{{ area.shape_id }}
+                };
+                shapes[{{ area.shape_id }}] = new_area_{{ area.shape_id }};
+
                 if (clicklistener_{{ area.shape_id }} == undefined) var first_time_{{ area.shape_id }} = true;
                 var clicklistener_{{ area.shape_id }} = google.maps.event.addListener(marker_{{ area.shape_id }}, 'click', function (event) {
-                    if (open_info_window != null) {
-                        open_info_window.close();
-                    }
-                    infowindow_{{ area.shape_id }}.open(map, marker_{{ area.shape_id }});
-                    open_info_window = infowindow_{{ area.shape_id }};
+                    handle_marker_click(infowindow_{{ area.shape_id }}, marker_{{ area.shape_id }});
 
                     if (first_time_{{ area.shape_id }})
                     {
@@ -410,60 +325,170 @@
                 });
 
                 google.maps.event.addListener(infowindow_{{ area.shape_id }}, 'closeclick', function () {
-                    map.setZoom({{ map.zoom }});
-                    map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                    handle_on_close_info_window(marker_{{ area.shape_id }})
                 });
 
                 google.maps.event.addListener(infowindow_{{ area.shape_id }}, 'domready', function () {
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
-                        for (var key in shapes) {
-                            if (shapes[key]["marker"] == marker_{{ area.shape_id }}) {
-                                $.post("/updateShape",{
-                                    title: $("input[name~='title']").val(),
-                                    description: $("textarea[name~='description']").val(),
-                                    rating: $("input[name~='rating']").val(),
-                                    shape_id: key.toString()
-                                }, function(data,status){
-                                    if (data == "Failed") {
-                                        alert("Ingen forbindelse, prøv igjen");
-                                    } else {
-                                        shapes[key]['title'] = $("input[name~='title']").val();
-                                        shapes[key]['description'] = $("textarea[name~='description']").val();
-                                        shapes[key]['rating'] = $("input[name~='rating']").val();
-                                    }
-                                    return;
-                                });
-                            }
-                        }
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
+                        shapes[{{ area.shape_id }}]['title'] = $("input[name~='title']").val();
+                        shapes[{{ area.shape_id }}]['description'] = $("textarea[name~='description']").val();
+                        shapes[{{ area.shape_id }}]['rating'] = $("input[name~='rating']").val();
                     });
 
                     $("#delete_btn").off('click');
                     $("#delete_btn").on('click', function() {
-                        for (var key in shapes) {
-                            if (shapes[key]["marker"] == marker_{{ area.shape_id }}) {
-                                $.post("/deleteShape",{
-                                        shape_id: key
-                                    },
-                                    function(data,status){
-                                        if (data === "Failed" && status === "success") {
-                                            alert("Kunne ikke slette, prøv igjen");
-                                        } else {
-                                            alert("Slettet");
-                                            thearea_{{ area.shape_id }}.setMap(null);
-                                            infowindow_{{ area.shape_id }}.close();
-                                            marker_{{ area.shape_id }}.setMap(null);
-                                            open_info_window = null;
-                                            map.setZoom({{ map.zoom }});
-                                            map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
-                                        }
-                                    });
-                            }
-                        }
+                        delete_shape({{ area.shape_id }});
                     });
                 });
 
             {% endfor %}
+        }
+
+
+        function register_shape(shape) {
+
+            if (shape["type"] == "POINT") {
+                $.post("/registerShape",
+                    {
+                        center: (shape["marker"].getPosition()).toString(),
+                        title: (shape["title"]).toString(),
+                        description: (shape["description"]).toString(),
+                        rating: shape["rating"],
+                        categoryID: (shape["category_ID"]).toString()
+                    },
+                    function (data, status) {
+                        if (data != "Failed") {
+                            shapes[data] = shape;
+                            (shape["marker"]).setMap(map);
+                            (shape["infowindow"]).open(map, shape["marker"]);
+                            open_info_window = shape["infowindow"];
+                            map.setOptions({draggableCursor: undefined});
+                            $("#pac-card").hide();
+                        } else {
+                            alert("Ingen forbindelse, prøv igjen");
+                        }
+                    });
+            }
+            else if (shape["type"] == "AREA" || shape["type"] == "ROAD" )
+            {
+                $.post("/registerShape",
+                    {
+                        center: (shape["points_array"][Math.round(shape["points_array"].length / 2)]).toString(),
+                        title: "",
+                        description: "",
+                        rating: "2",
+                        categoryID: (shape["category_ID"]).toString(),
+                        area_or_path: makestringfromarray(shape["points_array"])
+                    },
+                    function (data, status) {
+                        if (data != "Failed") {
+
+                            var road;
+                            if (shape["type"] == "AREA") {
+                                road = new google.maps.Polygon({
+                                    path: shape["points_array"],
+                                    strokeColor: color,
+                                    strokeOpacity: 1,
+                                    strokeWeight: 7,
+                                    fillColor: color,
+                                    fillOpacity: 0.4
+                            });
+                            } else {
+                                road = new google.maps.Polyline({
+                                    path: shape["points_array"],
+                                    strokeColor: color,
+                                    strokeOpacity: 1,
+                                    strokeWeight: 7,
+                            });
+                            }
+                            road.setMap(map);
+                            shape["road"] = road;
+                            shape["marker"].setMap(map);
+                            shape["infowindow"].open(map, shape["marker"]);
+                            open_info_window = shape["infowindow"];
+                            shapes[data] = shape;
+                            $("#pac-card").hide();
+                        } else {
+                            alert("Ingen forbindelse, prøv igjen");
+                        }
+                        return;
+                    });
+            };
+
+        }
+        function delete_shape(shape_id) {
+
+            shape_to_delete = shapes[shape_id];
+
+            $.post("/deleteShape",{
+                    shape_id: shape_id
+                },
+                function(data,status){
+                    if (data === "Failed" && status === "success") {
+                        alert("Kunne ikke slette, prøv igjen");
+                    } else {
+                        alert("Slettet");
+                        (shapes[shape_id]["infowindow"]).close();
+                        (shapes[shape_id]["marker"]).setMap(null);
+
+
+                        if (shapes[shape_id]["road"] != undefined) {
+                            shapes[shape_id]["road"].setMap(null);
+                        }
+
+                        map.setZoom({{ map.zoom }});
+                        map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                        open_info_window = null;
+                        $("#pac-card").show();
+                    }
+                });
+        }
+        function update_shape(shape_id) {
+            shape_to_update = shapes[shape_id];
+
+            $.post("/updateShape", {
+                title: shape_to_update["title"],
+                description: shape_to_update["description"],
+                rating: shape_to_update["rating"],
+                shape_id: shape_id
+            }, function (data, status) {
+                if (data == "Failed") {
+                    alert("Ingen forbindelse, prøv igjen");
+                } else {
+                    shape_to_update['title'] = $("input[name~='title']").val();
+                    shape_to_update['description'] = $("textarea[name~='description']").val();
+                    shape_to_update['rating'] = $("input[name~='rating']").val();
+                }
+                return;
+            });
+
+        }
+
+        function handle_outside_bounds_click() {
+            if (open_info_window != null) {
+                open_info_window.close();
+                open_info_window = null;
+            }
+            map.setZoom({{ map.zoom }});
+            map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+        }
+        function handle_on_close_info_window(marker) {
+            for (var key in shapes) {
+                if (shapes[key]["marker"] == marker) {
+                    update_shape(key);
+                }
+            }
+            handle_outside_bounds_click();
+            $("#pac-card").show();
+        }
+        function handle_marker_click(infowindow, marker) {
+            if (open_info_window != null) {
+                open_info_window.close();
+            }
+            $("#pac-card").hide();
+            infowindow.open(map, marker);
+            open_info_window = infowindow;
         }
 
         // function to compute the centroid
@@ -576,6 +601,15 @@
 
             });
 
+            google.maps.event.addListener(map,'click',function(event) {
+                     if (open_info_window != null) {
+                         open_info_window.close();
+                         open_info_window = null;
+                         $("#pac-card").show();
+                     }
+
+            });
+
             // event to keep the user inside the map bound, and prevent adding markers outside the target geo area
             google.maps.event.addListener(map,'drag',function () {
                 var northeast = map.getBounds().getNorthEast(); // LatLng of the north-east corner
@@ -605,6 +639,7 @@
         }
 
 
+
         $(document).ready(function () {
 
             $("#info_window").hide();
@@ -615,6 +650,16 @@
                 var changed_to = $(this).val();
                 var icon = $(this).siblings('img').attr('src'); // only used by shapes with type points
                 var category_id = $(this).attr('id');
+
+                if (changed_to == "Area" || changed_to == "Road") {
+                    icon = "../static/images/edit.png";
+                        map.setOptions({ draggableCursor : "url("+icon+") 20 50, default" });
+                        color = $(this).siblings('div').css('background-color');
+                        var mousemove_listener = null;
+                        var draw_mode = false;
+                        var points_array = [];
+                        var line = null;
+                }
 
                 // removing previous eventlisteners from map
                 if (changed_to == "Point" || changed_to == "Area" || changed_to == "Road") {
@@ -632,10 +677,6 @@
                         map.setOptions({ draggableCursor : "url("+icon+") 20 50, default" });
 
                         var clicklistener = google.maps.event.addListener(map,'click',function(event) {
-
-                            if (open_info_window != null) {
-                                open_info_window.close();
-                            }
 
                             if (event.latLng.lat() < southwestcorner.lat() && event.latLng.lat() > northeastcorner.lat()
                             && event.latLng.lng() < southwestcorner.lng() && event.latLng.lng() > northeastcorner.lng()) {
@@ -661,91 +702,40 @@
                                     "rating": $("input[name~='rating']").val()
                                 };
 
-
-                                $.post("/registerShape",
-                                {
-                                    center: (new_point["marker"].getPosition()).toString(),
-                                    title: (new_point["title"]).toString(),
-                                    description: (new_point["description"]).toString(),
-                                    rating: new_point["rating"],
-                                    categoryID: (new_point["category_ID"]).toString()
-                                },
-                                function (data, status) {
-                                    if (data != "Failed") {
-                                        shapes[data] = new_point;
-                                        marker.setMap(map);
-                                        infowindow.open(map, marker);
-                                        open_info_window = infowindow;
-                                        map.setOptions({ draggableCursor : undefined });
-                                    } else {
-                                        alert("Ingen forbindelse, prøv igjen");
-                                    }
-                                    return;
-                                });
+                                register_shape(new_point);
 
                                 google.maps.event.addListener(marker, 'click', function (event) {
-                                    if (open_info_window != null) {
-                                        open_info_window.close();
-                                    }
-                                    infowindow.open(map, marker);
-                                    open_info_window = infowindow;
+                                    handle_marker_click(infowindow, marker);
                                 });
 
                                 google.maps.event.addListener(infowindow, 'closeclick', function () {
-                                    map.setZoom({{ map.zoom }});
-                                    map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                                    handle_on_close_info_window(marker);
                                 });
 
                                 google.maps.event.addListener(infowindow, 'domready', function () {
-                                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
-                                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
-                                            for (var key in shapes) {
-                                                if (shapes[key]["marker"] == marker) {
-                                                    $.post("/updateShape",{
-                                                        title: $("input[name~='title']").val(),
-                                                        description: $("textarea[name~='description']").val(),
-                                                        rating: $("input[name~='rating']").val(),
-                                                        shape_id: key.toString()
-                                                    }, function(data,status){
-                                                        if (data == "Failed") {
-                                                            alert("Ingen forbindelse, prøv igjen");
-                                                        } else {
-                                                            shapes[key]['title'] = $("input[name~='title']").val();
-                                                            shapes[key]['description'] = $("textarea[name~='description']").val();
-                                                            shapes[key]['rating'] = $("input[name~='rating']").val();
-                                                        }
-                                                        return;
-                                                    });
-                                                }
+                                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
+                                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
+                                        for (var key in shapes) {
+                                            if (shapes[key]["marker"] == marker) {
+                                                shapes[key]['title'] = $("input[name~='title']").val();
+                                                shapes[key]['description'] = $("textarea[name~='description']").val();
+                                                shapes[key]['rating'] = $("input[name~='rating']").val();
                                             }
+                                        }
                                     });
 
                                     $("#delete_btn").off('click');
                                     $("#delete_btn").on('click', function() {
                                         for (var key in shapes) {
                                             if (shapes[key]["marker"] == marker) {
-                                                $.post("/deleteShape",{
-                                                    shape_id: key
-                                                },
-                                                function(data,status){
-                                                    if (data === "Failed" && status === "success") {
-                                                        alert("Kunne ikke slette, prøv igjen");
-                                                    } else {
-                                                        alert("Slettet");
-                                                        infowindow.close();
-                                                        marker.setMap(null);
-                                                        map.setZoom({{ map.zoom }});
-                                                        map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
-                                                    }
-                                                });
+                                                delete_shape(key);
                                             }
                                         }
                                     });
                                 });
 
                             } else {
-                                map.setZoom({{ map.zoom }});
-                                map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                                handle_outside_bounds_click();
                             }
 
 
@@ -758,21 +748,7 @@
                     // case current mode is Road
                     case "Road":
 
-                        icon = "../static/images/edit.png";
-                        map.setOptions({ draggableCursor : "url("+icon+") 20 50, default" });
-                        color = $(this).siblings('div').css('background-color');
-
-                        var mousemove_listener = null;
-                        var draw_mode = false;
-                        var points_array = [];
-
-                        var line = null;
-
                         var click_listener = google.maps.event.addListener(map,'click',function(event) {
-                            if (open_info_window != null) {
-                                open_info_window.close();
-                            }
-
                             if (event.latLng.lat() < southwestcorner.lat() && event.latLng.lat() > northeastcorner.lat()
                             && event.latLng.lng() < southwestcorner.lng() && event.latLng.lng() > northeastcorner.lng()) {
 
@@ -791,7 +767,7 @@
                                             strokeWeight: 7
                                         });
                                         line = Road;
-                                        Road.setMap(map);
+                                        line.setMap(map);
 
                                         var end = google.maps.event.addListener(Road,'click',function(event) {
 
@@ -804,78 +780,40 @@
                                                 content: content_window
                                             });
 
-                                            var theline = line;
                                             new_road = {
-                                                "shape": theline,
                                                 "marker": marker,
                                                 "type": "ROAD",
-                                                "infowindow": "",
+                                                "infowindow": infowindow,
                                                 "center": (points_array[Math.round(points_array.length/2)]).toString(),
                                                 "title": "",
                                                 "description": "",
                                                 "rating": "2",
-                                                "categoryID": (category_id).toString(),
-                                                "area_or_path": makestringfromarray(points_array)
+                                                "category_ID": (category_id).toString(),
+                                                "area_or_path": makestringfromarray(points_array),
+                                                "points_array": points_array
                                             };
 
-                                           // after done drawing, insert into database and show info window
-                                            $.post("/registerShape",
-                                            {
-                                                center: (points_array[Math.round(points_array.length/2)]).toString(),
-                                                title: "",
-                                                description: "",
-                                                rating: "2",
-                                                categoryID: (category_id).toString(),
-                                                area_or_path: makestringfromarray(points_array)
-                                            },
-                                            function(data, status){
-                                                if (data != "Failed") {
-                                                    shapes[data] = new_road;
-                                                    points_array = [];
-                                                    marker.setMap(map);
-                                                    infowindow.open(map, marker);
-                                                    open_info_window = infowindow;
-                                                    map.setOptions({ draggableCursor : undefined });
-                                                    line = null;
-                                                } else {
-                                                    alert("Ingen forbindelse, prøv igjen");
-                                                }
-                                                return;
-                                            });
+                                            register_shape(new_road);
+
+                                            line.setMap(null);
+                                            points_array = [];
 
                                             google.maps.event.addListener(marker, 'click', function (event) {
-                                                if (open_info_window != null) {
-                                                    open_info_window.close();
-                                                }
-                                                infowindow.open(map, marker);
-                                                open_info_window = infowindow;
+                                                handle_marker_click(infowindow, marker)
                                             });
 
                                             google.maps.event.addListener(infowindow, 'closeclick', function () {
-                                                map.setZoom({{ map.zoom }});
-                                                map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                                                handle_on_close_info_window(marker);
                                             });
 
                                             google.maps.event.addListener(infowindow, 'domready', function () {
-                                                $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
-                                                $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
+                                                $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
+                                                $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
                                                     for (var key in shapes) {
                                                         if (shapes[key]["marker"] == marker) {
-                                                            $.post("/updateShape",{
-                                                                title: $("input[name~='title']").val(),
-                                                                description: $("textarea[name~='description']").val(),
-                                                                rating: $("input[name~='rating']").val(),
-                                                                shape_id: key.toString()
-                                                            }, function(data,status){
-                                                                if (data == "Failed") {
-                                                                    alert("Ingen forbindelse, prøv igjen");
-                                                                } else {
-                                                                    shapes[key]['title'] = $("input[name~='title']").val();
-                                                                    shapes[key]['description'] = $("textarea[name~='description']").val();
-                                                                    shapes[key]['rating'] = $("input[name~='rating']").val();
-                                                                }
-                                                                return;
-                                                            });
+                                                            shapes[key]['title'] = $("input[name~='title']").val();
+                                                            shapes[key]['description'] = $("textarea[name~='description']").val();
+                                                            shapes[key]['rating'] = $("input[name~='rating']").val();
                                                         }
                                                     }
                                                 });
@@ -884,22 +822,7 @@
                                                 $("#delete_btn").on('click', function() {
                                                     for (var key in shapes) {
                                                         if (shapes[key]["marker"] == marker) {
-                                                            $.post("/deleteShape",{
-                                                                shape_id: key
-                                                            },
-                                                            function(data,status){
-                                                                if (data === "Failed" && status === "success") {
-                                                                    alert("Kunne ikke slette, prøv igjen");
-                                                                } else {
-                                                                    alert("Slettet");
-                                                                    theline.setMap(null);
-                                                                    //(shapes[key]["line"]).setMap(null); // this does not work
-                                                                    infowindow.close();
-                                                                    marker.setMap(null);
-                                                                    map.setZoom({{ map.zoom }});
-                                                                    map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
-                                                                }
-                                                            });
+                                                            delete_shape(key);
                                                         }
                                                     }
                                                 });
@@ -913,8 +836,7 @@
                                     });
                                 }
                             } else {
-                                map.setZoom({{ map.zoom }});
-                                map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                                handle_outside_bounds_click();
                             }
                         });
 
@@ -925,20 +847,7 @@
                     // case current mode is Area
                     case "Area":
 
-                        icon = "../static/images/edit.png";
-                        map.setOptions({ draggableCursor : "url("+icon+") 20 50, default" });
-                        color = $(this).siblings('div').css('background-color');
-
-                        var mousemove_listener = null;
-                        var draw_mode = false;
-                        var points_array = [];
-
-                        var line = null;
-
                         var click_listener = google.maps.event.addListener(map,'click',function(event) {
-                            if (open_info_window != null) {
-                                open_info_window.close();
-                            }
 
                             if (event.latLng.lat() < southwestcorner.lat() && event.latLng.lat() > northeastcorner.lat()
                             && event.latLng.lng() < southwestcorner.lng() && event.latLng.lng() > northeastcorner.lng()) {
@@ -958,7 +867,7 @@
                                             strokeWeight: 7
                                         });
                                         line = Road;
-                                        Road.setMap(map);
+                                        line.setMap(map);
 
                                         var end = google.maps.event.addListener(Road,'click',function(event) {
 
@@ -971,92 +880,40 @@
                                                 content: content_window
                                             });
 
-                                            var theline = line;
                                             new_road = {
-                                                "shape": theline,
                                                 "marker": marker,
                                                 "type": "AREA",
-                                                "infowindow": "",
+                                                "infowindow": infowindow,
                                                 "center": (points_array[Math.round(points_array.length/2)]).toString(),
                                                 "title": "",
                                                 "description": "",
                                                 "rating": "2",
-                                                "categoryID": (category_id).toString(),
-                                                "area_or_path": makestringfromarray(points_array)
+                                                "category_ID": (category_id).toString(),
+                                                "area_or_path": makestringfromarray(points_array),
+                                                "points_array": points_array
                                             };
 
-                                           // after done drawing, insert into database and show info window
-                                            $.post("/registerShape",
-                                            {
-                                                center: (points_array[Math.round(points_array.length/2)]).toString(),
-                                                title: "",
-                                                description: "",
-                                                rating: "2",
-                                                categoryID: (category_id).toString(),
-                                                area_or_path: makestringfromarray(points_array)
-                                            },
-                                            function(data, status){
-                                                if (data != "Failed") {
+                                            register_shape(new_road);
 
-                                                    if (line != null) line.setMap(null);
-                                                    var Road = new google.maps.Polygon({
-                                                        path: points_array,
-                                                        strokeColor: color,
-                                                        strokeOpacity: 0.8,
-                                                        strokeWeight: 1,
-                                                        fillColor: color,
-                                                        fillOpacity: 0.4
-                                                    });
-                                                    line = Road;
-                                                    Road.setMap(map);
-                                                    theline = line;
-
-                                                    shapes[data] = new_road;
-                                                    points_array = [];
-                                                    marker.setMap(map);
-                                                    infowindow.open(map, marker);
-                                                    open_info_window = infowindow;
-                                                    //map.setOptions({ draggableCursor : undefined });
-                                                    line = null;
-                                                } else {
-                                                    alert("Ingen forbindelse, prøv igjen");
-                                                }
-                                                return;
-                                            });
+                                            line.setMap(null);
+                                            points_array = [];
 
                                             google.maps.event.addListener(marker, 'click', function (event) {
-                                                if (open_info_window != null) {
-                                                    open_info_window.close();
-                                                }
-                                                infowindow.open(map, marker);
-                                                open_info_window = infowindow;
+                                                handle_marker_click(infowindow, marker);
                                             });
 
                                             google.maps.event.addListener(infowindow, 'closeclick', function () {
-                                                map.setZoom({{ map.zoom }});
-                                                map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                                                handle_on_close_info_window(marker);
                                             });
 
                                             google.maps.event.addListener(infowindow, 'domready', function () {
-                                                $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
-                                                $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
+                                                $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
+                                                $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
                                                     for (var key in shapes) {
                                                         if (shapes[key]["marker"] == marker) {
-                                                            $.post("/updateShape",{
-                                                                title: $("input[name~='title']").val(),
-                                                                description: $("textarea[name~='description']").val(),
-                                                                rating: $("input[name~='rating']").val(),
-                                                                shape_id: key.toString()
-                                                            }, function(data,status){
-                                                                if (data == "Failed") {
-                                                                    alert("Ingen forbindelse, prøv igjen");
-                                                                } else {
-                                                                    shapes[key]['title'] = $("input[name~='title']").val();
-                                                                    shapes[key]['description'] = $("textarea[name~='description']").val();
-                                                                    shapes[key]['rating'] = $("input[name~='rating']").val();
-                                                                }
-                                                                return;
-                                                            });
+                                                            shapes[key]['title'] = $("input[name~='title']").val();
+                                                            shapes[key]['description'] = $("textarea[name~='description']").val();
+                                                            shapes[key]['rating'] = $("input[name~='rating']").val();
                                                         }
                                                     }
                                                 });
@@ -1065,22 +922,7 @@
                                                 $("#delete_btn").on('click', function() {
                                                     for (var key in shapes) {
                                                         if (shapes[key]["marker"] == marker) {
-                                                            $.post("/deleteShape",{
-                                                                shape_id: key
-                                                            },
-                                                            function(data,status){
-                                                                if (data === "Failed" && status === "success") {
-                                                                    alert("Kunne ikke slette, prøv igjen");
-                                                                } else {
-                                                                    alert("Slettet");
-                                                                    theline.setMap(null);
-                                                                    //(shapes[key]["line"]).setMap(null); // this does not work
-                                                                    infowindow.close();
-                                                                    marker.setMap(null);
-                                                                    map.setZoom({{ map.zoom }});
-                                                                    map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
-                                                                }
-                                                            });
+                                                            delete_shape(key);
                                                         }
                                                     }
                                                 });
@@ -1094,16 +936,11 @@
                                     });
                                 }
                             } else {
-                                map.setZoom({{ map.zoom }});
-                                map.setCenter(computeCentroid([northeastcorner, southwestcorner]));
+                                handle_outside_bounds_click();
                             }
                         });
 
                         listeners.push(click_listener);
-
-
-
-
 
                         break;
 
@@ -1111,7 +948,6 @@
                     default:
                         break;
                 }
-
 
             }
             );
@@ -1336,6 +1172,7 @@
         </div>
     </div>
 
+    <!-- Address Search Bar -->
     <div class="pac-card" id="pac-card">
         <div id="pac-container" class="input-group" style="margin-bottom: 0;">
             <span id="toggle_panel" class="input-group-addon" style="background-color: #ffffff"><i class="fa fa-cog" style="width: 24px; color: #2a62bc"></i></span>

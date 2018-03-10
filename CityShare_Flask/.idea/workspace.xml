@@ -12,16 +12,17 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/CityShare_Flask$read_icons.coverage" NAME="read_icons Coverage Results" MODIFIED="1518386603211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CityShare$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1518127835022" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/CityShare_Flask$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1520412972189" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/CityShare_Flask$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1520720880205" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CityShare.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CityShare.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CityShare.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="57" column="12" lean-forward="false" selection-start-line="57" selection-start-column="12" selection-end-line="57" selection-end-column="12" />
+            <state relative-caret-position="125">
+              <caret line="294" column="83" lean-forward="true" selection-start-line="294" selection-start-column="83" selection-end-line="294" selection-end-column="83" />
               <folding>
+                <element signature="e#179#511#0" expanded="false" />
                 <element signature="e#218#488#0" expanded="false" />
                 <element signature="e#648#1830#0" expanded="false" />
                 <element signature="e#1874#1978#0" expanded="false" />
@@ -29,22 +30,76 @@
                 <element signature="e#3028#3559#0" expanded="false" />
                 <element signature="e#3634#6740#0" expanded="false" />
                 <element signature="e#6804#8234#0" expanded="false" />
-                <element signature="e#8296#12778#0" expanded="false" />
                 <element signature="e#12853#14041#0" expanded="false" />
                 <element signature="e#14111#14759#0" expanded="false" />
                 <element signature="e#14829#15217#0" expanded="false" />
-                <marker date="1520412500813" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-                <marker date="1520412500813" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-                <marker date="1520412500813" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
-                <marker date="1520412500813" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
-                <marker date="1520412500813" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
-                <marker date="1520412500813" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
-                <marker date="1520412500813" expanded="true" signature="7311:7441" ph="SELECT map_c... " />
-                <marker date="1520412500813" expanded="true" signature="8489:8613" ph="SELECT COUNT... Maps_Users" />
-                <marker date="1520412500813" expanded="true" signature="8832:8992" ph="SELECT map_c... " />
-                <marker date="1520412500813" expanded="true" signature="9682:10018" ph="SELECT S.sha... Shapes" />
-                <marker date="1520412500813" expanded="true" signature="11229:11339" ph="SELECT categ... Maps_Categories" />
-                <marker date="1520412500813" expanded="true" signature="14928:14966" ph="DELETE FROM Shapes... " />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="edit_map.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/templates/edit_map.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="102">
+              <caret line="95" column="14" lean-forward="false" selection-start-line="95" selection-start-column="14" selection-end-line="95" selection-end-column="14" />
+              <folding>
+                <element signature="e#58#1815#0#HTML" expanded="false" />
+                <element signature="e#2052#47485#0#HTML" expanded="false" />
+                <element signature="e#2830#14292#0#HTML" expanded="false" />
+                <element signature="e#3411#3900#0#HTML" expanded="false" />
+                <element signature="e#5284#6071#0#HTML" expanded="false" />
+                <element signature="e#6180#6277#0#HTML" expanded="false" />
+                <element signature="e#8555#9137#0#HTML" expanded="false" />
+                <element signature="e#11661#12250#0#HTML" expanded="false" />
+                <element signature="e#13270#13365#0#HTML" expanded="false" />
+                <element signature="e#14334#17609#0#HTML" expanded="false" />
+                <element signature="e#17650#18629#0#HTML" expanded="false" />
+                <element signature="e#18670#19445#0#HTML" expanded="false" />
+                <element signature="e#19494#19767#0#HTML" expanded="false" />
+                <element signature="e#19821#20074#0#HTML" expanded="false" />
+                <element signature="e#20132#20363#0#HTML" expanded="false" />
+                <element signature="e#20455#20896#0#HTML" expanded="false" />
+                <element signature="e#21007#21318#0#HTML" expanded="false" />
+                <element signature="e#21435#21813#0#HTML" expanded="false" />
+                <element signature="e#21921#26873#0#HTML" expanded="false" />
+                <element signature="e#22157#22968#0#HTML" expanded="false" />
+                <element signature="e#23576#25177#0#HTML" expanded="false" />
+                <element signature="e#23669#23972#0#HTML" expanded="false" />
+                <element signature="e#24093#24530#0#HTML" expanded="false" />
+                <element signature="e#24770#25162#0#HTML" expanded="false" />
+                <element signature="e#25251#25492#0#HTML" expanded="false" />
+                <element signature="e#25676#26621#0#HTML" expanded="false" />
+                <element signature="e#27435#27875#0#HTML" expanded="false" />
+                <element signature="e#28029#28254#0#HTML" expanded="false" />
+                <element signature="e#28364#32162#0#HTML" expanded="false" />
+                <element signature="e#29339#29925#0#HTML" expanded="false" />
+                <element signature="e#30084#30196#0#HTML" expanded="false" />
+                <element signature="e#30300#30408#0#HTML" expanded="false" />
+                <element signature="e#30780#31385#0#HTML" expanded="false" />
+                <element signature="e#31532#31875#0#HTML" expanded="false" />
+                <element signature="e#32233#38120#0#HTML" expanded="false" />
+                <element signature="e#34245#35072#0#HTML" expanded="false" />
+                <element signature="e#35381#35516#0#HTML" expanded="false" />
+                <element signature="e#35632#35764#0#HTML" expanded="false" />
+                <element signature="e#36172#36873#0#HTML" expanded="false" />
+                <element signature="e#37044#37459#0#HTML" expanded="false" />
+                <element signature="e#38191#44062#0#HTML" expanded="false" />
+                <element signature="e#42114#42815#0#HTML" expanded="false" />
+                <element signature="e#42986#43401#0#HTML" expanded="false" />
+                <element signature="e#44296#44703#0#HTML" expanded="false" />
+                <element signature="e#44767#45354#0#HTML" expanded="false" />
+                <element signature="e#45519#46366#0#HTML" expanded="false" />
+                <element signature="e#46446#46503#0#HTML" expanded="false" />
+                <element signature="e#46555#47347#0#HTML" expanded="false" />
+                <element signature="e#47399#47456#0#HTML" expanded="false" />
+                <element signature="e#47803#48851#0#HTML" expanded="false" />
+                <element signature="e#48865#50373#0#HTML" expanded="false" />
+                <element signature="e#50387#51880#0#HTML" expanded="false" />
+                <element signature="e#51894#53346#0#HTML" expanded="false" />
+                <element signature="e#53411#53807#0#HTML" expanded="false" />
+                <element signature="e#53884#54739#0#HTML" expanded="false" />
+                <marker date="1520720957269" expanded="false" signature="40186:41013" ph="{&quot;marker&quot;: marker...}" />
               </folding>
             </state>
           </provider>
@@ -65,12 +120,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>name=</find>
-      <find>form</find>
-      <find>btn</find>
-      <find>span</find>
-      <find>delete_cat</find>
-      <find>Custom skin and using flat mode to display the color picker in a custom widget.</find>
       <find>category_body</find>
       <find>AddedUsers</find>
       <find>compute</find>
@@ -95,6 +144,12 @@
       <find>lagre</find>
       <find>allmaps</find>
       <find>part</find>
+      <find>z-inde</find>
+      <find>change</find>
+      <find>delete</find>
+      <find>delete_btn</find>
+      <find>current_shape</find>
+      <find>shape_point</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -133,9 +188,9 @@
         <option value="$PROJECT_DIR$/templates/index.html" />
         <option value="$PROJECT_DIR$/templates/test_new_map.html" />
         <option value="$PROJECT_DIR$/templates/new_map.html" />
-        <option value="$PROJECT_DIR$/templates/edit_map.html" />
         <option value="$PROJECT_DIR$/templates/test_edit_map.html" />
         <option value="$PROJECT_DIR$/CityShare.py" />
+        <option value="$PROJECT_DIR$/templates/edit_map.html" />
       </list>
     </option>
   </component>
@@ -145,7 +200,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="61" />
     <option name="y" value="49" />
     <option name="width" value="888" />
@@ -166,6 +221,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -176,25 +233,12 @@
             <path>
               <item name="CityShare_Flask" type="b2602c69:ProjectViewProjectNode" />
               <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CityShare_Flask" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="stylesheets" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CityShare_Flask" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -302,27 +346,27 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952693" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2985318" sideWeight="0.5030257" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29690048" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2985318" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19440243" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20045386" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952693" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24962178" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39967373" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32952693" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
@@ -358,7 +402,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="16" />
+      <option name="time" value="19" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -476,18 +520,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="21" column="24" lean-forward="false" selection-start-line="21" selection-start-column="24" selection-end-line="21" selection-end-column="80" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1802">
-          <caret line="118" column="31" lean-forward="false" selection-start-line="118" selection-start-column="25" selection-end-line="118" selection-end-column="31" />
-          <folding>
-            <element signature="e#1098#1748#0#HTML" expanded="false" />
-            <marker date="1519424052778" expanded="true" signature="3535:3561" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -495,7 +527,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="67">
           <caret line="42" column="5" lean-forward="false" selection-start-line="42" selection-start-column="5" selection-end-line="42" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -503,7 +534,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="731">
           <caret line="43" column="9" lean-forward="false" selection-start-line="22" selection-start-column="8" selection-end-line="43" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -511,31 +541,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="29" column="4" lean-forward="false" selection-start-line="29" selection-start-column="4" selection-end-line="33" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/PycharmProjects/Nettbrettapplikasjon/CityShare_Flask/templates/test_new_map.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1463">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/PycharmProjects/Nettbrettapplikasjon/CityShare_Flask/templates/test_new_map.html" />
     <entry file="file://$PROJECT_DIR$/templates/edit_map.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="277">
           <caret line="475" column="86" lean-forward="false" selection-start-line="475" selection-start-column="86" selection-end-line="475" selection-end-column="86" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/edit_map.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="559" column="64" lean-forward="false" selection-start-line="559" selection-start-column="64" selection-end-line="559" selection-end-column="64" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -543,55 +556,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="317">
           <caret line="475" column="0" lean-forward="true" selection-start-line="475" selection-start-column="0" selection-end-line="475" selection-end-column="0" />
-          <folding>
-            <element signature="n#style#0;n#!!top" expanded="false" />
-            <element signature="e#78#115#0#HTML" expanded="false" />
-            <element signature="e#130#195#0#HTML" expanded="false" />
-            <element signature="e#214#275#0#HTML" expanded="false" />
-            <element signature="e#298#365#0#HTML" expanded="false" />
-            <element signature="e#381#490#0#HTML" expanded="false" />
-            <element signature="e#541#586#0#HTML" expanded="false" />
-            <element signature="e#602#660#0#HTML" expanded="false" />
-            <element signature="e#680#779#0#HTML" expanded="false" />
-            <element signature="e#815#884#0#HTML" expanded="false" />
-            <element signature="e#907#1010#0#HTML" expanded="false" />
-            <element signature="e#1030#1327#0#HTML" expanded="false" />
-            <element signature="e#1348#1524#0#HTML" expanded="false" />
-            <element signature="e#1551#1597#0#HTML" expanded="false" />
-            <element signature="e#4824#6068#0#HTML" expanded="false" />
-            <element signature="e#6120#17842#0#HTML" expanded="false" />
-            <element signature="e#6221#8271#0#HTML" expanded="false" />
-            <element signature="e#8436#9111#0#HTML" expanded="false" />
-            <element signature="e#9229#9492#0#HTML" expanded="false" />
-            <element signature="e#9603#11508#0#HTML" expanded="false" />
-            <element signature="e#11617#13558#0#HTML" expanded="false" />
-            <element signature="e#13667#15608#0#HTML" expanded="false" />
-            <element signature="e#15774#16739#0#HTML" expanded="false" />
-            <element signature="e#16819#16876#0#HTML" expanded="false" />
-            <element signature="e#16928#17720#0#HTML" expanded="false" />
-            <element signature="e#17772#17829#0#HTML" expanded="false" />
-            <element signature="n#div#0;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#1;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#2;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#3;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#4;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#5;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#6;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#select#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#6;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#7;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#8;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#9;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#style#0;n#i#0;n#button#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#9;n#form#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#div#1;n#!!top" expanded="false" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1943">
+          <caret line="118" column="31" lean-forward="false" selection-start-line="118" selection-start-column="25" selection-end-line="118" selection-end-column="31" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CityShare.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="57" column="12" lean-forward="false" selection-start-line="57" selection-start-column="12" selection-end-line="57" selection-end-column="12" />
+        <state relative-caret-position="125">
+          <caret line="294" column="83" lean-forward="true" selection-start-line="294" selection-start-column="83" selection-end-line="294" selection-end-column="83" />
           <folding>
+            <element signature="e#179#511#0" expanded="false" />
             <element signature="e#218#488#0" expanded="false" />
             <element signature="e#648#1830#0" expanded="false" />
             <element signature="e#1874#1978#0" expanded="false" />
@@ -599,22 +580,74 @@
             <element signature="e#3028#3559#0" expanded="false" />
             <element signature="e#3634#6740#0" expanded="false" />
             <element signature="e#6804#8234#0" expanded="false" />
-            <element signature="e#8296#12778#0" expanded="false" />
             <element signature="e#12853#14041#0" expanded="false" />
             <element signature="e#14111#14759#0" expanded="false" />
             <element signature="e#14829#15217#0" expanded="false" />
-            <marker date="1520412500813" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1520412500813" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1520412500813" expanded="true" signature="3178:3232" ph="SELECT usern... Persons" />
-            <marker date="1520412500813" expanded="true" signature="5824:5878" ph="INSERT INTO Maps_Users... " />
-            <marker date="1520412500813" expanded="true" signature="6266:6403" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1520412500813" expanded="true" signature="6897:6958" ph="SELECT map_i... Maps_Users" />
-            <marker date="1520412500813" expanded="true" signature="7311:7441" ph="SELECT map_c... " />
-            <marker date="1520412500813" expanded="true" signature="8489:8613" ph="SELECT COUNT... Maps_Users" />
-            <marker date="1520412500813" expanded="true" signature="8832:8992" ph="SELECT map_c... " />
-            <marker date="1520412500813" expanded="true" signature="9682:10018" ph="SELECT S.sha... Shapes" />
-            <marker date="1520412500813" expanded="true" signature="11229:11339" ph="SELECT categ... Maps_Categories" />
-            <marker date="1520412500813" expanded="true" signature="14928:14966" ph="DELETE FROM Shapes... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/edit_map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="95" column="14" lean-forward="false" selection-start-line="95" selection-start-column="14" selection-end-line="95" selection-end-column="14" />
+          <folding>
+            <element signature="e#58#1815#0#HTML" expanded="false" />
+            <element signature="e#2052#47485#0#HTML" expanded="false" />
+            <element signature="e#2830#14292#0#HTML" expanded="false" />
+            <element signature="e#3411#3900#0#HTML" expanded="false" />
+            <element signature="e#5284#6071#0#HTML" expanded="false" />
+            <element signature="e#6180#6277#0#HTML" expanded="false" />
+            <element signature="e#8555#9137#0#HTML" expanded="false" />
+            <element signature="e#11661#12250#0#HTML" expanded="false" />
+            <element signature="e#13270#13365#0#HTML" expanded="false" />
+            <element signature="e#14334#17609#0#HTML" expanded="false" />
+            <element signature="e#17650#18629#0#HTML" expanded="false" />
+            <element signature="e#18670#19445#0#HTML" expanded="false" />
+            <element signature="e#19494#19767#0#HTML" expanded="false" />
+            <element signature="e#19821#20074#0#HTML" expanded="false" />
+            <element signature="e#20132#20363#0#HTML" expanded="false" />
+            <element signature="e#20455#20896#0#HTML" expanded="false" />
+            <element signature="e#21007#21318#0#HTML" expanded="false" />
+            <element signature="e#21435#21813#0#HTML" expanded="false" />
+            <element signature="e#21921#26873#0#HTML" expanded="false" />
+            <element signature="e#22157#22968#0#HTML" expanded="false" />
+            <element signature="e#23576#25177#0#HTML" expanded="false" />
+            <element signature="e#23669#23972#0#HTML" expanded="false" />
+            <element signature="e#24093#24530#0#HTML" expanded="false" />
+            <element signature="e#24770#25162#0#HTML" expanded="false" />
+            <element signature="e#25251#25492#0#HTML" expanded="false" />
+            <element signature="e#25676#26621#0#HTML" expanded="false" />
+            <element signature="e#27435#27875#0#HTML" expanded="false" />
+            <element signature="e#28029#28254#0#HTML" expanded="false" />
+            <element signature="e#28364#32162#0#HTML" expanded="false" />
+            <element signature="e#29339#29925#0#HTML" expanded="false" />
+            <element signature="e#30084#30196#0#HTML" expanded="false" />
+            <element signature="e#30300#30408#0#HTML" expanded="false" />
+            <element signature="e#30780#31385#0#HTML" expanded="false" />
+            <element signature="e#31532#31875#0#HTML" expanded="false" />
+            <element signature="e#32233#38120#0#HTML" expanded="false" />
+            <element signature="e#34245#35072#0#HTML" expanded="false" />
+            <element signature="e#35381#35516#0#HTML" expanded="false" />
+            <element signature="e#35632#35764#0#HTML" expanded="false" />
+            <element signature="e#36172#36873#0#HTML" expanded="false" />
+            <element signature="e#37044#37459#0#HTML" expanded="false" />
+            <element signature="e#38191#44062#0#HTML" expanded="false" />
+            <element signature="e#42114#42815#0#HTML" expanded="false" />
+            <element signature="e#42986#43401#0#HTML" expanded="false" />
+            <element signature="e#44296#44703#0#HTML" expanded="false" />
+            <element signature="e#44767#45354#0#HTML" expanded="false" />
+            <element signature="e#45519#46366#0#HTML" expanded="false" />
+            <element signature="e#46446#46503#0#HTML" expanded="false" />
+            <element signature="e#46555#47347#0#HTML" expanded="false" />
+            <element signature="e#47399#47456#0#HTML" expanded="false" />
+            <element signature="e#47803#48851#0#HTML" expanded="false" />
+            <element signature="e#48865#50373#0#HTML" expanded="false" />
+            <element signature="e#50387#51880#0#HTML" expanded="false" />
+            <element signature="e#51894#53346#0#HTML" expanded="false" />
+            <element signature="e#53411#53807#0#HTML" expanded="false" />
+            <element signature="e#53884#54739#0#HTML" expanded="false" />
+            <marker date="1520720957269" expanded="false" signature="40186:41013" ph="{&quot;marker&quot;: marker...}" />
           </folding>
         </state>
       </provider>
