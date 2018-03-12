@@ -273,8 +273,14 @@ def edit_map():
                 "bounds": bounds,
                 "zoom": data[6],
                 "northeastcorner": bounds[0].replace(" ", ","),
-                "southwestcorner": bounds[1].replace(" ", ",")
+                "southwestcorner": bounds[1].replace(" ", ","),
+                "map_users": []
             }
+            sql = "SELECT username FROM Maps_Users WHERE map_id = "+str(mapid)+";"
+            cursor.execute(sql)
+            data = cursor.fetchall();
+            for username in data:
+                map["map_users"].append(username[0]);
 
 
             ## Reading already registered shapes on map

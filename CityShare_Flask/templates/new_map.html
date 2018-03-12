@@ -102,6 +102,34 @@
 
     <script>
 
+        function getBoundsZoomLevel(bounds, mapDim) {
+            var WORLD_DIM = { height: 256, width: 256 };
+            var ZOOM_MAX = 21;
+
+            function latRad(lat) {
+                var sin = Math.sin(lat * Math.PI / 180);
+                var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+                return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+            }
+
+            function zoom(mapPx, worldPx, fraction) {
+                return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+            }
+
+            var ne = bounds.getNorthEast();
+            var sw = bounds.getSouthWest();
+
+            var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+
+            var lngDiff = ne.lng() - sw.lng();
+            var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+            var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+            var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+            return Math.min(latZoom, lngZoom, ZOOM_MAX);
+        }
+
         var map = null;
         function initMap() {
             map = new google.maps.Map(document.getElementById('Map'), {
@@ -118,6 +146,7 @@
                 },
                 fullscreenControl: false
             });
+
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -136,12 +165,46 @@
                 alert("Din browser støtter ikke geografisk gjenfinning");
             }
 
-            // saving the map bounds
-            map.addListener('bounds_changed', function() {
-                $('#geo_boundery').val(map.getBounds());
-                $('#geo_zoom').val(map.getZoom());
+            var bounds = {
+                north: 0,
+                south: 0,
+                east: 0,
+                west: 0
+            };
+            var rectangle = new google.maps.Rectangle({
+                bounds: bounds,
+                editable: true,
+                draggable: true
             });
 
+            map.addListener('bounds_changed', function() {
+                lat_center = map.getCenter().lat();
+                lng_center = map.getCenter().lng();
+
+                n = (map.getBounds().getNorthEast().lat()+lat_center)/2;
+                s = (map.getBounds().getSouthWest().lat()+lat_center)/2;
+                e = (map.getBounds().getNorthEast().lng()+lng_center)/2;
+                w = (map.getBounds().getSouthWest().lng()+lng_center)/2;
+                bounds = {
+                  north: n,
+                  south: s,
+                  east: e,
+                  west: w
+                };
+                rectangle.setMap(null);
+                rectangle.setBounds(bounds);
+                rectangle.setMap(map);
+            });
+
+            rectangle.addListener('bounds_changed', function () {
+                $('#geo_boundery').val(rectangle.getBounds());
+
+                var $mapDiv = $('#Map');
+                var mapDim = { height: $mapDiv.height(), width: $mapDiv.width() };
+                calculated_zoom = getBoundsZoomLevel(rectangle.getBounds(), mapDim);
+
+                $('#geo_zoom').val(calculated_zoom+1);
+            });
 
             var card = document.getElementById('pac-card');
             var input = document.getElementById('pac-input');
