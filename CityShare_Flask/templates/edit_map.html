@@ -202,7 +202,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="../static/jsscripts_plugins/jquery-1.11.0.min.js"></script>
     <script src="../static/jsscripts_plugins/chosen.jquery.js"></script>
-    <script src="../static/jsscripts_plugins/ImageSelect.jquery.js"></script>|
+    <script src="../static/jsscripts_plugins/ImageSelect.jquery.js"></script>
 
     <script>
 
@@ -661,6 +661,22 @@
             $("#pac-card").hide();
             infowindow.open(map, marker);
             open_info_window = infowindow;
+
+            // disable fields in info window if the user is not the shape creater
+            // enable fields if the user is the map creater or the shape creater
+            //$("#title").attr('disabled', false);
+            if (shapes[current_shape_id]["shape_creater"] == "{{ map.logged_in_user }}"
+                || "{{ map.logged_in_user }}" == "{{ map.creater }}") {
+                $("#title").removeAttr('disabled');
+                $("#description").removeAttr('disabled');
+                $("#rating").removeAttr('disabled');
+                $("#delete_btn").removeAttr('disabled');
+            } else {
+                $("#title").attr('disabled', 'disabled');
+                $("#description").attr('disabled', 'disabled');
+                $("#rating").attr('disabled', 'disabled');
+                $("#delete_btn").attr('disabled', 'disabled');
+            }
         }
 
         function getBoundsZoomLevel(bounds, mapDim) {
@@ -1260,7 +1276,7 @@
 
                for (var key in shapes) {
                    shapes[key]["marker"].setMap(null);
-                   console.log(shapes[key]["type"]);
+
                    if (shapes[key]["type"] == "AREA" || shapes[key]["type"] == "ROAD") {
                        (shapes[key]["shape"]).setMap(null);
                    }
@@ -1349,9 +1365,14 @@
 
 
                         <div class="slidecontainer" aria-placeholder="Filtrer etter brukere">
+                            <label for="Weight">Filtrer figurer etter brukere</label>
                             <select id="filter_users" multiple="true">
                                 {% for user in map.map_users %}
-                                    <option value="{{ user }}">{{ user }}</option>
+                                    <option value="{{ user.username }}">
+                                        {{ user.username }},
+                                        <br>
+                                        {{ user.email }}
+                                    </option>
                                 {% endfor %}
 
                             </select>
@@ -1501,8 +1522,7 @@
     <div id="Map" class="part"></div>
 
     <!-- Info_Window on map -->
-    <div class="col-xs-8">
-        <div id="info_window">
+    <div id="info_window">
         <input type="hidden" name="position" value="">
         <div class='form-group'>
             <label for='title'>Titel:</label>
@@ -1518,7 +1538,6 @@
         </div>
         <br>
         <button type="button" id="delete_btn" class="btn btn-danger">Slett</button>
-    </div>
     </div>
 
     <!-- Link to download the map from google API services -->

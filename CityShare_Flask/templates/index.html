@@ -41,65 +41,53 @@
 
 </head>
 <body>
-        <header>
-            <nav id="nav_bar" class="navbar navbar-inverse">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#">CityShare</a>
-                    </div>
-                    <div class="collapse navbar-collapse" id="myNavbar">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="/">Hjem</a></li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
 
-                            {% if session.get('Logged_in') == "Feil brukernavn eller passord" or session.get('Logged_in') == "Database feil" or session.get('Logged_in') is none %}
-
-                                <li>
-                                    <form action="/login" method="post" class="navbar-form navbar-right">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" name="username" placeholder="Brukernavn">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control" name="password" placeholder="Passord">
-                                        </div>
-
-                                        <div class="form-group">
-                                        <button type="submit" class="btn btn-success formbuttons"><span class="glyphicon glyphicon-log-in"></span> Logg inn</button>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <button type="button" class="btn btn-primary formbuttons" onclick="window.location='/signup'">
-                                            <span class="glyphicon glyphicon-user"></span>
-                                            Registrer deg
-                                            </button>
-                                        </div>
-                                    </form>
-                                </li>
-
-                            {% elif session.get('Logged_in') is not none %}
-                                <li>
-                                    <a style="display: inline-block" href="/signout">Log ut <i class="fa fa-sign-out" style="font-size:24px"></i></a>
-                                </li>
-
-                            {% endif %}
-
-
-                        </ul>
-                    </div>
-
-            </nav>
-        </header>
+    <header>
+        <nav id="nav_bar" class="navbar navbar-inverse">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">CityShare</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/">Hjem</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if session.get('Logged_in') == "Feil brukernavn eller passord" or session.get('Logged_in') == "Database feil" or session.get('Logged_in') is none %}
+                        <li>
+                            <form action="/login" method="post" class="navbar-form navbar-right">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" name="username" placeholder="Brukernavn">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" name="password" placeholder="Passord">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success formbuttons"><span class="glyphicon glyphicon-log-in"></span> Logg inn</button>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary formbuttons" onclick="window.location='/signup'">
+                                        <span class="glyphicon glyphicon-user"></span>
+                                        Registrer deg
+                                    </button>
+                                </div>
+                            </form>
+                        </li>
+                    {% elif session.get('Logged_in') is not none %}
+                        <li>
+                            <a style="display: inline-block" href="/signout">Log ut <i class="fa fa-sign-out" style="font-size:24px"></i></a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
 
     {% block content  %}
-
-
-
-
     {% endblock %}
 
     <!-- <footer>
