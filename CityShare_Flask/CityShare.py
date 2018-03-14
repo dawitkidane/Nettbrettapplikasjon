@@ -274,7 +274,8 @@ def edit_map():
                 "zoom": data[6],
                 "northeastcorner": bounds[0].replace(" ", ","),
                 "southwestcorner": bounds[1].replace(" ", ","),
-                "map_users": []
+                "map_users": [],
+                "logged_in_user": str(username)
             }
             sql = "SELECT username FROM Maps_Users WHERE map_id = "+str(mapid)+";"
             cursor.execute(sql)
