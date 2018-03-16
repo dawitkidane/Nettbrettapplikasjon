@@ -1511,11 +1511,15 @@
                 </div>
             </div>
 
+           {% if map.creater == map.logged_in_user %}
+
             <div class="panel panel-info" >
                 <form action="/exportMap?mapid={{ map.mapid }}'" method="post">
                     <input id="submit" class="panel panel-info"   type="submit" value="EXPORT">
                 </form>
             </div>
+
+            {% endif %}
 
 
         </div>
