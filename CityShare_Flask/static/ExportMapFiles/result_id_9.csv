@@ -1,0 +1,12 @@
+Maps.map_id,latitude,longtitude,Shapes.area_or_path,Shapes.center,Shapes.shape_creater,Shapes.title,Shapes.description,Shapes.rate,Maps_Categories.category_type
+9,40.710390016322705,-73.98860739160159,None,None,Mohammed,Mohammed,Punkt,5,Point
+9,40.710390016322705,-73.98860739160159,None,None,Mohammed,,,2,Point
+9,40.710390016322705,-73.98860739160159,None,None,Dawit,Dawit,Punkt 1,1,Point
+9,40.710390016322705,-73.98860739160159,None,None,Dawit,Dawit,Punkt 2,3,Point
+9,40.710390016322705,-73.98860739160159,None,None,Mohammed,,,1,Point
+9,40.710390016322705,-73.98860739160159,None,None,Mohammed,Ipad test,Hello,2,Point
+9,40.710390016322705,-73.98860739160159,None,None,Mohammed,Mohammed,Vei,3,Road
+9,40.710390016322705,-73.98860739160159,None,None,Dawit,Dawit,Vei,1,Road
+9,40.710390016322705,-73.98860739160159,None,None,Mohammed,Mohammed,Area,4,Area
+9,40.710390016322705,-73.98860739160159,None,None,Dawit,Dawit,Area,1,Area
+9,40.710390016322705,-73.98860739160159,None,None,Dawit,,,2,Area
