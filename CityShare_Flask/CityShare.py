@@ -491,4 +491,8 @@ def exportMap():
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
+    app.run(host='0.0.0.0')
+=======
     app.run("0.0.0.0")
+>>>>>>> bf151938a8e654255425ddba2aa585983d5143d9
