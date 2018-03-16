@@ -15,15 +15,15 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/CityShare_Flask$read_icons.coverage" NAME="read_icons Coverage Results" MODIFIED="1518386603211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CityShare$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1518127835022" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/CityShare_Flask$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1521070804787" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/CityShare_Flask$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1521133098342" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="CityShare.py" pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="CityShare.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CityShare.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
-              <caret line="244" column="15" lean-forward="false" selection-start-line="244" selection-start-column="15" selection-end-line="244" selection-end-column="15" />
+            <state relative-caret-position="697">
+              <caret line="441" column="26" lean-forward="false" selection-start-line="441" selection-start-column="26" selection-end-line="441" selection-end-column="26" />
               <folding>
                 <element signature="e#179#511#0" expanded="false" />
                 <element signature="e#546#581#0" expanded="false" />
@@ -34,11 +34,20 @@
                 <element signature="e#3655#6761#0" expanded="false" />
                 <element signature="e#6825#8255#0" expanded="false" />
                 <element signature="e#8317#13317#0" expanded="false" />
-                <element signature="e#9197#9707#0" expanded="false" />
                 <element signature="e#13392#14580#0" expanded="false" />
                 <element signature="e#14650#15298#0" expanded="false" />
                 <element signature="e#15368#15756#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="edit_map.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/templates/edit_map.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1337" column="0" lean-forward="false" selection-start-line="1337" selection-start-column="0" selection-end-line="1337" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -127,8 +136,8 @@
         <option value="$PROJECT_DIR$/static/css_plugins/chosen.css" />
         <option value="$PROJECT_DIR$/templates/home.html" />
         <option value="$PROJECT_DIR$/templates/new_map.html" />
-        <option value="$PROJECT_DIR$/CityShare.py" />
         <option value="$PROJECT_DIR$/templates/index.html" />
+        <option value="$PROJECT_DIR$/CityShare.py" />
         <option value="$PROJECT_DIR$/templates/edit_map.html" />
       </list>
     </option>
@@ -139,7 +148,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="352" />
     <option name="y" value="70" />
     <option name="width" value="888" />
@@ -160,6 +169,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -167,11 +177,15 @@
               <item name="CityShare_Flask" type="b2602c69:ProjectViewProjectNode" />
               <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="CityShare_Flask" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -280,7 +294,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2985318" sideWeight="0.5030257" order="7" side_tool="true" content_ui="tabs" />
@@ -288,7 +303,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22185971" sideWeight="0.4969743" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21860817" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2246596" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980332" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -336,7 +351,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="28" />
+      <option name="time" value="29" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -481,19 +496,11 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/css_plugins/$RITVIV1.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/static/css_plugins/$RITVIV1.css" />
     <entry file="file://$PROJECT_DIR$/static/css_plugins/chosen.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="211">
           <caret line="274" column="19" lean-forward="true" selection-start-line="274" selection-start-column="19" selection-end-line="274" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -512,7 +519,6 @@
         <state relative-caret-position="230">
           <caret line="254" column="61" lean-forward="false" selection-start-line="254" selection-start-column="61" selection-end-line="254" selection-end-column="61" />
           <folding>
-            <element signature="n#style#0;n#!!top" expanded="false" />
             <element signature="e#2742#3750#0#HTML" expanded="false" />
             <element signature="e#3803#8397#0#HTML" expanded="false" />
             <element signature="e#8538#10588#0#HTML" expanded="false" />
@@ -525,17 +531,6 @@
             <element signature="e#19136#19193#0#HTML" expanded="false" />
             <element signature="e#19245#20037#0#HTML" expanded="false" />
             <element signature="e#20089#20146#0#HTML" expanded="false" />
-            <element signature="n#div#0;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#1;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#2;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#3;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#4;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#5;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#6;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#select#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#6;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#7;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#8;n#form#0;n#div#0;n#!!top" expanded="false" />
-            <element signature="n#div#1;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -544,55 +539,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="256">
           <caret line="91" column="0" lean-forward="true" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-          <folding>
-            <element signature="n#header#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/edit_map.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="206" column="11" lean-forward="false" selection-start-line="206" selection-start-column="11" selection-end-line="206" selection-end-column="11" />
-          <folding>
-            <element signature="e#58#3851#0#HTML" expanded="false" />
-            <element signature="e#5341#5714#0#HTML" expanded="false" />
-            <element signature="e#5808#18120#0#HTML" expanded="false" />
-            <element signature="e#18158#18470#0#HTML" expanded="false" />
-            <element signature="e#18548#22482#0#HTML" expanded="false" />
-            <element signature="e#22523#23368#0#HTML" expanded="false" />
-            <element signature="e#23409#23972#0#HTML" expanded="false" />
-            <element signature="e#24021#24344#0#HTML" expanded="false" />
-            <element signature="e#24392#24726#0#HTML" expanded="false" />
-            <element signature="e#24784#26167#0#HTML" expanded="false" />
-            <element signature="e#26221#27229#0#HTML" expanded="false" />
-            <element signature="e#27307#28154#0#HTML" expanded="false" />
-            <element signature="e#28246#28687#0#HTML" expanded="false" />
-            <element signature="e#28798#29109#0#HTML" expanded="false" />
-            <element signature="e#29226#29604#0#HTML" expanded="false" />
-            <element signature="e#29765#35115#0#HTML" expanded="false" />
-            <element signature="e#35400#53145#0#HTML" expanded="false" />
-            <element signature="e#53264#53851#0#HTML" expanded="false" />
-            <element signature="e#53967#54647#0#HTML" expanded="false" />
-            <element signature="e#54807#54864#0#HTML" expanded="false" />
-            <element signature="e#54916#55708#0#HTML" expanded="false" />
-            <element signature="e#55760#55817#0#HTML" expanded="false" />
-            <element signature="e#55859#55980#0#HTML" expanded="false" />
-            <element signature="e#56033#57083#0#HTML" expanded="false" />
-            <element signature="e#57141#58656#0#HTML" expanded="false" />
-            <element signature="e#61428#62936#0#HTML" expanded="false" />
-            <element signature="e#62950#64443#0#HTML" expanded="false" />
-            <element signature="e#64457#65909#0#HTML" expanded="false" />
-            <element signature="e#65981#66377#0#HTML" expanded="false" />
-            <element signature="e#66489#67344#0#HTML" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CityShare.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="244" column="15" lean-forward="false" selection-start-line="244" selection-start-column="15" selection-end-line="244" selection-end-column="15" />
+        <state relative-caret-position="697">
+          <caret line="441" column="26" lean-forward="false" selection-start-line="441" selection-start-column="26" selection-end-line="441" selection-end-column="26" />
           <folding>
             <element signature="e#179#511#0" expanded="false" />
             <element signature="e#546#581#0" expanded="false" />
@@ -603,11 +557,18 @@
             <element signature="e#3655#6761#0" expanded="false" />
             <element signature="e#6825#8255#0" expanded="false" />
             <element signature="e#8317#13317#0" expanded="false" />
-            <element signature="e#9197#9707#0" expanded="false" />
             <element signature="e#13392#14580#0" expanded="false" />
             <element signature="e#14650#15298#0" expanded="false" />
             <element signature="e#15368#15756#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/edit_map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1337" column="0" lean-forward="false" selection-start-line="1337" selection-start-column="0" selection-end-line="1337" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
