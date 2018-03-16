@@ -444,8 +444,8 @@ def exportMap():
 
     conn = get_db()
     cursor = conn.cursor()
-    sql = "SELECT Maps.map_id, astext(Centroid(geo_boundery)), astext(Centroid(area_or_path)), " \
-          "astext(Centroid(Shapes.center)), Shapes.shape_creater," \
+    sql = "SELECT Maps.map_id, astext(geo_boundery), astext(area_or_path), " \
+          "astext(Shapes.center), Shapes.shape_creater," \
           " Shapes.title, Shapes.description, Shapes.rate, Maps_Categories.category_type FROM " \
           "(Maps JOIN Maps_Categories ON Maps.map_id = Maps_Categories.map_id AND Maps.map_id =" + str(theid) + ")" \
           "JOIN Shapes ON Shapes.category_ID = Maps_Categories.Category_ID; "
@@ -455,7 +455,7 @@ def exportMap():
         data = cursor.fetchall()
 
         with open('static/ExportMapFiles/result_id_'+theid+'.csv','w') as csvfile:
-            fieldnames = ['Maps.map_id', 'latitude', 'longtitude', 'Shapes.area_or_path', 'Shapes.center',
+            fieldnames = ['Maps.map_id', 'north-east_map_boundry', 'south-west_map_boundry', 'Shapes.area_or_path', 'Shapes.center',
                           'Shapes.shape_creater', 'Shapes.title', 'Shapes.description', 'Shapes.rate',
                           'Maps_Categories.category_type']
 
@@ -463,13 +463,15 @@ def exportMap():
             writer.writeheader()
 
             for i in data:
-                bounds = (str(i[1]).strip("POINT(").strip(")")).replace(" ", ",").split(",")
+                bounds = (str(i[1]).strip("POLYGON((").strip("))")).split(",")
+                northeast = "POINT("+bounds[0]+")"
+                southwest = "POINT("+bounds[1]+")"
 
                 area_or_path = (str(i[2]))
 
                 center = (str(i[3]))
 
-                writer.writerow({'Maps.map_id': i[0], 'latitude': bounds[0], 'longtitude': bounds[1],
+                writer.writerow({'Maps.map_id': i[0], 'north-east_map_boundry': northeast, 'south-west_map_boundry': southwest,
                                  'Shapes.area_or_path': area_or_path, 'Shapes.center': center,
                                  'Shapes.shape_creater': i[4],'Shapes.title': i[5], 'Shapes.description': i[6],
                                  'Shapes.rate': i[7], 'Maps_Categories.category_type': i[8]})
@@ -489,4 +491,4 @@ def exportMap():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run("0.0.0.0")
