@@ -93,7 +93,7 @@ def search_for_users():
     ### TODO: search in database and return results
     conn = get_db()
     cursor = conn.cursor()
-    sql = "SELECT username FROM Persons where username = 'search';".replace('search', username)
+    sql = "SELECT username FROM Persons where username = 'search' or e_post = 'search';".replace('search', username)
     try:
         cursor.execute(sql)
         data = cursor.fetchall()
@@ -273,8 +273,18 @@ def edit_map():
                 "bounds": bounds,
                 "zoom": data[6],
                 "northeastcorner": bounds[0].replace(" ", ","),
-                "southwestcorner": bounds[1].replace(" ", ",")
+                "southwestcorner": bounds[1].replace(" ", ","),
+                "map_users": [],
+                "logged_in_user": str(username)
             }
+            sql = "SELECT M.username, e_post FROM Maps_Users AS M JOIN Persons AS P ON M.username = P.username WHERE M.map_id = "+str(mapid)+";"
+            cursor.execute(sql)
+            data = cursor.fetchall();
+            for registered_user in data:
+                user = {}
+                user["username"] = registered_user[0];
+                user["email"] = registered_user[1];
+                map["map_users"].append(user);
 
 
             ## Reading already registered shapes on map

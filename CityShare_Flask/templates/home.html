@@ -3,7 +3,8 @@
 {% block stylingblock %}
 
     <style>
-        iframe {
+
+        iframe, img {
             width: -moz-available;
         }
         .navbar-right {
@@ -25,20 +26,21 @@
             vertical-align: middle;
         }
 
-     .box:hover {
-         border: 5px ridge #ff1493;
-     }
-
-     .box h3 {
-         font-family: Andalus;
-         color: #000000;
-     }
-
-    @media only screen and (max-width: 749px) {
-        .box {
-            width: 90%;
+        .box:hover {
+            border: 5px ridge #ff1493;
         }
-    }
+
+        .box h3 {
+            font-family: Andalus;
+            color: #000000;
+        }
+
+        @media only screen and (max-width: 749px) {
+            .box {
+                width: 90%;
+            }
+        }
+
     </style>
 {% endblock %}
 
@@ -50,7 +52,7 @@
 
                 {% if session.get('Logged_in') == "Feil brukernavn eller passord" or session.get('Logged_in') == "Database feil" %}
 
-                    <div class="row">
+                    <div>
                         <div class="col-lg-12">
 
                             <div class="alert alert-danger alert-dismissable">
@@ -107,16 +109,12 @@
 
             {% else %}
 
-                <!--
-                    <div class="alert alert-danger alert-dismissable">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>{{ session["Logged_in"] }}</strong>
-                    </div>
-                -->
-
                 <div class="row" style="height: 100%">
                     <div class="col-lg-6">
+                        <!--
                         <iframe src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+                        -->
+                        <img src="../static/images/cityshare.png" alt="Bildet ikke funnet">
                     </div>
                     <div class="col-lg-1"></div>
                     <div class="col-lg-5">
