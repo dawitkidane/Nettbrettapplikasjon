@@ -21,6 +21,7 @@
         #ChoicePanel {
             padding: 10px;
             height: inherit;
+            overflow-y: scroll;
         }
 
         .part {
@@ -83,10 +84,6 @@
             width: 70px;
             height: 20px;
             border-radius: 25px;
-        }
-        #submit{
-            width: 100%;
-
         }
 
 
@@ -201,12 +198,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- icon select plugin links -->
-    <link rel="stylesheet" href="../static/css_plugins/chosen.css">
-    <link rel="stylesheet" href="../static/css_plugins/ImageSelect.css">
+    <link rel="stylesheet" href="../static/IconSelector_plugin/css/chosen.css">
+    <link rel="stylesheet" href="../static/IconSelector_plugin/css/ImageSelect.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="../static/jsscripts_plugins/jquery-1.11.0.min.js"></script>
-    <script src="../static/jsscripts_plugins/chosen.jquery.js"></script>
-    <script src="../static/jsscripts_plugins/ImageSelect.jquery.js"></script>
+    <script src="../static/IconSelector_plugin/javascript/jquery-1.11.0.min.js"></script>
+    <script src="../static/IconSelector_plugin/javascript/chosen.jquery.js"></script>
+    <script src="../static/IconSelector_plugin/javascript/ImageSelect.jquery.js"></script>
 
     <script>
 
@@ -292,8 +289,8 @@
                 });
 
                 google.maps.event.addListener(infowindow_{{ point.shape_id }}, 'domready', function () {
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
                         shapes[{{ point.shape_id }}]['title'] = $("input[name~='title']").val();
                         shapes[{{ point.shape_id }}]['description'] = $("textarea[name~='description']").val();
                         shapes[{{ point.shape_id }}]['rating'] = $("input[name~='rating']").val();
@@ -306,8 +303,8 @@
                 });
 
                 google.maps.event.addListener(infowindow_{{ point.shape_id }}, 'closeclick', function () {
-                    handle_on_close_info_window();
                     handle_outside_bounds_click();
+                    handle_on_close_info_window();
                 });
 
 
@@ -375,13 +372,13 @@
                 });
 
                 google.maps.event.addListener(infowindow_{{ road.shape_id }}, 'closeclick', function () {
-                    handle_on_close_info_window();
                     handle_outside_bounds_click();
+                    handle_on_close_info_window();
                 });
 
                 google.maps.event.addListener(infowindow_{{ road.shape_id }}, 'domready', function () {
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
                         shapes[{{ road.shape_id }}]['title'] = $("input[name~='title']").val();
                         shapes[{{ road.shape_id }}]['description'] = $("textarea[name~='description']").val();
                         shapes[{{ road.shape_id }}]['rating'] = $("input[name~='rating']").val();
@@ -459,13 +456,13 @@
                 });
 
                 google.maps.event.addListener(infowindow_{{ area.shape_id }}, 'closeclick', function () {
-                    handle_on_close_info_window();
                     handle_outside_bounds_click();
+                    handle_on_close_info_window();
                 });
 
                 google.maps.event.addListener(infowindow_{{ area.shape_id }}, 'domready', function () {
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
                         shapes[{{ area.shape_id }}]['title'] = $("input[name~='title']").val();
                         shapes[{{ area.shape_id }}]['description'] = $("textarea[name~='description']").val();
                         shapes[{{ area.shape_id }}]['rating'] = $("input[name~='rating']").val();
@@ -601,6 +598,8 @@
                         }
 
                         delete shapes[shape_id];
+                        current_shape_id = null;
+                        open_info_window = null;
 
                         handle_outside_bounds_click();
                     }
@@ -629,10 +628,12 @@
             if (open_info_window != null) {
                 open_info_window.close();
                 open_info_window = null;
+                map.setZoom(map.getZoom());
+                map.setCenter((shapes[current_shape_id]["marker"]).getPosition());
+                //current_shape_id = null;
+            } else {
+                map.fitBounds(new google.maps.LatLngBounds(northeastcorner, southwestcorner));
             }
-            map.fitBounds(new google.maps.LatLngBounds(northeastcorner, southwestcorner));
-            map.setZoom({{ map.zoom }}-2);
-            current_shape_id = null;
         }
         function handle_on_close_info_window() {
 
@@ -647,6 +648,9 @@
             $("#pac-card").show();
 
         }
+
+
+
         function handle_marker_click(infowindow, marker) {
 
             if (current_shape_id != null) {
@@ -777,9 +781,14 @@
             southwestcorner = new google.maps.LatLng({{ map.southwestcorner }});
             bounds = new google.maps.LatLngBounds(northeastcorner, southwestcorner);
 
+            var $mapDiv = $('#Map');
+            var mapDim = { height: $mapDiv.height(), width: $mapDiv.width() };
+            calculated_zoom = getBoundsZoomLevel(bounds, mapDim);
+
             map = new google.maps.Map(document.getElementById('Map'), {
                 center: computeCentroid([northeastcorner, southwestcorner]),
-                zoom: {{ map.zoom }}-2,
+                //zoom: {{ map.zoom }},
+                zoom: calculated_zoom,
                 gestureHandling: true, // true to turn on hand scroll or 'none'
                 zoomControl: true,
                 fullscreenControl: false,
@@ -801,6 +810,7 @@
                 bounds: map.getBounds(),
                 clickable: false,
                 fillOpacity: 0,
+                strokeColor: '#FF0000'
             });
             rectangle.setMap(map);
 
@@ -877,14 +887,14 @@
                 fixed_west = southwestcorner.lng();
                 if ((east > fixed_west) || (west < fixed_east) || (north > fixed_south) || (south < fixed_north)) {
                     map.fitBounds(new google.maps.LatLngBounds(northeastcorner, southwestcorner));
-                    map.setZoom({{ map.zoom }}-2);
+                    map.setZoom({{ map.zoom }});
                 }
             });
 
             google.maps.event.addListener(map,'bounds_changed',function () {
-                if (map.getZoom() < {{ map.zoom }}-2) {
+                if (map.getZoom() < {{ map.zoom }}) {
                     map.fitBounds(bounds);
-                    map.setZoom({{ map.zoom }}-2);
+                    map.setZoom({{ map.zoom }});
                 }
             });
 
@@ -956,13 +966,13 @@
                                 });
 
                                 google.maps.event.addListener(infowindow, 'closeclick', function () {
-                                    handle_on_close_info_window();
                                     handle_outside_bounds_click();
+                                    handle_on_close_info_window();
                                 });
 
                                 google.maps.event.addListener(infowindow, 'domready', function () {
-                                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
-                                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
+                                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
+                                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
                                         for (var key in shapes) {
                                             if (shapes[key]["marker"] == marker) {
                                                 shapes[key]['title'] = $("input[name~='title']").val();
@@ -995,110 +1005,216 @@
 
                     // case current mode is Road
                     case "Road":
+                        /*
+                            click_listener = google.maps.event.addListener(map,'click',function(event) {
 
-                        var click_listener = google.maps.event.addListener(map,'click',function(event) {
-
-                            handle_on_close_info_window();
+                                handle_on_close_info_window();
 
                                 if (draw_mode == false) {
                                     draw_mode = true;
 
                                     mousemove_listener = google.maps.event.addListener(map,'mousemove',function(event) {
-                                        if (event.latLng.lat() < southwestcorner.lat() && event.latLng.lat() > northeastcorner.lat()
-                                            && event.latLng.lng() < southwestcorner.lng() && event.latLng.lng() > northeastcorner.lng()) {
-                                                var new_location = event.latLng;
-                                                points_array.push(new_location);
+                                            if (event.latLng.lat() < southwestcorner.lat() && event.latLng.lat() > northeastcorner.lat()
+                                                && event.latLng.lng() < southwestcorner.lng() && event.latLng.lng() > northeastcorner.lng()) {
+                                                    var new_location = event.latLng;
+                                                    points_array.push(new_location);
 
-                                                if (line != null) line.setMap(null);
-                                                var Road = new google.maps.Polyline({
-                                                    path: points_array,
-                                                    strokeColor: color,
-                                                    strokeOpacity: 1,
-                                                    strokeWeight: 7
-                                                });
-                                                line = Road;
-                                                line.setMap(map);
-
-                                                var end = google.maps.event.addListener(Road,'click',function(event) {
-
-                                                    var marker = new google.maps.Marker({
-                                                        position: points_array[Math.round(points_array.length/2)]
+                                                    if (line != null) line.setMap(null);
+                                                    var Road = new google.maps.Polyline({
+                                                        path: points_array,
+                                                        strokeColor: color,
+                                                        strokeOpacity: 1,
+                                                        strokeWeight: 7
                                                     });
+                                                    line = Road;
+                                                    line.setMap(map);
 
-                                                    var content_window = $('#info_window').html();
-                                                    var infowindow = new google.maps.InfoWindow({
-                                                        content: content_window
-                                                    });
+                                                    var end = google.maps.event.addListener(Road,'click',function(event) {
 
-                                                    new_road = {
-                                                        "marker": marker,
-                                                        "type": "ROAD",
-                                                        "infowindow": infowindow,
-                                                        "center": (points_array[Math.round(points_array.length/2)]).toString(),
-                                                        "title": "",
-                                                        "description": "",
-                                                        "rating": "2",
-                                                        "category_ID": (category_id).toString(),
-                                                        "area_or_path": makestringfromarray(points_array),
-                                                        "points_array": points_array
-                                                    };
-
-                                                    register_shape(new_road);
-
-                                                    line.setMap(null);
-                                                    points_array = [];
-
-                                                    google.maps.event.addListener(marker, 'click', function (event) {
-                                                        handle_marker_click(infowindow, marker)
-                                                    });
-
-                                                    google.maps.event.addListener(infowindow, 'closeclick', function () {
-                                                        handle_on_close_info_window();
-                                                        handle_outside_bounds_click();
-                                                    });
-
-                                                    google.maps.event.addListener(infowindow, 'domready', function () {
-                                                        $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
-                                                        $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
-                                                            for (var key in shapes) {
-                                                                if (shapes[key]["marker"] == marker) {
-                                                                    shapes[key]['title'] = $("input[name~='title']").val();
-                                                                    shapes[key]['description'] = $("textarea[name~='description']").val();
-                                                                    shapes[key]['rating'] = $("input[name~='rating']").val();
-                                                                }
-                                                            }
+                                                        var marker = new google.maps.Marker({
+                                                            position: points_array[Math.round(points_array.length/2)]
                                                         });
 
-                                                        $("#delete_btn").off('click');
-                                                        $("#delete_btn").on('click', function() {
-                                                            for (var key in shapes) {
-                                                                if (shapes[key]["marker"] == marker) {
-                                                                    delete_shape(key);
-                                                                }
-                                                            }
+                                                        var content_window = $('#info_window').html();
+                                                        var infowindow = new google.maps.InfoWindow({
+                                                            content: content_window
                                                         });
+
+                                                        new_road = {
+                                                            "marker": marker,
+                                                            "type": "ROAD",
+                                                            "infowindow": infowindow,
+                                                            "center": (points_array[Math.round(points_array.length/2)]).toString(),
+                                                            "title": "",
+                                                            "description": "",
+                                                            "rating": "2",
+                                                            "category_ID": (category_id).toString(),
+                                                            "area_or_path": makestringfromarray(points_array),
+                                                            "points_array": points_array
+                                                        };
+
+                                                        register_shape(new_road);
+
+                                                        line.setMap(null);
+                                                        points_array = [];
+
+                                                        google.maps.event.addListener(marker, 'click', function (event) {
+                                                            handle_marker_click(infowindow, marker)
+                                                        });
+
+                                                        google.maps.event.addListener(infowindow, 'closeclick', function () {
+                                                            handle_on_close_info_window();
+                                                            handle_outside_bounds_click();
+                                                        });
+
+                                                        google.maps.event.addListener(infowindow, 'domready', function () {
+                                                            $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur');
+                                                            $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur', function () {
+                                                                for (var key in shapes) {
+                                                                    if (shapes[key]["marker"] == marker) {
+                                                                        shapes[key]['title'] = $("input[name~='title']").val();
+                                                                        shapes[key]['description'] = $("textarea[name~='description']").val();
+                                                                        shapes[key]['rating'] = $("input[name~='rating']").val();
+                                                                    }
+                                                                }
+                                                            });
+
+                                                            $("#delete_btn").off('click');
+                                                            $("#delete_btn").on('click', function() {
+                                                                for (var key in shapes) {
+                                                                    if (shapes[key]["marker"] == marker) {
+                                                                        delete_shape(key);
+                                                                    }
+                                                                }
+                                                            });
+                                                        });
+
+
+                                                        draw_mode = false;
+                                                        google.maps.event.removeListener(mousemove_listener);
+                                                        google.maps.event.removeListener(end);
                                                     });
 
+                                            }
+                                        });
 
-                                                    draw_mode = false;
-                                                    google.maps.event.removeListener(mousemove_listener);
-                                                    google.maps.event.removeListener(end);
-                                                });
-
-                                        }
-                                    });
+                                    listeners.push(mousemove_listener);
                                 }
 
-                        });
+                            });
+                        */
+
+                        click_listener = google.maps.event.addListener(map,'click',function(event) {
+
+                                handle_on_close_info_window();
+
+                                var cursor = new google.maps.Marker({
+                                    position: event.latLng,
+                                    icon: "../static/images/edit.png",
+                                    draggable: true
+                                });
+                                cursor.setMap(map);
+
+                                if (draw_mode == false) {
+                                    draw_mode = true;
+
+                                    drag_listener = google.maps.event.addListener(cursor,'drag',function(event) {
+                                        if (event.latLng.lat() < southwestcorner.lat() && event.latLng.lat() > northeastcorner.lat()
+                                            && event.latLng.lng() < southwestcorner.lng() && event.latLng.lng() > northeastcorner.lng()) {
+                                            var new_location = event.latLng;
+                                            points_array.push(new_location);
+
+                                            if (line != null) line.setMap(null);
+                                            var Road = new google.maps.Polyline({
+                                                path: points_array,
+                                                strokeColor: color,
+                                                strokeOpacity: 1,
+                                                strokeWeight: 7
+                                            });
+                                            line = Road;
+                                            line.setMap(map);
+                                        }
+                                    });
+
+                                    var end = google.maps.event.addListener(cursor,'dragend',function(event) {
+                                                var marker = new google.maps.Marker({
+                                                    position: points_array[Math.round(points_array.length/2)]
+                                                });
+
+                                                var content_window = $('#info_window').html();
+                                                var infowindow = new google.maps.InfoWindow({
+                                                    content: content_window
+                                                });
+
+                                                new_road = {
+                                                            "marker": marker,
+                                                            "type": "ROAD",
+                                                            "infowindow": infowindow,
+                                                            "center": (points_array[Math.round(points_array.length/2)]).toString(),
+                                                            "title": "",
+                                                            "description": "",
+                                                            "rating": "2",
+                                                            "category_ID": (category_id).toString(),
+                                                            "area_or_path": makestringfromarray(points_array),
+                                                            "points_array": points_array
+                                                        };
+
+                                                register_shape(new_road);
+
+                                                line.setMap(null);
+                                                points_array = [];
+
+                                                google.maps.event.addListener(marker, 'click', function (event) {
+                                                            handle_marker_click(infowindow, marker)
+                                                        });
+
+                                                google.maps.event.addListener(infowindow, 'closeclick', function () {
+                                                    handle_outside_bounds_click();
+                                                    handle_on_close_info_window();
+                                                });
+
+                                                google.maps.event.addListener(infowindow, 'domready', function () {
+                                                            $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
+                                                            $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
+                                                                for (var key in shapes) {
+                                                                    if (shapes[key]["marker"] == marker) {
+                                                                        shapes[key]['title'] = $("input[name~='title']").val();
+                                                                        shapes[key]['description'] = $("textarea[name~='description']").val();
+                                                                        shapes[key]['rating'] = $("input[name~='rating']").val();
+                                                                    }
+                                                                }
+                                                            });
+
+                                                            $("#delete_btn").off('click');
+                                                            $("#delete_btn").on('click', function() {
+                                                                for (var key in shapes) {
+                                                                    if (shapes[key]["marker"] == marker) {
+                                                                        delete_shape(key);
+                                                                    }
+                                                                }
+                                                            });
+                                                        });
+
+
+                                                draw_mode = false;
+                                                cursor.setMap(null);
+                                            });
+
+                                    listeners.push(end);
+                                    listeners.push(drag_listener);
+
+                                }
+                            });
+
 
                         listeners.push(click_listener);
-
                         break;
 
                     // case current mode is Area
                     case "Area":
 
-                        var click_listener = google.maps.event.addListener(map,'click',function(event) {
+                        /*
+                            click_listener = google.maps.event.addListener(map,'click',function(event) {
 
                             handle_on_close_info_window();
 
@@ -1191,6 +1307,112 @@
                                     });
                                 }
                         });
+
+                        */
+
+                        click_listener = google.maps.event.addListener(map,'click',function(event) {
+
+                                handle_on_close_info_window();
+
+                                var cursor = new google.maps.Marker({
+                                    position: event.latLng,
+                                    icon: "../static/images/edit.png",
+                                    draggable: true
+                                });
+                                cursor.setMap(map);
+
+                                if (draw_mode == false) {
+                                    draw_mode = true;
+
+                                    drag_listener = google.maps.event.addListener(cursor,'drag',function(event) {
+                                        if (event.latLng.lat() < southwestcorner.lat() && event.latLng.lat() > northeastcorner.lat()
+                                        && event.latLng.lng() < southwestcorner.lng() && event.latLng.lng() > northeastcorner.lng()) {
+                                            var new_location = event.latLng;
+                                            points_array.push(new_location);
+
+                                            if (line != null) line.setMap(null);
+                                            var Road = new google.maps.Polyline({
+                                                path: points_array,
+                                                strokeColor: color,
+                                                strokeOpacity: 1,
+                                                strokeWeight: 7
+                                            });
+                                            line = Road;
+                                            line.setMap(map);
+                                        }
+                                    });
+
+                                    var end = google.maps.event.addListener(cursor,'dragend',function(event) {
+                                        var marker = new google.maps.Marker({
+                                                    position: computeCentroid(points_array)
+                                                });
+
+                                        var content_window = $('#info_window').html();
+                                        var infowindow = new google.maps.InfoWindow({
+                                                    content: content_window
+                                                });
+
+                                        new_road = {
+                                                    "marker": marker,
+                                                    "type": "AREA",
+                                                    "infowindow": infowindow,
+                                                    "center": (points_array[Math.round(points_array.length / 2)]).toString(),
+                                                    "title": "",
+                                                    "description": "",
+                                                    "rating": "2",
+                                                    "category_ID": (category_id).toString(),
+                                                    "area_or_path": makestringfromarray(points_array),
+                                                    "points_array": points_array
+                                                };
+
+                                        register_shape(new_road);
+
+                                        line.setMap(null);
+                                        points_array = [];
+
+                                        google.maps.event.addListener(marker, 'click', function (event) {
+                                                    handle_marker_click(infowindow, marker);
+                                                });
+
+                                        google.maps.event.addListener(infowindow, 'closeclick', function () {
+                                            handle_outside_bounds_click();
+                                            handle_on_close_info_window();
+                                        });
+
+                                        google.maps.event.addListener(infowindow, 'domready', function () {
+                                                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
+                                                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
+                                                        for (var key in shapes) {
+                                                            if (shapes[key]["marker"] == marker) {
+                                                                shapes[key]['title'] = $("input[name~='title']").val();
+                                                                shapes[key]['description'] = $("textarea[name~='description']").val();
+                                                                shapes[key]['rating'] = $("input[name~='rating']").val();
+                                                            }
+                                                        }
+                                                    });
+
+                                                    $("#delete_btn").off('click');
+                                                    $("#delete_btn").on('click', function () {
+                                                        for (var key in shapes) {
+                                                            if (shapes[key]["marker"] == marker) {
+                                                                delete_shape(key);
+                                                            }
+                                                        }
+                                                    });
+                                                });
+
+
+                                        draw_mode = false;
+                                        cursor.setMap(null);
+
+                                    });
+
+                                    listeners.push(end);
+                                    listeners.push(drag_listener);
+
+                                }
+
+                            });
 
                         listeners.push(click_listener);
 
@@ -1511,13 +1733,6 @@
                   </div>
                 </div>
             </div>
-
-            <div class="panel panel-info" >
-                <form action="/exportMap?mapid={{ map.mapid }}'" method="post">
-                    <input id="submit" class="panel panel-info"   type="submit" value="EXPORT">
-                </form>
-            </div>
-
 
         </div>
     </div>

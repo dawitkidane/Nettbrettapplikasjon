@@ -2,7 +2,7 @@
 
 import os, os.path
 
-path = "C:/Users/webjo/PycharmProjects/CityShare_Flask/static/icons"
+path = "C:\Users\webjo\Desktop\Github\Nettbrettapplikasjon\CityShare_Flask\static\icons"
 valid_images = [".png"]
 teller = 0
 for f in os.listdir(path):
