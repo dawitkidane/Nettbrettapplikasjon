@@ -1,4 +1,6 @@
-from flask import Flask, render_template, url_for, request, json, g, session
+from tkinter import Tk
+
+from flask import Flask, render_template, url_for, request, json, g, session, send_file
 import mysql.connector
 
 app = Flask(__name__)
@@ -245,6 +247,7 @@ def show_maps():
 def edit_map():
     mapid = request.args.get('mapid')
     username = session.get("Logged_in")
+    lo = []
 
     ## TODO: check if the user have right to enter this map
     conn = get_db()
@@ -255,9 +258,8 @@ def edit_map():
         cursor.execute(sql)
         have_right = cursor.fetchone()[0]
         if have_right == 1:
-
             ## Reading map details from database and return render template with results
-            sql = "SELECT map_creater, title, description, start_date, end_date, astext(geo_boundery), zoom " \
+            sql = "SELECT map_creater, title, description, start_date, end_date, astext(geo_boundery), zoom ,map_id " \
                   "FROM Maps " \
                   "WHERE map_id = " + str(mapid) + ";"
             cursor.execute(sql)
@@ -277,6 +279,14 @@ def edit_map():
                 "map_users": [],
                 "logged_in_user": str(username)
             }
+            sql = "SELECT map_id " \
+                  "FROM Maps ;"
+            cursor.execute(sql)
+            natey = cursor.fetchall();
+
+            for x in natey:
+                lo.append(x[0])
+
             sql = "SELECT M.username, e_post FROM Maps_Users AS M JOIN Persons AS P ON M.username = P.username WHERE M.map_id = "+str(mapid)+";"
             cursor.execute(sql)
             data = cursor.fetchall();
@@ -341,19 +351,30 @@ def edit_map():
                     areas_categories.append(category)
 
         else:
-            return render_template("edit_map.html", map={}, points=[], roads=[], area=[],
-                                   Fail="Du har ingen tilgang til dette kartet, kontakt administrator")
+            session["err"] = "Du har ingen tilgang til dette kartet venligst ta kontakt med admin"
+            return render_template("error.html")
 
     except mysql.connector.Error as err:
+
         conn.close()
         print(err.msg)
         return render_template("edit_map.html", map={}, shapes=[], Fail=err.msg)
     finally:
         conn.close()
-        return render_template("edit_map.html", map=map, points_categories=points_categories, roads_categories=roads_categories,
-                               areas_categories=areas_categories, points=points, roads=roads, area=areas)
 
-    return render_template("edit_map.html", mapid=mapid)
+        if str(mapid) in str(lo):
+            return render_template("edit_map.html", map=map, points_categories=points_categories,
+                                   roads_categories=roads_categories,
+                                   areas_categories=areas_categories, points=points, roads=roads, area=areas)
+        else:
+            session["err"] = "Du har ingen tilgang til dette kartet venligst ta kontakt med adminstrator!"
+            return render_template("error.html")
+
+    if str(mapid) in str(lo):
+        return render_template("edit_map.html", mapid=mapid)
+    else:
+        session["err"] = "Du har ingen tilgang til dette kartet venligst ta kontakt med adminstrator!"
+        return render_template("error.html")
 
 @app.route("/registerShape", methods=['POST'])
 def registerShape():
@@ -454,7 +475,11 @@ def exportMap():
         cursor.execute(sql)
         data = cursor.fetchall()
 
-        with open('static/ExportMapFiles/result_id_'+theid+'.csv','w') as csvfile:
+        filepath = "static/ExportMapFiles/result_id_'+theid+'.csv"
+        filename = "result_id_"+theid+".csv"
+
+        with open(filepath, 'w') as csvfile:
+
             fieldnames = ['Maps.map_id', 'north-east_map_boundry', 'south-west_map_boundry', 'Shapes.area_or_path', 'Shapes.center',
                           'Shapes.shape_creater', 'Shapes.title', 'Shapes.description', 'Shapes.rate',
                           'Maps_Categories.category_type']
@@ -487,12 +512,7 @@ def exportMap():
 
     print("Writing complete")
 
-    return render_template("home.html")
-
+    return send_file(filepath, attachment_filename=filename, as_attachment=True)
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     app.run(host='0.0.0.0')
-=======
-    app.run("0.0.0.0")
->>>>>>> bf151938a8e654255425ddba2aa585983d5143d9
