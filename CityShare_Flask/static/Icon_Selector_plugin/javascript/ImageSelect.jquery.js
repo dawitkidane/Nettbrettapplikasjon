@@ -18,7 +18,7 @@
 
       $.fn.extend({
         // summery:
-        //  Extend the original 'chosen' method to support images
+        //  Extend the original 'chosen' method to support Images
 
         chosen: function(options) {
 

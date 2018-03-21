@@ -7,7 +7,7 @@ valid_images = [".png"]
 teller = 0
 for f in os.listdir(path):
     if f.endswith(".png"):
-        print("<option value='"+f+"' data-img-src='../static/icons/"+f+"'>"+f.strip(".png")+"</option>")
+        print("<option value='"+f+"' data-img-src='../static/Icons/"+f+"'>"+f.strip(".png")+"</option>")
         teller += 1
 
 print(teller)
