@@ -3,51 +3,15 @@
 {% block stylingblock %}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap Library Plugin -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <style>
+    <!-- Link to static/view_maps_stylesheet.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/view_maps_stylesheet.css') }}">
 
-    #maps {
-        text-align: center;
-    }
-
-    .map_box {
-        display: inline-block;
-        width: 45%;
-        margin: 5px;
-        padding: 5px;
-        height: 200px;
-        border: 1px solid black;
-        /*box-shadow: grey 5px 5px;*/
-    }
-
-    .map_box:hover {
-        box-shadow: orange 5px 5px;
-    }
-
-    @media only screen and (max-width: 800px) {
-        .map_box {
-            width: 90%;
-        }
-    }
-
-    .map_info_box, .static_map_box {
-        vertical-align: middle;
-        display: inline-block;
-        width: 49%;
-        height: 190px;
-        overflow: scroll;
-    }
-    .map_info_box {
-        text-align: left;
-        padding: 5px;
-    }
-    strong {
-        color: #2a62bc;
-    }
-    </style>
 {% endblock %}
 
 {% block content %}
@@ -69,7 +33,6 @@
 
         {% endfor %}
 
-
-
     </div>
+
 {% endblock %}

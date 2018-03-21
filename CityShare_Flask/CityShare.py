@@ -68,7 +68,9 @@ def login():
         cursor.execute(sql, (username, password))
         row = cursor.fetchone()
         does_exist = row[0]
-        is_admin = row[1] #cursor.fetchone()[1]
+        is_admin = row[1]
+
+        Error = None
 
         if does_exist == 1:
             session["Logged_in"] = username
@@ -76,18 +78,20 @@ def login():
             if is_admin == 1:
                 session["is_Admin"] = is_admin
 
-            return render_template("home.html")
+            return render_template("home.html", Error=Error)
+
+
         else:
-            session["Logged_in"] = "Feil brukernavn eller passord"
+            Error = "Feil brukernavn eller passord"
 
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        session['Logged_in'] = "Database feil"
+        Error = "Database feil"
     finally:
         conn.close()
 
-    return render_template("home.html")
+    return render_template("home.html", Error=Error)
 
 @app.route("/searchUsers", methods=['POST'])
 def search_for_users():

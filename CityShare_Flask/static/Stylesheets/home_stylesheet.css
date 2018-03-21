@@ -1,0 +1,38 @@
+iframe, img {
+    width: -moz-available;
+}
+
+.navbar-right {
+    margin: 5px;
+}
+
+.formbuttons {
+    width: -moz-available;
+}
+
+.box {
+    display: inline-block;
+    float: left;
+    border: 1px solid grey;
+    box-shadow: 5px 5px #d3d3d3;
+    padding: 5%;
+    margin: 5px;
+    width: 350px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.box:hover {
+    border: 5px ridge #ff1493;
+}
+
+.box h3 {
+    font-family: Andalus;
+    color: #000000;
+}
+
+@media only screen and (max-width: 749px) {
+    .box {
+        width: 90%;
+    }
+}
