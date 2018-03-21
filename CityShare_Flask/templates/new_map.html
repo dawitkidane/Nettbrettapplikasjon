@@ -19,6 +19,7 @@
         #ChoicePanel {
             padding: 10px;
             height: inherit;
+            overflow-y: scroll;
         }
 
         .part {
@@ -85,20 +86,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- icon select plugin links -->
-    <link rel="stylesheet" href="../static/css_plugins/chosen.css">
-    <link rel="stylesheet" href="../static/css_plugins/ImageSelect.css">
+    <link rel="stylesheet" href="../static/IconSelector_plugin/css/chosen.css">
+    <link rel="stylesheet" href="../static/IconSelector_plugin/css/ImageSelect.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="../static/jsscripts_plugins/jquery-1.11.0.min.js"></script>
-    <script src="../static/jsscripts_plugins/chosen.jquery.js"></script>
-    <script src="../static/jsscripts_plugins/ImageSelect.jquery.js"></script>
+    <script src="../static/IconSelector_plugin/javascript/jquery-1.11.0.min.js"></script>
+    <script src="../static/IconSelector_plugin/javascript/chosen.jquery.js"></script>
+    <script src="../static/IconSelector_plugin/javascript/ImageSelect.jquery.js"></script>
 
     <!-- date picker plugin links -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <!-- Modal plugins -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+    <script src='../static/colorpicker_plugin/spectrum.js'></script>
+    <link rel='stylesheet' href='../static/colorpicker_plugin/spectrum.css' />
+
 
     <script>
 
@@ -173,7 +178,7 @@
             };
             var rectangle = new google.maps.Rectangle({
                 bounds: bounds,
-                editable: true,
+                editable: false,
                 draggable: true
             });
 
@@ -248,6 +253,7 @@
 
             });
         }
+
 
         $(document).ready(function () {
 
@@ -364,7 +370,8 @@
             $("#add_road_category").on('click', function () {
                var icon_name = $('#road_name').val();
                var icon_type = "Road";
-               var road_color = $( "#road_color input" ).val();
+               //var road_color = $( "#road_color input" ).val();
+                var road_color = "#"+$("#colorpicker_road").spectrum("get").toHex();
                var color_div = "<div style='background-color:"+road_color+"; width: 30px; height: 30px'></div>";
 
                var text = color_div+" <strong>Name</strong>: "+icon_name+", <strong>Type</strong>: "+icon_type;
@@ -407,7 +414,8 @@
             $("#add_area_category").on('click', function () {
                var icon_name = $('#area_name').val();
                var icon_type = "Area";
-               var area_color = $( "#area_color input" ).val();
+               //var area_color = $( "#area_color input" ).val();
+               var area_color = "#"+$("#colorpicker_area").spectrum("get").toHex();
                var color_div = "<div style='background-color:"+area_color+"; width: 30px; height: 30px'></div>";
 
                var text = color_div+" <strong>Name</strong>: "+icon_name+", <strong>Type</strong>: "+icon_type;
@@ -499,6 +507,12 @@
                 auto_adjust_dimentions();
             });
 
+            $("#colorpicker_road").spectrum({
+                color: "#3355cc"
+            });
+            $("#colorpicker_area").spectrum({
+                color: "#3355cc"
+            });
         });
 
 
@@ -1305,8 +1319,10 @@
 
                         <div class="input-group">
                             <div class="input-group" id="road_color">
-                                Velg farge: <input type="color" class="form-group">
+                                Velg farge: <input id="colorpicker_road" type="color" value='#3355cc' class="form-group">
                             </div>
+
+
                         </div>
 
                         <div class="input-group">
@@ -1342,7 +1358,7 @@
 
                         <div class="input-group">
                             <div class="input-group" id="area_color">
-                                Velg farge: <input type="color" class="form-group">
+                                Velg farge: <input id="colorpicker_area" type="color" value='#3355cc' class="form-group">
                             </div>
                         </div>
 
