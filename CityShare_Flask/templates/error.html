@@ -1,29 +1,17 @@
 {% extends "index.html" %}
 {% block stylingblock %}
-
-    <style>
-        #errdiv{
-            height: 600px;
-            width:700px;
-            border: 1px solid grey;
-            border-radius: 5px;
-            margin: auto;
-            text-align: center;
-
-        }
-        #errtxt{
-            margin-top: 10%;
-            font-size: 1.5em;
-        }
-    </style>
+    <!-- Link to static/stylesheets/error_stylesheet.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/error_stylesheet.css') }}">
 {% endblock %}
 
 {% block content %}
     <div id="errdiv"class="alert alert-danger">
 
-        <h1 >Oops! an error has occur!</h1>
+        <h1 >Obs! En feil har skjedd!</h1>
 
         <p id="errtxt">{{ session.get('err') }}</p>
+
+        <a href="/">Gå tilbake til hjemsiden</a>
 
     </div>
 
