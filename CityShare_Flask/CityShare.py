@@ -1,5 +1,3 @@
-from tkinter import Tk
-
 from flask import Flask, render_template, url_for, request, json, g, session, send_file
 import mysql.connector
 
