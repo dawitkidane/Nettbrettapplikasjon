@@ -13,13 +13,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Bootstrap Library plugin -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- Chosen icon select plugin links -->
-    <link rel="stylesheet" href="../static/Icon_Selector_plugin/css/chosen.css">
-    <link rel="stylesheet" href="../static/Icon_Selector_plugin/css/ImageSelect.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="../static/Icon_Selector_plugin/javascript/jquery-1.11.0.min.js"></script>
-    <script src="../static/Icon_Selector_plugin/javascript/chosen.jquery.js"></script>
-    <script src="../static/Icon_Selector_plugin/javascript/ImageSelect.jquery.js"></script>
 
     <!-- link to static/Scripts/edit_map_JavaScript.js -->
     <script src="{{ url_for('static',filename='Scripts/edit_map_JavaScript.js') }}"></script>
@@ -41,268 +35,6 @@
         // a map to store te shapes by their id's
         var shapes = [];
 
-        function get_shapes_by_users(array_of_users) {
-            if (array_of_users.length == 0 || array_of_users == undefined) return shapes;
-
-            shapes_by_users = [];
-            for (var key in shapes) {
-                if (array_of_users.includes(shapes[key]["shape_creater"])) {
-                    shapes_by_users[key] = shapes[key]
-                }
-            }
-            return shapes_by_users
-        }
-
-        // function to load the registered shapes on this map
-        function loadShapes() {
-
-            // removing all shapes
-            for (var key in shapes) {
-                shapes[key]["marker"].setMap(null);
-                if (shapes[key]["type"] != "POINT") {
-                    shapes[key]["shape"].setMap(null);
-                }
-            }
-
-            {% for point in points %}
-
-                var marker_{{ point.shape_id }} = new google.maps.Marker({
-                    position: new google.maps.LatLng{{ point.shape_center }},
-                    icon: "../static/icons/{{ point.icon }}"
-                });
-                var content_window_{{ point.shape_id }} = $('#info_window').html();
-                var infowindow_{{ point.shape_id }} = new google.maps.InfoWindow({
-                    content: content_window_{{ point.shape_id }}
-                });
-                var new_point_{{ point.shape_id }} = {
-                    "type": "POINT",
-                    "marker": marker_{{ point.shape_id }},
-                    "infowindow": infowindow_{{ point.shape_id }},
-                    "center": marker_{{ point.shape_id }}.getPosition().toString(),
-                    "area_or_path": "",
-                    "title": "{{ point.title }}",
-                    "description": "{{ point.description }}".replace("{n}","\n"),
-                    "rating": "{{ point.rating }}",
-                    "shape_creater": "{{ point.shape_creater }}"
-                };
-                shapes["{{ point.shape_id }}"] = new_point_{{ point.shape_id }};
-                marker_{{ point.shape_id }}.setMap(map);
-                infowindow_{{ point.shape_id }}.open(map, marker_{{ point.shape_id }});
-                open_info_window = infowindow_{{ point.shape_id }};
-                infowindow_{{ point.shape_id }}.close();
-
-                shapes[{{ point.shape_id }}] = new_point_{{ point.shape_id }};
-
-                if (clicklistener_{{ point.shape_id }} == undefined) var first_time_{{ point.shape_id }} = true;
-                var clicklistener_{{ point.shape_id }} = google.maps.event.addListener(marker_{{ point.shape_id }}, 'click', function (event) {
-                    handle_marker_click(infowindow_{{ point.shape_id }}, marker_{{ point.shape_id }});
-
-                    if (first_time_{{ point.shape_id }})
-                    {
-                        $("input[name~='title']").val(shapes[{{ point.shape_id }}]['title']);
-                        $("textarea[name~='description']").val(shapes[{{ point.shape_id }}]['description']);
-                        $("input[name~='rating']").val(shapes[{{ point.shape_id }}]['rating']);
-                        first_time_{{ point.shape_id }} = false;
-                    }
-                });
-
-                google.maps.event.addListener(infowindow_{{ point.shape_id }}, 'domready', function () {
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
-                        shapes[{{ point.shape_id }}]['title'] = $("input[name~='title']").val();
-                        shapes[{{ point.shape_id }}]['description'] = $("textarea[name~='description']").val();
-                        shapes[{{ point.shape_id }}]['rating'] = $("input[name~='rating']").val();
-                    });
-
-                    $("#delete_btn").off('click');
-                    $("#delete_btn").on('click', function() {
-                        delete_shape({{ point.shape_id }});
-                    });
-                });
-
-                google.maps.event.addListener(infowindow_{{ point.shape_id }}, 'closeclick', function () {
-                    handle_outside_bounds_click();
-                    handle_on_close_info_window();
-                });
-
-
-            {% endfor %}
-
-            var line = null;
-
-            {% for road in roads %}
-
-                color = "{{ road.icon }}";
-                var points_array = makearrayfromstring("{{ road.area_or_path }}");
-
-                var Road_{{ road.shape_id }} = new google.maps.Polyline({
-                    path: points_array,
-                    strokeColor: color,
-                    strokeOpacity: 1,
-                    strokeWeight: 7
-                });
-
-                var marker_{{ road.shape_id }} = new google.maps.Marker({
-                    position: points_array[Math.round(points_array.length/2)]
-                });
-
-                var content_window_{{ road.shape_id }} = $('#info_window').html();
-                var infowindow_{{ road.shape_id }} = new google.maps.InfoWindow({
-                    content: content_window_{{ road.shape_id }}
-                });
-
-                var theline_{{ road.shape_id }} = Road_{{ road.shape_id }};
-
-                points_array = [];
-                Road_{{ road.shape_id }}.setMap(map);
-                marker_{{ road.shape_id }}.setMap(map);
-                infowindow_{{ road.shape_id }}.open(map, marker_{{ road.shape_id }});
-                infowindow_{{ road.shape_id }}.close();
-                line_{{ road.shape_id }} = null;
-
-                new_road_{{ road.shape_id }} = {
-                    "shape": theline_{{ road.shape_id }},
-                    "marker": marker_{{ road.shape_id }},
-                    "type": "ROAD",
-                    "infowindow": infowindow_{{ road.shape_id }},
-                    "center": {{ road.shape_center }},
-                    "title": "{{ road.title }}",
-                    "description": "{{ road.description }}".replace("{n}","\n"),
-                    "rating": "{{ road.rating }}",
-                    "area_or_path": "{{ road.area_or_path }}",
-                    "road": Road_{{ road.shape_id }},
-                    "shape_creater": "{{ road.shape_creater }}"
-                };
-                shapes[{{ road.shape_id }}] = new_road_{{ road.shape_id }};
-
-                if (clicklistener_{{ road.shape_id }} == undefined) var first_time_{{ road.shape_id }} = true;
-                var clicklistener_{{ road.shape_id }} = google.maps.event.addListener(marker_{{ road.shape_id }}, 'click', function (event) {
-                    handle_marker_click(infowindow_{{ road.shape_id }}, marker_{{ road.shape_id }});
-
-                    if (first_time_{{ road.shape_id }})
-                    {
-                        $("input[name~='title']").val(shapes[{{ road.shape_id }}]['title']);
-                        $("textarea[name~='description']").val(shapes[{{ road.shape_id }}]['description']);
-                        $("input[name~='rating']").val(shapes[{{ road.shape_id }}]['rating']);
-                        first_time_{{ road.shape_id }} = false;
-                    }
-
-                });
-
-                google.maps.event.addListener(infowindow_{{ road.shape_id }}, 'closeclick', function () {
-                    handle_outside_bounds_click();
-                    handle_on_close_info_window();
-                });
-
-                google.maps.event.addListener(infowindow_{{ road.shape_id }}, 'domready', function () {
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
-                        shapes[{{ road.shape_id }}]['title'] = $("input[name~='title']").val();
-                        shapes[{{ road.shape_id }}]['description'] = $("textarea[name~='description']").val();
-                        shapes[{{ road.shape_id }}]['rating'] = $("input[name~='rating']").val();
-                    });
-
-                    $("#delete_btn").off('click');
-                    $("#delete_btn").on('click', function() {
-                        delete_shape({{ road.shape_id }});
-                    });
-                });
-
-            {% endfor %}
-
-            var area_{{ area.shape_id }} = null;
-
-            {% for area in area %}
-                color = "{{ area.icon }}";
-                var points_array = makearrayfromstring("{{ area.area_or_path }}");
-
-                var Area_{{ area.shape_id }} = new google.maps.Polygon({
-                    path: points_array,
-                    strokeColor: color,
-                    strokeOpacity: 1,
-                    strokeWeight: 7,
-                    fillColor: color,
-                    fillOpacity:0.4,
-                    clickable: false
-                });
-
-                var marker_{{ area.shape_id }} = new google.maps.Marker({
-                    position: computeCentroid(points_array)
-                });
-
-                var content_window_{{ area.shape_id }} = $('#info_window').html();
-                var infowindow_{{ area.shape_id }} = new google.maps.InfoWindow({
-                    content: content_window_{{ area.shape_id }}
-                });
-
-                var thearea_{{ area.shape_id }} = Area_{{ area.shape_id }};
-
-                points_array = [];
-                Area_{{ area.shape_id }}.setMap(map);
-                marker_{{ area.shape_id }}.setMap(map);
-                infowindow_{{ area.shape_id }}.open(map, marker_{{ area.shape_id }});
-                infowindow_{{ area.shape_id }}.close();
-                area_{{ area.shape_id }} = null;
-
-                new_area_{{ area.shape_id }} = {
-                    "shape": thearea_{{ area.shape_id }},
-                    "marker": marker_{{ area.shape_id }},
-                    "type": "AREA",
-                    "infowindow": infowindow_{{ area.shape_id }},
-                    "center": {{ area.shape_center }},
-                    "title": "{{ area.title }}",
-                    "description": "{{ area.description }}".replace("{n}","\n"),
-                    "rating": "{{ area.rating }}",
-                    "area_or_path": "{{ area.area_or_path }}",
-                    "road": Area_{{ area.shape_id }},
-                    "shape_creater": "{{ area.shape_creater }}"
-                };
-                shapes[{{ area.shape_id }}] = new_area_{{ area.shape_id }};
-
-                if (clicklistener_{{ area.shape_id }} == undefined) var first_time_{{ area.shape_id }} = true;
-                var clicklistener_{{ area.shape_id }} = google.maps.event.addListener(marker_{{ area.shape_id }}, 'click', function (event) {
-                    handle_marker_click(infowindow_{{ area.shape_id }}, marker_{{ area.shape_id }});
-
-                    if (first_time_{{ area.shape_id }})
-                    {
-                        $("input[name~='title']").val(shapes[{{ area.shape_id }}]['title']);
-                        $("textarea[name~='description']").val(shapes[{{ area.shape_id }}]['description']);
-                        $("input[name~='rating']").val(shapes[{{ area.shape_id }}]['rating']);
-                        first_time_{{ area.shape_id }} = false;
-                    }
-
-                });
-
-                google.maps.event.addListener(infowindow_{{ area.shape_id }}, 'closeclick', function () {
-                    handle_outside_bounds_click();
-                    handle_on_close_info_window();
-                });
-
-                google.maps.event.addListener(infowindow_{{ area.shape_id }}, 'domready', function () {
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
-                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
-                        shapes[{{ area.shape_id }}]['title'] = $("input[name~='title']").val();
-                        shapes[{{ area.shape_id }}]['description'] = $("textarea[name~='description']").val();
-                        shapes[{{ area.shape_id }}]['rating'] = $("input[name~='rating']").val();
-                    });
-
-                    $("#delete_btn").off('click');
-                    $("#delete_btn").on('click', function() {
-                        delete_shape({{ area.shape_id }});
-                    });
-                });
-
-            {% endfor %}
-
-            // displaying shapes and markers
-            for (var key in shapes) {
-                shapes[key]["marker"].setMap(map);
-                if (shapes[key]["type"] != "POINT") {
-                    shapes[key]["shape"].setMap(map);
-                }
-            }
-        }
-
         function clear_map_events() {
             // removing previous eventlisteners from map
             if (listeners.length > 0) {
@@ -315,163 +47,166 @@
 
         var current_shape_id = null;
         function register_shape(shape) {
+            data = Object.keys(shapes).length;
 
             if (shape["type"] == "POINT") {
-                $.post("/registerShape",
-                    {
-                        center: (shape["marker"].getPosition()).toString(),
-                        title: (shape["title"]).toString(),
-                        description: (shape["description"]).toString(),
-                        rating: shape["rating"],
-                        categoryID: (shape["category_ID"]).toString()
-                    },
-                    function (data, status) {
-                        if (data != "Failed") {
-                            shapes[data] = shape;
-                            (shape["marker"]).setMap(map);
-                            (shape["infowindow"]).open(map, shape["marker"]);
-                            shape["shape_creater"] = "{{ map.logged_in_user }}";
-                            open_info_window = shape["infowindow"];
-                            map.setOptions({draggableCursor: undefined});
-                            $("#pac-card").hide();
-                            current_shape_id = data;
-                            $("input[name~='New_Marker']").prop('checked', false);
-                            clear_map_events();
-                        } else {
-                            alert("Ingen forbindelse, prøv igjen");
-                        }
-                    });
+                shapes[data] = shape;
+                (shape["marker"]).setMap(map);
+                (shape["infowindow"]).open(map, shape["marker"]);
+                open_info_window = shape["infowindow"];
+                map.setOptions({draggableCursor: undefined});
+                $("#pac-card").hide();
+                current_shape_id = data;
+                $("input[name~='New_Marker']").prop('checked', false);
+                clear_map_events();
             }
             else if (shape["type"] == "AREA" || shape["type"] == "ROAD" )
             {
-                $.post("/registerShape",
-                    {
-                        center: (shape["points_array"][Math.round(shape["points_array"].length / 2)]).toString(),
-                        title: "",
-                        description: "",
-                        rating: "2",
-                        categoryID: (shape["category_ID"]).toString(),
-                        area_or_path: makestringfromarray(shape["points_array"])
-                    },
-                    function (data, status) {
-                        if (data != "Failed") {
-
-                            var road;
-                            if (shape["type"] == "AREA") {
-                                road = new google.maps.Polygon({
-                                    path: shape["points_array"],
-                                    strokeColor: color,
-                                    strokeOpacity: 1,
-                                    strokeWeight: 7,
-                                    fillColor: color,
-                                    fillOpacity: 0.4,
-                                    clickable: false
-                            });
-                            } else {
-                                road = new google.maps.Polyline({
-                                    path: shape["points_array"],
-                                    strokeColor: color,
-                                    strokeOpacity: 1,
-                                    strokeWeight: 7,
-                            });
-                            }
-                            road.setMap(map);
-                            shape["marker"].setMap(map);
-                            shape["infowindow"].open(map, shape["marker"]);
-                            shape["shape"] = road;
-                            open_info_window = shape["infowindow"];
-                            shape["shape_creater"] = "{{ map.logged_in_user }}";
-                            shapes[data] = shape;
-                            $("#pac-card").hide();
-                            current_shape_id = data;
-                            $("input[name~='New_Marker']").prop('checked', false);
-                            map.setOptions({draggableCursor: undefined});
-                            clear_map_events();
-                        } else {
-                            alert("Ingen forbindelse, prøv igjen");
-                        }
-                        return;
+                var road;
+                if (shape["type"] == "AREA") {
+                    road = new google.maps.Polygon({
+                        path: shape["points_array"],
+                        strokeColor: color,
+                        strokeOpacity: 1,
+                        strokeWeight: 7,
+                        fillColor: color,
+                        fillOpacity: 0.4,
+                        clickable: false
                     });
-            };
-
+                } else {
+                    road = new google.maps.Polyline({
+                        path: shape["points_array"],
+                        strokeColor: color,
+                        strokeOpacity: 1,
+                        strokeWeight: 7,
+                    });
+                }
+                road.setMap(map);
+                shape["marker"].setMap(map);
+                shape["infowindow"].open(map, shape["marker"]);
+                shape["shape"] = road;
+                open_info_window = shape["infowindow"];
+                shapes[data] = shape;
+                $("#pac-card").hide();
+                current_shape_id = data;
+                $("input[name~='New_Marker']").prop('checked', false);
+                map.setOptions({draggableCursor: undefined});
+                clear_map_events();
+            }
+            return;
         }
         function delete_shape(shape_id) {
 
-            shape_to_delete = shapes[shape_id];
+            var descision = confirm("Er du sikker på at du vil slette dette kart objektet ?");
+            if (descision == true) {
+                shape_to_delete = shapes[shape_id];
 
-            $.post("/deleteShape",{
-                    shape_id: shape_id
-                },
-                function(data,status){
-                    if (data === "Failed" && status === "success") {
-                        alert("Kunne ikke slette, prøv igjen");
-                    } else {
-                        alert("Slettet");
-                        (shapes[shape_id]["infowindow"]).close();
-                        (shapes[shape_id]["marker"]).setMap(null);
+                (shapes[shape_id]["infowindow"]).close();
+                (shapes[shape_id]["marker"]).setMap(null);
 
-
-                        if (shapes[shape_id]["shape"] != undefined) {
-                            shapes[shape_id]["shape"].setMap(null);
-                        }
-
-                        delete shapes[shape_id];
-                        current_shape_id = null;
-                        open_info_window = null;
-
-                        handle_outside_bounds_click();
-                    }
-                });
-        }
-        function update_shape(shape_id) {
-            shape_to_update = shapes[shape_id];
-
-            $.post("/updateShape", {
-                title: shape_to_update["title"],
-                description: shape_to_update["description"],
-                rating: shape_to_update["rating"],
-                shape_id: shape_id
-            }, function (data, status) {
-                if (data == "Failed") {
-                    alert("Ingen forbindelse, prøv igjen");
-                } else {
-                    current_shape_id = null;
+                if (shapes[shape_id]["shape"] != undefined) {
+                    shapes[shape_id]["shape"].setMap(null);
                 }
-                return;
-            });
 
+                delete shapes[shape_id];
+                current_shape_id = null;
+                open_info_window = null;
+
+                handle_outside_bounds_click();
+                $("#pac-card").show();
+            }
         }
 
+        function ResetRespondoentFieldsAndShapes() {
+
+            var descision = confirm("Er du sikker på at du vil slett person data ?");
+            if (descision == true) {
+                {% for question in questions %}
+                    $("#question_{{ question.ID }}").val("");
+                {% endfor %}
+
+                for (var key in shapes) {
+                    (shapes[key]["marker"]).setMap(null);
+                    if (shapes[key]["type"] == "AREA" || shapes[key]["type"] == "ROAD") {
+                        (shapes[key]["shape"]).setMap(null);
+                    }
+                }
+                shapes = {};
+                }
+        }
+        function SaveRespondoent() {
+            var Respondoent = {};
+            {% for question in questions %}
+                answer_{{ question.ID }} = $("#question_{{ question.ID }}").val();
+                Respondoent["{{ question.question }}"] = {
+                    "ID": {{ question.ID }},
+                    "answer": answer_{{ question.ID }}
+                }
+            {% endfor %}
+
+            var Shapes = {};
+            for (var key in shapes) {
+                Shapes[key] = {
+                    "type": shapes[key]["type"],
+                    "category_ID": shapes[key]["category_ID"],
+                    "creater": shapes[key]["shape_creater"],
+                    "center": shapes[key]["center"],
+                    "area_or_path": shapes[key]["area_or_path"],
+                    "title": shapes[key]["title"],
+                    "description": shapes[key]["description"],
+                    "rating": shapes[key]["rating"]
+                }
+            }
+
+            $.post("/RegisterRespondoent",
+                    {
+                        Respondoent: JSON.stringify(Respondoent),
+                        Shapes: JSON.stringify(Shapes),
+                        Map_id: {{ map.mapid }}
+                    },
+                    function (data, status) {
+                        if (data == "Success") {
+                            alert("Repondent Data er lagret !");
+                            // clear the map, and clear the shapes array as well
+                            for (var key in shapes) {
+                                (shapes[key]["marker"]).setMap(null);
+                                if (shapes[key]["type"] == "AREA" || shapes[key]["type"] == "ROAD") {
+                                    (shapes[key]["shape"]).setMap(null);
+                                }
+                            }
+                            shapes = {};
+                            {% for question in questions %}
+                                $("#question_{{ question.ID }}").val("");
+                            {% endfor %}
+                            return;
+                        } else {
+                            alert("Kan ikke lagre respondent data, sjekk internett forbindelse");
+                            return;
+                        }
+                    });
+        }
+
+        var last_valid_center;
+        var last_valid_zoom;
         function handle_outside_bounds_click() {
             if (open_info_window != null) {
                 open_info_window.close();
                 open_info_window = null;
-                map.setZoom(map.getZoom());
-                map.setCenter((shapes[current_shape_id]["marker"]).getPosition());
-                //current_shape_id = null;
+                map.setZoom(last_valid_zoom);
+                map.setCenter(last_valid_center);
             } else {
                 map.fitBounds(new google.maps.LatLngBounds(northeastcorner, southwestcorner));
             }
         }
         function handle_on_close_info_window() {
-
             if (open_info_window != null) {
                 open_info_window.close();
                 open_info_window = null;
                 $("#pac-card").show();
             }
-            if (current_shape_id != null) {
-                update_shape(current_shape_id);
-            }
             $("#pac-card").show();
-
         }
         function handle_marker_click(infowindow, marker) {
-
-            if (current_shape_id != null) {
-                update_shape(current_shape_id);
-            }
-
             for (var key in shapes) {
                 if (shapes[key]["marker"] == marker) {
                     current_shape_id = key;
@@ -485,21 +220,6 @@
             infowindow.open(map, marker);
             open_info_window = infowindow;
 
-            // disable fields in info window if the user is not the shape creater
-            // enable fields if the user is the map creater or the shape creater
-            //$("#title").attr('disabled', false);
-            if (shapes[current_shape_id]["shape_creater"] == "{{ map.logged_in_user }}"
-                || "{{ map.logged_in_user }}" == "{{ map.creater }}") {
-                $("#title").removeAttr('disabled');
-                $("#description").removeAttr('disabled');
-                $("#rating").removeAttr('disabled');
-                $("#delete_btn").removeAttr('disabled');
-            } else {
-                $("#title").attr('disabled', 'disabled');
-                $("#description").attr('disabled', 'disabled');
-                $("#rating").attr('disabled', 'disabled');
-                $("#delete_btn").attr('disabled', 'disabled');
-            }
         }
 
         function getBoundsZoomLevel(bounds, mapDim) {
@@ -571,7 +291,6 @@
         var markers = [];
         var markerCluster;
         function initMap() {
-
             northeastcorner = new google.maps.LatLng({{ map.northeastcorner }});
             southwestcorner = new google.maps.LatLng({{ map.southwestcorner }});
             bounds = new google.maps.LatLngBounds(northeastcorner, southwestcorner);
@@ -590,7 +309,7 @@
                 bounds: bounds,
 
                 mapTypeControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_BOTTOM
+                    position: google.maps.ControlPosition.LEFT_CENTER
                 },
                 streetViewControlOptions: {
                     position: google.maps.ControlPosition.RIGHT_CENTER
@@ -601,17 +320,12 @@
                 fullscreenControl: false
             });
 
-            var rectangle = new google.maps.Rectangle({
-                bounds: map.getBounds(),
-                clickable: false,
-                fillOpacity: 0,
-                strokeColor: '#FF0000'
-            });
-            rectangle.setMap(map);
+            last_valid_center = map.getCenter();
+            last_valid_zoom = map.getZoom();
 
             var card = document.getElementById('pac-card');
             var input = document.getElementById('pac-input');
-            map.controls[google.maps.ControlPosition.TOP_CENTER].push(card);
+            map.controls[google.maps.ControlPosition.LEFT_TOP].push(card);
 
             var autocomplete = new google.maps.places.Autocomplete(input);
 
@@ -643,7 +357,6 @@
                     map.setZoom(17);  // Why 17? Because it looks good.
                 }
 
-
                 var address = '';
                 if (place.address_components) {
                     address = [
@@ -656,44 +369,75 @@
             });
 
             google.maps.event.addListener(map,'click',function(event) {
-                     if (open_info_window != null) {
-                         open_info_window.close();
-                         open_info_window = null;
-                         $("#pac-card").show();
-                         handle_outside_bounds_click()
-                     }
-                     if (current_shape_id != null) {
-                         update_shape(current_shape_id);
-                     }
-
+                if (open_info_window != null) {
+                    open_info_window.close();
+                    open_info_window = null;
+                    $("#pac-card").show();
+                    handle_outside_bounds_click()
+                }
             });
 
             // event to keep the user inside the map bound, and prevent adding markers outside the target geo area
             google.maps.event.addListener(map,'drag',function () {
                 northeast = map.getBounds().getNorthEast(); // LatLng of the north-east corner
                 southwest = map.getBounds().getSouthWest(); // LatLng of the south-west corder
+
                 south = southwest.lat();
+                west = southwest.lng();
+
                 north = northeast.lat();
                 east = northeast.lng();
-                west = southwest.lng();
+
                 fixed_south = southwestcorner.lat();
+                fixed_west = southwestcorner.lng();
+
                 fixed_north = northeastcorner.lat();
                 fixed_east = northeastcorner.lng();
-                fixed_west = southwestcorner.lng();
+
                 if ((east > fixed_west) || (west < fixed_east) || (north > fixed_south) || (south < fixed_north)) {
-                    map.fitBounds(new google.maps.LatLngBounds(northeastcorner, southwestcorner));
-                    map.setZoom({{ map.zoom }});
+                    map.setCenter(last_valid_center);
+                    map.setZoom(last_valid_zoom);
+                } else {
+                    last_valid_center = map.getCenter();
+                    last_valid_zoom = map.getZoom();
                 }
             });
 
             google.maps.event.addListener(map,'bounds_changed',function () {
-                if (map.getZoom() < {{ map.zoom }}) {
+                if (map.getZoom() < calculated_zoom) {
                     map.fitBounds(bounds);
-                    map.setZoom({{ map.zoom }});
+                    map.setZoom(calculated_zoom);
                 }
+
+                var outerCoords = [
+                {lat: northeastcorner.lat()+10, lng: southwestcorner.lng()-10}, // north west
+                {lat: southwestcorner.lat()-10, lng: southwestcorner.lng()-10}, // south west
+                {lat: southwestcorner.lat()-10, lng: northeastcorner.lng()+10}, // south east
+                {lat: northeastcorner.lat()+10, lng: northeastcorner.lng()+10} // north east
+            ];
+                var innerCoords = [
+                    {lat: northeastcorner.lat(), lng: southwestcorner.lng()}, // north west
+                    {lat: southwestcorner.lat(), lng: southwestcorner.lng()}, // south west
+                    {lat: southwestcorner.lat(), lng: northeastcorner.lng()}, // south east
+                    {lat: northeastcorner.lat(), lng: northeastcorner.lng()}  // north east
+                ];
+                map.data.add({
+                    geometry: new google.maps.Data.Polygon([outerCoords, innerCoords])
+                });
+                map.data.setStyle(function(feature) {
+                  var color = 'white';
+                  if (feature.getProperty('isColorful')) {
+                    color = feature.getProperty('color');
+                  }
+                  return ({
+                      fillColor: color,
+                      fillOpacity: 1,
+                      strokeColor: color,
+                      strokeWeight: 2
+                  });
+                });
             });
 
-            loadShapes();
         }
 
     </script>
@@ -721,23 +465,6 @@
                 </div>
                 <div id="collapse1" class="panel-collapse collapse in">
                     <div class="panel-body">
-
-
-                        <div class="slidecontainer" aria-placeholder="Filtrer etter brukere">
-                            <label for="Weight">Filtrer figurer etter brukere</label>
-                            <select id="filter_users" multiple="true">
-                                {% for user in map.map_users %}
-                                    <option value="{{ user.username }}">
-                                        {{ user.username }},
-                                        <br>
-                                        {{ user.email }}
-                                    </option>
-                                {% endfor %}
-
-                            </select>
-                        </div>
-
-                        <br>
 
                         <div class="slidecontainer">
                             <label for="Weight">Linjevekt</label>
@@ -769,114 +496,90 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
-                            Legg til et <strong>Nytt Punkt</strong></a>
+                            <strong>Ny Respondoent</strong></a>
                     </h4>
                 </div>
                 <div id="collapse2" class="panel-collapse collapse">
                     <div class="panel-body">
+                        <div style="padding: 5%; margin: 5%; border-radius: 5px; border: 1px solid red">
+                            <form>
 
-                        {% for point_cat in points_categories %}
-                            <div class="radio">
-                                <label>
-                                    <input type="radio" name="New_Marker" id="{{ point_cat.ID }}" value="Point">
-                                    <img class="category_icon" src="../static/icons/{{ point_cat.image_or_color }}">
-                                    <p>{{ point_cat.name }}</p>
-                                </label>
-                            </div>
-                        {% endfor %}
+                            {% for question in questions %}
+                                <div class="form-group">
+                                    <label for="pwd">{{ question.question }}</label>
+                                    <input type="text" class="form-control" id="question_{{ question.ID }}" placeholder="Svar her" name="question.{{ question.ID }}">
+                                </div>
+                            {% endfor %}
 
-                    <!--
-                        <div class="radio">
-                            <label>
-                                <input type="radio" name="New_Marker" value="b">
-                                <img class="category_icon" src="../static/Icons/barber.png">
-                                <p>Kategori navn 1</p>
-                            </label>
+                                <div class="form-group">
+                                   <div class="btn-group btn-group-justified">
+                                       <a onclick="SaveRespondoent();" class="btn btn-success">Lagre</a>
+                                       <a type="button" class="btn btn-info" data-toggle="modal" data-target="#ShapeModal" data-backdrop="false">
+                                           Ny Markør
+                                       </a>
+                                       <a onclick="ResetRespondoentFieldsAndShapes();" class="btn btn-danger">Slett</a>
+                                   </div>
+                                </div>
+
+                                <div class="modal fade" id="ShapeModal" role="dialog">
+                                    <div class="modal-dialog">
+
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">Legg til En Markør</h4>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                            <strong>Punkter</strong>
+                                            {% for point_cat in points_categories %}
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="New_Marker" id="{{ point_cat.ID }}" value="Point">
+                                                        <img class="category_icon" src="../static/icons/{{ point_cat.image_or_color }}">
+                                                        <p>{{ point_cat.name }}</p>
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+
+                                            <strong>Linjer</strong>
+                                            {% for road_cat in roads_categories %}
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="New_Marker" id="{{ road_cat.ID }}" value="Road">
+                                                        <div class="color_box" style="background-color: {{ road_cat.image_or_color }}"></div>
+                                                        <p>{{ road_cat.name }}</p>
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+
+                                            <strong>Områder</strong>
+                                            {% for area_cat in areas_categories %}
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="New_Marker" id="{{ area_cat.ID }}" value="Area">
+                                                        <div class="color_box" style="background-color: {{ area_cat.image_or_color }}"></div>
+                                                        <p>{{ area_cat.name }}</p>
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-default" data-dismiss="modal">Lukk</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    -->
                     </div>
                 </div>
             </div>
 
-            <div class="panel panel-danger">
-
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
-                            Legg til et <strong>Nytt Område</strong></a>
-                    </h4>
-                </div>
-                <div id="collapse3" class="panel-collapse collapse">
-                    <div class="panel-body">
-
-                        {% for area_cat in areas_categories %}
-                            <div class="radio">
-                              <label>
-                                  <input type="radio" name="New_Marker" id="{{ area_cat.ID }}" value="Area">
-                                  <div class="color_box" style="background-color: {{ area_cat.image_or_color }}"></div>
-                                  <p>{{ area_cat.name }}</p>
-                              </label>
-                            </div>
-                        {% endfor %}
-
-                    <!--
-                        <div class="radio">
-                            <label>
-                              <input type="radio" name="New_Marker" value="e">
-                              <div class="color_box" style="background-color: red"></div>
-                              <p>Kategori navn 1</p>
-                            </label>
-                        </div>
-                    -->
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">
-                    Legg til en <strong>Ny Vei</strong></a>
-                  </h4>
-                </div>
-                <div id="collapse4" class="panel-collapse collapse">
-                  <div class="panel-body">
-
-                      {% for road_cat in roads_categories %}
-                          <div class="radio">
-                              <label>
-                                  <input type="radio" name="New_Marker" id="{{ road_cat.ID }}" value="Road">
-                                  <div class="color_box" style="background-color: {{ road_cat.image_or_color }}"></div>
-                                  <p>{{ road_cat.name }}</p>
-                              </label>
-                          </div>
-                      {% endfor %}
-
-                  <!--
-                        <div class="radio">
-                            <label>
-                              <input type="radio" name="New_Marker" value="l">
-                              <div class="color_box" style="background-color: red"></div>
-                              <p>Kategori navn 1</p>
-                            </label>
-                        </div>
-                  -->
-                  </div>
-                </div>
-            </div>
-
-           {% if map.creater == map.logged_in_user %}
-
-            <div class="panel panel-info" >
-
-                <form action="/exportMap?mapid={{ map.mapid }}'" method="post">
-                    <input id="submit" class="panel panel-info"   type="submit" value="EKSPORT">
-                </form>
-            </div>
-
-            {% endif %}
         </div>
+
     </div>
 
     <!-- Address Search Bar on map -->
@@ -913,6 +616,7 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY&libraries=places&callback=initMap">
     </script>
+    <!-- Link to include google clustering Library -->
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
     </script>
 

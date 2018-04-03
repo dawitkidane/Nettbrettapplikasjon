@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, json, g, session, send_file
+from flask import Flask, render_template, url_for, request, json, g, session
 import mysql.connector
 
 app = Flask(__name__)
@@ -104,6 +104,7 @@ def search_for_users():
         users = []
         for entry in data:
             users.append(entry)
+
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
@@ -140,18 +141,20 @@ def add_new_map():
 
         geo_zoom = request.form.get('geo_zoom')
 
-        users = request.form.getlist('users')
-        if map_creater not in users:
-            users.append(map_creater)
+        Interviewers = request.form.getlist('Interviewers')
+        Administrators = request.form.getlist('Administrators')
+        if map_creater not in Administrators:
+            Administrators.append(map_creater)
 
         points_categories = request.form.getlist('point_categories')
         roads_categories = request.form.getlist('road_categories')
         areas_categories = request.form.getlist('area_categories')
+        questions = request.form.getlist('questions')
         """
         ['asdasd,Point,2hand.png', 'zoo,Point,zoo.png']
         ['black,Road,#000000', 'blue,Road,#0000ff', 'green,Road,#008000']
         ['red,Area,#ff0000', 'white,Area,#ffffff', 'yellow,Area,#ffff00', 'purple,Area,#e916d9']
-        
+        ['How old are you ?', 'Where do you live ?']
         """
 
         ## TODO: ADD MAP TO DATABASE, 2 TABLES USERS AND MAPS
@@ -164,23 +167,16 @@ def add_new_map():
             conn.commit()
             Map_id = cursor.lastrowid
 
-        except mysql.connector.Error as err:
-            conn.close()
-            print(err.msg)
-            return render_template("new_map.html")
-
-        ## TODO: adding users to the map
-        cursor = conn.cursor()
-        try:
-            for user in users:
-                sql = "INSERT INTO Maps_Users(username, map_id) VALUES(%s,%s);"
+            for user in Interviewers:
+                sql = "INSERT INTO Maps_Interviewers(username, map_id) VALUES(%s,%s);"
                 cursor.execute(sql, (user, Map_id))
                 conn.commit()
-        except mysql.connector.Error as err:
-            print(err.msg)
 
-        cursor = conn.cursor()
-        try:
+            for user in Administrators:
+                sql = "INSERT INTO Maps_Administrators(username, map_id) VALUES(%s,%s);"
+                cursor.execute(sql, (user, Map_id))
+                conn.commit()
+
             categories = points_categories + roads_categories + areas_categories
             for category in categories:
                 cat = category.split(',')
@@ -188,27 +184,39 @@ def add_new_map():
                       "VALUES(%s,%s,%s,%s);"
                 cursor.execute(sql, (cat[0], cat[1], cat[2], Map_id))
                 conn.commit()
+
+            for question in questions:
+                sql = "INSERT INTO Maps_Questions(question, map_id) values(%s,%s);"
+                cursor.execute(sql, (question, Map_id))
+                conn.commit()
+
+
         except mysql.connector.Error as err:
             conn.close()
             print(err.msg)
-        finally:
-            conn.close()
-            return render_template("home.html")
+            return render_template("new_map.html", Fail="En Feil har skjedd, prøv igjen!")
 
-        return render_template("new_map.html")
+        conn.close()
+        return render_template("home.html")
 
 @app.route("/showmaps", methods=['GET'])
 def show_maps():
     username = session.get("Logged_in")
+
     conn = get_db()
     cursor = conn.cursor()
-    sql= "SELECT map_id FROM Maps_Users WHERE username = '"+username+"';"
+    sql = "(SELECT map_id FROM Maps_Interviewers WHERE username = 'person')" \
+          "UNION ALL" \
+          "(SELECT map_id FROM Maps_Administrators WHERE username = 'person');".replace('person',str(username))
     try:
         cursor.execute(sql)
         data = cursor.fetchall()
         mapids = []
         for entry in data:
             mapids.append(entry[0])
+
+        if mapids.__len__() == 0:
+            return render_template("view_maps.html", maps={}, msg="Det er ingen registrerte kart på deg!")
 
         maps = []
         for mapid in mapids:
@@ -219,126 +227,97 @@ def show_maps():
             cursor = conn.cursor()
 
             sql = "SELECT map_creater, title, date(start_date), end_date, description, astext(Centroid(geo_boundery)), zoom FROM Maps WHERE map_id = "+str(mapid)+";"
-            try:
-                cursor.execute(sql)
-                data = cursor.fetchone()
-                map['creater'] = data[0]
-                map['title'] = data[1]
-                map['issuedate'] = str(data[2])
-                map['expirydate'] = str(data[3])
-                map['description'] = str(data[4])
-                map['center'] = (str(data[5]).strip("POINT(").strip(")")).replace(" ",",")
-                map['zoom'] = str(data[6])
 
-                maps.append(map)
+            cursor.execute(sql)
+            data = cursor.fetchone()
+            map['creater'] = data[0]
+            map['title'] = data[1]
+            map['issuedate'] = str(data[2])
+            map['expirydate'] = str(data[3])
+            map['description'] = str(data[4])
+            map['center'] = (str(data[5]).strip("POINT(").strip(")")).replace(" ",",")
+            map['zoom'] = str(data[6])
 
-
-            except mysql.connector.Error as err:
-                conn.close()
-                print(err.msg)
+            maps.append(map)
 
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-    finally:
-        conn.close()
+        return render_template("view_maps.html", maps={}, Fail="En feil har skjedd, prøv igjen!")
 
+    conn.close()
     return render_template("view_maps.html", maps=maps)
 
 @app.route("/EditMap", methods=['GET'])
 def edit_map():
     mapid = request.args.get('mapid')
     username = session.get("Logged_in")
-    lo = []
 
-    ## TODO: check if the user have right to enter this map
     conn = get_db()
     cursor = conn.cursor()
-    sql = "SELECT COUNT(*) from Maps_Users WHERE username = '" + str(username) + "' AND map_id = " + str(
-        mapid) + " LIMIT 0, 1;"
+
+    # TODO: Getting the usernames and email for the Interviwers and Administrators
+    Interviewers = []
+    Administrators = []
+    sql = "SELECT M.username, e_post FROM Maps_Interviewers AS M JOIN Persons AS P ON M.username = P.username " \
+          "WHERE map_id = 'MAP_ID';".replace("MAP_ID",str(mapid))
     try:
         cursor.execute(sql)
-        have_right = cursor.fetchone()[0]
-        if have_right == 1:
-            ## Reading map details from database and return render template with results
-            sql = "SELECT map_creater, title, description, start_date, end_date, astext(geo_boundery), zoom ,map_id " \
-                  "FROM Maps " \
-                  "WHERE map_id = " + str(mapid) + ";"
-            cursor.execute(sql)
-            data = cursor.fetchone()
-            bounds = str(data[5]).strip("POLYGON((").strip("))").split(",")
-            map = {
-                "mapid": mapid,
-                "creater": data[0],
-                "title": data[1],
-                "description": data[2],
-                "issuedate": data[3],
-                "expirydate": data[4],
-                "bounds": bounds,
-                "zoom": data[6],
-                "northeastcorner": bounds[0].replace(" ", ","),
-                "southwestcorner": bounds[1].replace(" ", ","),
-                "map_users": [],
-                "logged_in_user": str(username)
-            }
-            sql = "SELECT map_id " \
-                  "FROM Maps ;"
-            cursor.execute(sql)
-            natey = cursor.fetchall();
+        data = cursor.fetchall()
+        for entry in data:
+            interviewer = {"username": entry[0], "email": entry[1]}
+            Interviewers.append(interviewer)
 
-            for x in natey:
-                lo.append(x[0])
+        sql = "SELECT M.username, e_post FROM Maps_Administrators AS M JOIN Persons AS P ON M.username = P.username " \
+              "WHERE map_id = 'MAP_ID';".replace("MAP_ID", str(mapid))
 
-            sql = "SELECT M.username, e_post FROM Maps_Users AS M JOIN Persons AS P ON M.username = P.username WHERE M.map_id = "+str(mapid)+";"
-            cursor.execute(sql)
-            data = cursor.fetchall();
-            for registered_user in data:
-                user = {}
-                user["username"] = registered_user[0];
-                user["email"] = registered_user[1];
-                map["map_users"].append(user);
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        for entry in data:
+            Administrator = {"username": entry[0], "email": entry[1]}
+            Administrators.append(Administrator)
 
 
-            ## Reading already registered shapes on map
-            sql = "SELECT S.shape_id, S.shape_creater, astext(S.center), astext(S.area_or_path), S.title, S.description, " \
-                  "S.rate, M.category_type, M.category_image_or_color " \
-                  "FROM Shapes S JOIN Maps_Categories M " \
-                  "ON S.category_ID = M.category_ID " \
-                  "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
-            cursor.execute(sql)
-            data = cursor.fetchall()
-            points = []
-            roads = []
-            areas = []
-            for entry in data:
-                shape = {
-                    "shape_id": entry[0],
-                    "shape_creater": entry[1],
-                    "shape_center": str(entry[2]).strip('POINT').replace(" ", ", "),
-                    "area_or_path": str(entry[3]).strip("LINESTRING").strip("(").strip(")"),
-                    "title": entry[4],
-                    "description": str((entry[5])).replace("\n","{n}"),
-                    "rating": entry[6],
-                    "category_type": entry[7],
-                    "icon": entry[8]
-                }
+        # TODO: Check if the user logged in has right to access this map
+        has_right = False
+        all_users = Administrators+Interviewers
+        for user in all_users:
+            if user["username"] == username:
+                has_right = True
+                break
+        if has_right == False:
+            return render_template("view_maps.html", Fail="Du har ikke tilgang til dette kartet!")
 
-                if shape['shape_creater'] == username or session.get("is_Admin") == 1:
-                    if shape['category_type'] == "Point":
-                        points.append(shape)
-                    elif shape['category_type'] == "Road":
-                        roads.append(shape)
-                    elif shape['category_type'] == "Area":
-                        areas.append(shape)
 
-            ## Reading registered Categories
-            sql = "SELECT category_ID, category_name, category_type, category_image_or_color FROM Maps_Categories WHERE map_id = "+str(mapid)+";"
-            cursor.execute(sql)
-            data = cursor.fetchall()
-            points_categories = []
-            areas_categories = []
-            roads_categories = []
-            for entry in data:
+        # TODO: Reading map details from database
+        sql = "SELECT map_creater, title, description, start_date, end_date, astext(geo_boundery), zoom ,map_id " \
+              "FROM Maps " \
+              "WHERE map_id = MAP_ID;".replace("MAP_ID",str(mapid))
+        cursor.execute(sql)
+        data = cursor.fetchone()
+        bounds = str(data[5]).strip("POLYGON((").strip("))").split(",")
+        map = {
+            "mapid": mapid,
+            "creater": data[0],
+            "title": data[1],
+            "description": data[2],
+            "issuedate": data[3],
+            "expirydate": data[4],
+            "bounds": bounds,
+            "zoom": data[6],
+            "northeastcorner": bounds[0].replace(" ", ","),
+            "southwestcorner": bounds[1].replace(" ", ","),
+            "logged_in_user": str(username)
+        }
+
+        # TODO: Reading registered Categories
+        sql = "SELECT category_ID, category_name, category_type, category_image_or_color FROM Maps_Categories WHERE map_id = "+str(mapid)+";"
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        points_categories = []
+        areas_categories = []
+        roads_categories = []
+        for entry in data:
                 category = {
                     "ID": entry[0],
                     "name": entry[1],
@@ -352,169 +331,316 @@ def edit_map():
                 elif category["type"] == "Area":
                     areas_categories.append(category)
 
-        else:
-            session["err"] = "Du har ingen tilgang til dette kartet venligst ta kontakt med admin"
-            return render_template("error.html")
+        # TODO: Reading registered Questions
+        sql = "SELECT question_ID, question FROM Maps_Questions WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        questions = []
+        for entry in data:
+            question = {
+                "ID": entry[0],
+                "question": entry[1]
+            }
+            questions.append(question)
 
     except mysql.connector.Error as err:
-
         conn.close()
         print(err.msg)
-        return render_template("edit_map.html", map={}, shapes=[], Fail=err.msg)
-    finally:
-        conn.close()
+        return render_template("view_maps.html", Fail="En feil har skjedd, prøv igjen!")
 
-        if str(mapid) in str(lo):
-            return render_template("edit_map.html", map=map, points_categories=points_categories,
-                                   roads_categories=roads_categories,
-                                   areas_categories=areas_categories, points=points, roads=roads, area=areas)
-        else:
-            session["err"] = "Du har ingen tilgang til dette kartet venligst ta kontakt med adminstrator!"
-            return render_template("error.html")
+    conn.close()
+    return render_template("edit_map.html", map=map, points_categories=points_categories,
+                           roads_categories=roads_categories, questions=questions,
+                           areas_categories=areas_categories)
 
-    if str(mapid) in str(lo):
-        return render_template("edit_map.html", mapid=mapid)
-    else:
-        session["err"] = "Du har ingen tilgang til dette kartet venligst ta kontakt med adminstrator!"
+@app.route("/ViewMapResult", methods=['GET'])
+def view_map_result():
+    mapid = request.args.get('mapid')
+    username = session.get("Logged_in")
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # TODO: Check if a user is logged in
+    if username is None:
         return render_template("error.html")
 
-@app.route("/registerShape", methods=['POST'])
-def registerShape():
-
-    username = session.get('Logged_in')
-    category_id = request.form.get("categoryID")
-    center = "POINT"+request.form.get("center")
-    area_or_path = request.form.get("area_or_path")
-    title = request.form.get("title")
-    description = request.form.get("description")
-    rating = request.form.get("rating")
-
-    conn = get_db()
-    cursor = conn.cursor()
-
-    sql = ""
-    if area_or_path is None:
-        sql = "INSERT INTO Shapes(category_ID, shape_creater, center, title, description, rate)" \
-              "VALUES(%s,%s," + center + ",%s,%s,%s);"
-    else:
-        area_or_path_coordinates = "geomfromtext('LINESTRING("+request.form.get("area_or_path")+")')"
-        sql = "INSERT INTO Shapes(category_ID, shape_creater, center, area_or_path, title, description, rate)" \
-              "VALUES(%s,%s," + center + "," + area_or_path_coordinates + ",%s,%s,%s);"
-
-    try:
-        cursor.execute(sql, (category_id, username, title, description, rating))
-        Shape_id = cursor.lastrowid
-        conn.commit()
-    except mysql.connector.Error as err:
-        conn.close()
-        print(err.msg)
-        return "Failed"
-    finally:
-        conn.close()
-
-    return str(Shape_id)
-
-@app.route("/updateShape", methods=['POST'])
-def updateShape():
-    username = session.get('Logged_in')
-
-    shape_id = request.form.get('shape_id')
-    title = request.form.get("title")
-    description = request.form.get("description")
-    rating = request.form.get("rating")
-
-    conn = get_db()
-    cursor = conn.cursor()
-    sql = "UPDATE Shapes " \
-          "SET title = '"+title+"', description = '"+description+"', rate = "+str(rating)+" " \
-          "WHERE shape_id = "+str(shape_id)+";"
-    try:
-        cursor.execute(sql)
-        conn.commit()
-    except mysql.connector.Error as err:
-        conn.close()
-        print(err.msg)
-        return "Failed"
-    finally:
-        conn.close()
-
-    return "OK"
-
-@app.route("/deleteShape", methods=['POST'])
-def deleteShape():
-    shape_id = request.form.get('shape_id')
-
-    conn = get_db()
-    cursor = conn.cursor()
-    sql = "DELETE FROM Shapes WHERE shape_id = ID;".replace("ID", shape_id);
-    try:
-        cursor.execute(sql)
-        conn.commit()
-    except mysql.connector.Error as err:
-        conn.close()
-        print(err.msg)
-        return "Failed"
-    finally:
-        conn.close()
-
-    return "Deleted"
-
-@app.route("/exportMap", methods=['POST', 'GET'])
-def exportMap():
-    import csv
-
-    theid = request.args.get('mapid').strip("'")
-
-    conn = get_db()
-    cursor = conn.cursor()
-    sql = "SELECT Maps.map_id, astext(geo_boundery), astext(area_or_path), " \
-          "astext(Shapes.center), Shapes.shape_creater," \
-          " Shapes.title, Shapes.description, Shapes.rate, Maps_Categories.category_type FROM " \
-          "(Maps JOIN Maps_Categories ON Maps.map_id = Maps_Categories.map_id AND Maps.map_id =" + str(theid) + ")" \
-          "JOIN Shapes ON Shapes.category_ID = Maps_Categories.Category_ID; "
-
+    # TODO: Determine if the logged_in_user who is requesing the map is an administrator or just an interviewer
+    Interviewers = []
+    Administrators = []
+    sql = "SELECT M.username, e_post FROM Maps_Interviewers AS M JOIN Persons AS P ON M.username = P.username " \
+          "WHERE map_id = 'MAP_ID';".replace("MAP_ID",str(mapid))
     try:
         cursor.execute(sql)
         data = cursor.fetchall()
+        for entry in data:
+            interviewer = {"username": entry[0], "email": entry[1]}
+            Interviewers.append(interviewer)
 
-        filepath = "static/ExportMapFiles/result_id_'+theid+'.csv"
-        filename = "result_id_"+theid+".csv"
+        sql = "SELECT M.username, e_post FROM Maps_Administrators AS M JOIN Persons AS P ON M.username = P.username " \
+              "WHERE map_id = 'MAP_ID';".replace("MAP_ID", str(mapid))
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        for entry in data:
+            Administrator = {"username": entry[0], "email": entry[1]}
+            Administrators.append(Administrator)
 
-        with open(filepath, 'w') as csvfile:
+        Administrators_names = []
+        for user in Administrators:
+            Administrators_names.append(user["username"])
 
-            fieldnames = ['Maps.map_id', 'north-east_map_boundry', 'south-west_map_boundry', 'Shapes.area_or_path', 'Shapes.center',
-                          'Shapes.shape_creater', 'Shapes.title', 'Shapes.description', 'Shapes.rate',
-                          'Maps_Categories.category_type']
+        # TODO: Reading the map_details
+        sql = "SELECT map_creater, title, description, start_date, end_date, astext(geo_boundery), zoom ,map_id " \
+              "FROM Maps " \
+              "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+        cursor.execute(sql)
+        data = cursor.fetchone()
+        bounds = str(data[5]).strip("POLYGON((").strip("))").split(",")
+        map = {
+            "mapid": mapid,
+            "creater": data[0],
+            "title": data[1],
+            "description": data[2],
+            "issuedate": data[3],
+            "expirydate": data[4],
+            "bounds": bounds,
+            "zoom": data[6],
+            "northeastcorner": bounds[0].replace(" ", ","),
+            "southwestcorner": bounds[1].replace(" ", ","),
+            "logged_in_user": str(username)
+        }
 
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
+        # TODO: Reading registered Questions
+        sql = "SELECT question_ID, question FROM Maps_Questions WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        questions = []
+        for entry in data:
+            question = {
+                "question_ID": entry[0],
+                "question": entry[1]
+            }
+            questions.append(question)
 
-            for i in data:
-                bounds = (str(i[1]).strip("POLYGON((").strip("))")).split(",")
-                northeast = "POINT("+bounds[0]+")"
-                southwest = "POINT("+bounds[1]+")"
+        # TODO: Reading registered responses including respondents, questions and respondent's answers
+        sql = "SELECT A.respondent_ID, A.question_ID, A.Answer " \
+              "FROM Respondent_Answers AS A JOIN Maps_Respondents AS R ON A.respondent_ID = R.respondent_ID " \
+              "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        questions_response = []
+        for entry in data:
+            Question_response = {
+                "respondent_ID": entry[0],
+                "question_ID": entry[1],
+                "Answer": entry[2]
+            }
+            questions_response.append(Question_response)
 
-                area_or_path = (str(i[2]))
 
-                center = (str(i[3]))
+        # TODO: Reading already registered shapes on map
+        sql = "SELECT S.shape_id, S.shape_creater, astext(S.center), astext(S.area_or_path), S.title, S.description, " \
+              "S.rate, M.category_type, M.category_image_or_color, respondent_ID " \
+              "FROM Shapes S JOIN Maps_Categories M ON S.category_ID = M.category_ID " \
+              "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
 
-                writer.writerow({'Maps.map_id': i[0], 'north-east_map_boundry': northeast, 'south-west_map_boundry': southwest,
-                                 'Shapes.area_or_path': area_or_path, 'Shapes.center': center,
-                                 'Shapes.shape_creater': i[4],'Shapes.title': i[5], 'Shapes.description': i[6],
-                                 'Shapes.rate': i[7], 'Maps_Categories.category_type': i[8]})
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        points = []
+        roads = []
+        areas = []
+        for entry in data:
+            shape = {
+                "shape_id": entry[0],
+                "shape_creater": entry[1],
+                "shape_center": str(entry[2]).strip('POINT').replace(" ", ", "),
+                "area_or_path": str(entry[3]).strip("LINESTRING").strip("(").strip(")"),
+                "title": entry[4],
+                "description": str((entry[5])).replace("\n", "{n}"),
+                "rating": entry[6],
+                "category_type": entry[7],
+                "icon": entry[8],
+                "respondent_ID": entry[9]
+            }
 
-                print(i)
+            if shape['shape_creater'] == username or username in Administrators_names:
+                if shape['category_type'] == "Point":
+                    points.append(shape)
+                elif shape['category_type'] == "Road":
+                    roads.append(shape)
+                elif shape['category_type'] == "Area":
+                    areas.append(shape)
+
 
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
+        return render_template("error.html", Fail="En feil har skjedd, prøv igjen!")
 
-    finally:
+    conn.close()
+
+    all_users = []
+    if username in Administrators_names:
+        for user in (Administrators + Interviewers):
+            if user not in all_users:
+                all_users.append(user)
+
+    return render_template("view_map_result.html", Users=all_users, Map=map,
+                           Questions=questions, Questions_response=questions_response,
+                           Points=points, Areas=areas, Roads=roads)
+
+@app.route("/RegisterRespondoent", methods=['POST'])
+def RegisterRespondoent():
+    Respondoent = json.loads(request.form.get('Respondoent'))
+    Shapes = json.loads(request.form.get('Shapes'))
+    Map_id = request.form.get('Map_id')
+    logged_in_user = session.get("Logged_in")
+
+    """
+    for key in Respondoent:
+        print(key+": "+str(Respondoent[key]))
+    Where do you live ?: {'answer': 'Bergen', 'ID': 1}
+    how old are you ?: {'answer': '18', 'ID': 3}
+    what do you like to eat ?: {'answer': 'chicken', 'ID': 2}
+    
+    for key in Shapes:
+        print(key+": "+str(Shapes[key]))
+    1: {'title': 'point 2', 'type': 'POINT', 'category_ID': '1', 'creater': 'Mohammed', 'description': 'nr. 2', 'area_or_path': '', 'rating': '5', 'center': '(58.93767829819591, 5.803488164550799)'}
+    0: {'title': 'POINT 1', 'type': 'POINT', 'category_ID': '2', 'creater': 'Mohammed', 'description': 'nr 1', 'area_or_path': '', 'rating': '2', 'center': '(58.935198189097356, 5.694998174316424)'}
+    """
+
+    # TODO Insert/create new respondent
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = "INSERT INTO Maps_Respondents(map_id) VALUES(Map_id);".replace("Map_id", str(Map_id))
+    try:
+        cursor.execute(sql)
+        conn.commit()
+        Respondoent_id = cursor.lastrowid
+
+        # TODO Insert respondent's answers
+        for key in Respondoent:
+            question = dict(Respondoent[key])
+            sql = "INSERT INTO Respondent_Answers(respondent_ID, question_ID, Answer) VALUES(%s,%s,%s);"
+            cursor.execute(sql, (Respondoent_id, question["ID"], question["answer"]))
+            conn.commit()
+
+        # TODO Insert respondent's shapes
+        for key in Shapes:
+            shape = dict(Shapes[key])
+
+            center = "POINT" + str(shape['center'])
+            area_or_path = "geomfromtext('LINESTRING(" + str(shape['area_or_path']) + ")')"
+            sql = "INSERT INTO Shapes(category_ID, shape_creater, center, area_or_path, title, description, rate, respondent_ID)" \
+                  "VALUES(%s, %s, "+center+", "+area_or_path+", %s, %s, %s, %s);"
+
+            cursor.execute(sql, (str(shape['category_ID']), str(logged_in_user), shape['title'],
+                                 shape['description'], shape['rating'], str(Respondoent_id)))
+
+            conn.commit()
+
+    except mysql.connector.Error as err:
         conn.close()
+        print(err.msg)
+        return "Fail"
 
-    print("Writing complete")
+    conn.close()
+    return "Success"
 
-    return send_file(filepath, attachment_filename=filename, as_attachment=True)
+@app.route("/DownloadMapAsCSVFile", methods=['POST'])
+def Download_Map_As_CSV_File():
+    username = session.get("Logged_in")
+    Map_id = json.loads(request.form.get('Map_id'))
+    Shapes_data = json.loads(request.form.get('Data'))
+    Respondents = json.loads(request.form.get("Respondoents"))
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # TODO: Check if a user is logged in
+    if username is None:
+        return render_template("error.html",
+                               Fail="Du må være logget inn for å kunne laste ned ditt kart som en .csv fil!")
+
+    # TODO: Determine if the logged_in_user who is requesing the map is an administrator or an interviewer
+    All_Users = []
+    sql = "(SELECT M.username FROM Maps_Administrators AS M JOIN Persons AS P ON M.username = P.username WHERE map_id = MAP_ID)" \
+          "UNION" \
+          "(SELECT M.username FROM Maps_Interviewers AS M JOIN Persons AS P ON M.username = P.username WHERE map_id = MAP_ID);".replace("MAP_ID", str(Map_id))
+    try:
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        for entry in data:
+            User = entry[0]
+            All_Users.append(User)
+
+        # TODO: checking if the current user name has right to this map
+        if username not in All_Users:
+            conn.close()
+            return render_template("error.html", Fail="Du har ingen rettighet til dette kartet !")
+
+        file_header = "Map_ID,Map_bounds,Area_or_path_Coordinates,Center,Interviewer," \
+                      "Title,Description,Rating,Category_type,Respondent_ID"
+
+        sql = "SELECT question FROM Maps_Questions WHERE map_id = 'MAP_ID';".replace("MAP_ID", str(Map_id))
+        cursor.execute(sql)
+        questions = cursor.fetchall()
+        for question in questions:
+            file_header += ","+str(question[0])
+
+        file_content = file_header+"\n"
+
+        # TODO: Read map bounds
+        sql = "SELECT astext(geo_boundery) FROM Maps WHERE map_id = 'MAP_ID';".replace("MAP_ID", str(Map_id))
+        cursor.execute(sql)
+        map_bounds = cursor.fetchone()[0]
+
+        for shape_id in Shapes_data:
+            line = file_header
+            line = line.replace("Map_ID",str(Map_id))
+            line = line.replace("Map_bounds",str(map_bounds))
+
+            # TODO: Read relevant shape's data from database
+            sql = "SELECT astext(S.area_or_path), astext(S.center), S.shape_creater, S.title, S.description, " \
+                  "S.rate, M.category_type, S.respondent_ID " \
+                  "FROM Shapes S JOIN Maps_Categories M ON S.category_ID = M.category_ID " \
+                  "WHERE map_id = 'MAP_ID' AND shape_id = 'SHAPE_ID';"\
+                .replace("MAP_ID", str(Map_id)).replace("SHAPE_ID", str(shape_id))
+
+            cursor.execute(sql)
+            shape = cursor.fetchone()
+
+            ## Map_ID,Map_bounds,Area_or_path_Coordinates,Center,Interviewer,Title,Description,Rating,Category_type,Respondent_ID
+            line = line.replace("Map_ID", str(Map_id))
+            line = line.replace("Map_bounds", str(map_bounds))
+            line = line.replace("Area_or_path_Coordinates",str(shape[0]))
+            line = line.replace("Center",str(shape[1]))
+            line = line.replace("Interviewer",str(shape[2]))
+            line = line.replace("Title",str(shape[3]))
+            line = line.replace("Description",str(shape[4]))
+            line = line.replace("Rating",str(shape[5]))
+            line = line.replace("Category_type",str(shape[6]))
+            line = line.replace("Respondent_ID",str(shape[7]))
+
+            sql = "SELECT Q.question, R.Answer " \
+                  "FROM Respondent_Answers AS R JOIN Maps_Questions AS Q ON R.question_ID = Q.question_ID " \
+                  "WHERE map_id = 'MAP_ID' AND R.respondent_ID = 'RESPONDENT_ID';"\
+                    .replace("MAP_ID", str(Map_id)).replace('RESPONDENT_ID',str(shape[7]))
+
+            cursor.execute(sql)
+            Questions = cursor.fetchall()
+
+            for q in Questions:
+                line = line.replace(str(q[0]),str(q[1]))
+
+            file_content += line+"\n"
+
+    except mysql.connector.Error as err:
+        conn.close()
+        print(err.msg)
+        return "Fail"
+
+    return file_content
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

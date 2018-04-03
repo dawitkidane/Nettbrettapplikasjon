@@ -17,6 +17,10 @@
     <!-- Link to static/index_stylesheet.css -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/index_stylesheet.css') }}">
 
+    <!-- This is important inorder to to set the viewport width to the width of the device, add this to your HTML file -->
+    <!-- insure the webpage is responisve to the design -->
+    <meta name="viewport" content="width=device-width">
+
     {% block stylingblock %}
     {% endblock %}
 

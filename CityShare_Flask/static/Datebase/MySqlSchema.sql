@@ -16,8 +16,8 @@ mohammed?!?!?
 */
 
 CREATE TABLE Persons (
-username VARCHAR(30) BINARY,
-login_pass VARCHAR(25) BINARY,
+username VARCHAR(30),
+login_pass VARCHAR(25),
 first_name VARCHAR(15),
 last_name VARCHAR(15),
 e_post VARCHAR(30),
@@ -39,7 +39,15 @@ PRIMARY KEY(map_id),
 FOREIGN KEY (map_creater) REFERENCES Persons(username)
 );
 
-CREATE TABLE Maps_Users(
+CREATE TABLE Maps_Interviewers(
+username VARCHAR(30),
+map_id INT,
+PRIMARY KEY (username, map_id),
+FOREIGN KEY (username) REFERENCES Persons(username),
+FOREIGN KEY (map_id) REFERENCES Maps(map_id)
+);
+
+CREATE TABLE Maps_Administrators(
 username VARCHAR(30),
 map_id INT,
 PRIMARY KEY (username, map_id),
@@ -57,6 +65,30 @@ PRIMARY KEY (category_ID),
 FOREIGN KEY (map_id) REFERENCES Maps(map_id)
 );
 
+CREATE TABLE Maps_Questions(
+question_ID INT AUTO_INCREMENT,
+question Text,
+map_id INT,
+PRIMARY KEY (question_ID),
+FOREIGN KEY (map_id) REFERENCES Maps(map_id)
+);
+
+CREATE TABLE Maps_Respondents(
+respondent_ID INT AUTO_INCREMENT,
+map_id INT,
+PRIMARY KEY (respondent_ID, map_id),
+FOREIGN KEY (map_id) REFERENCES Maps(map_id)
+);
+
+CREATE TABLE Respondent_Answers(
+respondent_ID INT,
+question_ID INT,
+Answer TEXT,
+PRIMARY KEY(respondent_ID, question_ID),
+FOREIGN KEY (respondent_ID) REFERENCES Maps_Respondents(respondent_ID),
+FOREIGN KEY (question_ID) REFERENCES Maps_Questions(question_ID)
+);
+
 CREATE TABLE Shapes (
 shape_id INT AUTO_INCREMENT,
 category_ID INT,
@@ -66,9 +98,11 @@ area_or_path LINESTRING,
 title VARCHAR(50),
 description TEXT,
 rate INT DEFAULT 0,
-PRIMARY KEY(shape_id, category_ID),
+respondent_ID INT,
+PRIMARY KEY(shape_id),
 FOREIGN KEY (category_ID) REFERENCES Maps_Categories(category_ID),
-FOREIGN KEY (shape_creater) REFERENCES Persons(username)
+FOREIGN KEY (shape_creater) REFERENCES Persons(username),
+FOREIGN KEY (respondent_ID) REFERENCES Maps_Respondents(respondent_ID)
 );
 
 
@@ -81,39 +115,3 @@ VALUES('Dawit','Dawit1995','Dawit','Kidane','d_kzzz@yahoo.com',0047450088910,TRU
 INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone) 
 VALUES('Rami','Rami1992','Rami','Guniem','rami@yahoo.no',004777665544);
 
-SELECT * FROM Persons WHERE username = 'mohammed' AND login_pass = 'Mohammed1992';
-
-/*
-SELECT * FROM Maps_Categories;
-
-INSERT INTO Shapes(category_ID, shape_creater, center, title, description, rate)
-VALUES (001, 'Mohammed', POINT(58.969975, 5.73), 'HER TEST', 'BESKRIVELSE TESt', 3);
-
-SELECT *, astext(center) FROM Shapes;
-
-
-DELETE FROM Shapes WHERE shape_id = 16;
-
-UPDATE Shapes 
-SET title = 'hello', description = 'heihei', rate = 2
-WHERE shape_id = 1;
-
-
-SELECT *, astext(area_or_path), astext(center) FROM Shapes;
-
-INSERT INTO Shapes(category_ID, shape_creater, center, area_or_path, title, description, rate)
-VALUES(2, 'Mohammed', POINT(0, 0), geomfromtext('LINESTRING(0 0,1 1,2 2)'), 'TITLE', 'DESC', 0);
-
-
-SELECT S.shape_id, S.shape_creater, astext(S.center), astext(S.area_or_path), S.title, S.description, S.rate, M.category_type, M.category_image_or_color 
-FROM Shapes S JOIN Maps_Categories M 
-ON S.category_ID = M.category_ID
-WHERE map_id = 001;
-
-SELECT * FROM Maps;
-
-
-SELECT S.shape_id, S.shape_creater, astext(S.center), astext(S.area_or_path), S.title, S.description, S.rate, M.category_type, 
-M.category_image_or_color 
-FROM Shapes S JOIN Maps_Categories M ON S.category_ID = M.category_ID WHERE map_id = 1;
-*/

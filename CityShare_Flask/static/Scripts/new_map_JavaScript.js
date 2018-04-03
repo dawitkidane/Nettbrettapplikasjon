@@ -143,9 +143,33 @@ function initMap() {
 
     $(document).ready(function () {
 
-        // Adding users / jQuery
-        $('#SearchUsersButton').on('click', function (e) {
-            var username = $('#searchUsers').val();
+        $('#AddQuestionButton').on('click', function () {
+           added_questions = $("#category_body_questions").children().text();
+           current_question = $("#Question").val();
+
+           if (added_questions.includes(current_question) || current_question == "") {
+               alert("Dette spørsmålet er allerede lagt til.");
+               return;
+           } else {
+               question_ID = current_question.replace(/ /g, "_");
+               var newelement = "<li class='list-group-item'>"+current_question
+                                    +"<span id='"+question_ID+"' class='badge'>"
+                                    +"<i class='fa fa-minus'></i>"
+                                    +"</span>"
+                                    +"<input name='questions' value='"+current_question+"' type='hidden' class='form-control'>"
+                                    +"</li>";
+               $('#category_body_questions').append(newelement);
+               $('#Question').empty();
+               $('#'+question_ID+'').off('click');
+               $('#'+question_ID+'').on('click', function(e) {
+                   $(this).parent().remove();
+               });
+           }
+        });
+
+        // Adding Interviewers / jQuery
+        $('#SearchInterviewersButton').on('click', function (e) {
+            var username = $('#searchInterviewers').val();
 
             if (username != '') {
                 $.post("/searchUsers",{ username: username }, function(data,status){
@@ -154,22 +178,22 @@ function initMap() {
                         var user = results[0];
 
                         if (results.length > 0) {
-                            var addedusers = $("#category_body_users").children().text();
+                            var addedusers = $("#category_body_Interviewers").children().text();
                             if (addedusers.includes(username) || addedusers.includes(user)) return;
-                            $('#AddUserButton').show();
-                            $('#AddUserButton').off('click');
-                            $('#AddUserButton').on('click', function(e) {
+                            $('#AddInterviewersButton').show();
+                            $('#AddInterviewersButton').off('click');
+                            $('#AddInterviewersButton').on('click', function(e) {
                                 var newelement = "<li class='list-group-item'>"+user
-                                    +"<span id='"+user+"' class='badge'>"
+                                    +"<span id='"+user+"_Interviewer' class='badge'>"
                                     +"<i class='fa fa-minus'></i>"
                                     +"</span>"
-                                    +"<input name='users' value='"+user+"' type='hidden' class='form-control'>"
+                                    +"<input name='Interviewers' value='"+user+"' type='hidden' class='form-control'>"
                                     +"</li>";
-                                $('#category_body_users').append(newelement);
-                                $('#AddUserButton').hide();
-                                $('#searchUsers').empty();
-                                $('#'+user+'').off('click');
-                                    $('#'+user+'').on('click', function(e) {
+                                $('#category_body_Interviewers').append(newelement);
+                                $('#AddInterviewersButton').hide();
+                                $('#searchInterviewers').empty();
+                                $('#'+user+'_Interviewer').off('click');
+                                    $('#'+user+'_Interviewer').on('click', function(e) {
                                         $(this).parent().remove();
                                     });
                                 });
@@ -182,7 +206,47 @@ function initMap() {
             }
         });
 
-        $('#AddUserButton').hide();
+        // Adding Administrators / jQuery
+        $('#SearchAdministratorsButton').on('click', function (e) {
+            var username = $('#searchAdministrators').val();
+
+            if (username != '') {
+                $.post("/searchUsers",{ username: username }, function(data,status){
+                    if (status === "success") {
+                        var results = JSON.parse(data);
+                        var user = results[0];
+
+                        if (results.length > 0) {
+                            var addedusers = $("#category_body_Administrators").children().text();
+                            if (addedusers.includes(username) || addedusers.includes(user)) return;
+                            $('#AddAdministratorsButton').show();
+                            $('#AddAdministratorsButton').off('click');
+                            $('#AddAdministratorsButton').on('click', function(e) {
+                                var newelement = "<li class='list-group-item'>"+user
+                                    +"<span id='"+user+"_Admin' class='badge'>"
+                                    +"<i class='fa fa-minus'></i>"
+                                    +"</span>"
+                                    +"<input name='Administrators' value='"+user+"' type='hidden' class='form-control'>"
+                                    +"</li>";
+                                $('#category_body_Administrators').append(newelement);
+                                $('#AddAdministratorsButton').hide();
+                                $('#searchAdministrators').empty();
+                                $('#'+user+'_Admin').off('click');
+                                    $('#'+user+'_Admin').on('click', function(e) {
+                                        $(this).parent().remove();
+                                    });
+                                });
+                        }
+
+                    } else {
+                        alert("Database Connection failure");
+                    }
+                });
+            }
+        });
+
+        $('#AddInterviewersButton').hide();
+        $('#AddAdministratorsButton').hide();
 
         // Datepicker - jQuery
         var dateToday = new Date();
@@ -202,12 +266,19 @@ function initMap() {
 
         // Checking that users are added to the map before submitting
         $("#form").submit(function(){
-            if ( $("#category_body_users").children().length === 0) {
-                alert("Du må legge til minst en bruker !");
+            if ( $("#category_body_Interviewers").children().length === 0) {
+                alert("Du må legge til minst en Interviewer !");
                 return false;
-            } else {
-                return true;
             }
+            if ($("#category_body_questions").children().length === 0) {
+                alert("Du må legge til minst et spørsmål !");
+                return false;
+            }
+            if ($("#category_body_Administrators").children().length === 0) {
+                alert("Du må legge til minst en Administrator !");
+                return false;
+            }
+
         });
 
         // Method to add Point categories

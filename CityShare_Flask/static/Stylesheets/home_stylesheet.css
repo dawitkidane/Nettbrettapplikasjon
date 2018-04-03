@@ -1,5 +1,5 @@
 iframe, img {
-    width: -moz-available;
+    width: 100%;
 }
 
 .navbar-right {
@@ -7,7 +7,7 @@ iframe, img {
 }
 
 .formbuttons {
-    width: -moz-available;
+    width: 100%;
 }
 
 .box {

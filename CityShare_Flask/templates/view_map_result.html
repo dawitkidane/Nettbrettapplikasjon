@@ -1,0 +1,925 @@
+{% extends 'index.html' %}
+
+{% block stylingblock %}
+    <!-- Link to static/edit_map_stylesheet.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/edit_map_stylesheet.css') }}">
+{% endblock %}
+
+{% block scriptblock %}
+
+    <!-- Font-Awesome plugin -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- JQuery Library plugin -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Bootstrap Library plugin -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Chosen icon select plugin links -->
+    <link rel="stylesheet" href="../static/Icon_Selector_plugin/css/chosen.css">
+    <link rel="stylesheet" href="../static/Icon_Selector_plugin/css/ImageSelect.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="../static/Icon_Selector_plugin/javascript/jquery-1.11.0.min.js"></script>
+    <script src="../static/Icon_Selector_plugin/javascript/chosen.jquery.js"></script>
+    <script src="../static/Icon_Selector_plugin/javascript/ImageSelect.jquery.js"></script>
+
+    <!-- link to static/Scripts/view_map_result_JavaScript.js -->
+    <script src="{{ url_for('static',filename='Scripts/view_map_result_JavaScript.js') }}"></script>
+
+    <script>
+
+        // a global variable to make the map available at all methods, this is needed
+        var map = null;
+
+        // An array to keep track of the map listeners used to draw the different category types
+        // (point, area, road). these listeners should be removed every time the user change shape type, to enable
+        // customized enviromenet.
+        var listeners = [];
+
+        // if another info window is open, and the user clicked on another marker, this variable is used to
+        // enable the user to change context to the wished marker.
+        var open_info_window = null;
+
+        // a map to store te shapes by their id's
+        var shapes = [];
+
+        var current_shapes = [];
+
+        var Question_Responses = [];
+        function Load_Questions_Responses() {
+            {% for question in Questions_response %}
+
+                response = {
+                    "question_ID": "{{ question.question_ID }}",
+                    "respondent_ID": "{{ question.respondent_ID }}",
+                    "Answer": "{{ question.Answer }}"
+                };
+
+                Question_Responses.push(response);
+
+            {% endfor %}
+        }
+
+
+        Load_Questions_Responses();
+
+        // function to clear all drawn shapes
+        function clear_map() {
+            // removing all shapes
+            for (var key in current_shapes) {
+                current_shapes[key]["marker"].setMap(null);
+                if (current_shapes[key]["type"] != "POINT") {
+                    current_shapes[key]["shape"].setMap(null);
+                }
+            }
+        }
+        // function to load the registered shapes on this map
+        function loadShapes() {
+
+            clear_map();
+
+            {% for point in Points %}
+
+                var marker_{{ point.shape_id }} = new google.maps.Marker({
+                    position: new google.maps.LatLng{{ point.shape_center }},
+                    icon: "../static/icons/{{ point.icon }}"
+                });
+                var content_window_{{ point.shape_id }} = $('#info_window').html();
+                var infowindow_{{ point.shape_id }} = new google.maps.InfoWindow({
+                    content: content_window_{{ point.shape_id }}
+                });
+                var new_point_{{ point.shape_id }} = {
+                    "type": "POINT",
+                    "marker": marker_{{ point.shape_id }},
+                    "infowindow": infowindow_{{ point.shape_id }},
+                    "center": marker_{{ point.shape_id }}.getPosition().toString(),
+                    "area_or_path": "",
+                    "title": "{{ point.title }}",
+                    "description": "{{ point.description }}".replace("{n}","\n"),
+                    "rating": "{{ point.rating }}",
+                    "shape_creater": "{{ point.shape_creater }}",
+                    "respondent_id": "{{ point.respondent_ID }}"
+                };
+                shapes[{{ point.shape_id }}] = new_point_{{ point.shape_id }};
+
+                // to draw
+                marker_{{ point.shape_id }}.setMap(map);
+                infowindow_{{ point.shape_id }}.open(map, marker_{{ point.shape_id }});
+                infowindow_{{ point.shape_id }}.close();
+
+
+                //shapes["{{ point.shape_id }}"] = new_point_{{ point.shape_id }};
+
+                if (clicklistener_{{ point.shape_id }} == undefined) var first_time_{{ point.shape_id }} = true;
+                var clicklistener_{{ point.shape_id }} = google.maps.event.addListener(marker_{{ point.shape_id }}, 'click', function (event) {
+                    handle_marker_click(infowindow_{{ point.shape_id }}, marker_{{ point.shape_id }});
+
+                    if (first_time_{{ point.shape_id }})
+                    {
+                        $("input[name~='title']").val(shapes[{{ point.shape_id }}]['title']);
+                        $("textarea[name~='description']").val(shapes[{{ point.shape_id }}]['description']);
+                        $("input[name~='rating']").val(shapes[{{ point.shape_id }}]['rating']);
+                        first_time_{{ point.shape_id }} = false;
+                    }
+                });
+
+                /*
+                google.maps.event.addListener(infowindow_{{ point.shape_id }}, 'domready', function () {
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
+                        shapes[{{ point.shape_id }}]['title'] = $("input[name~='title']").val();
+                        shapes[{{ point.shape_id }}]['description'] = $("textarea[name~='description']").val();
+                        shapes[{{ point.shape_id }}]['rating'] = $("input[name~='rating']").val();
+                    });
+
+                    $("#delete_btn").off('click');
+                    $("#delete_btn").on('click', function() {
+                        delete_shape({{ point.shape_id }});
+                    });
+                });
+                */
+
+                google.maps.event.addListener(infowindow_{{ point.shape_id }}, 'closeclick', function () {
+                    handle_outside_bounds_click();
+                    handle_on_close_info_window();
+                });
+
+
+            {% endfor %}
+
+            var line = null;
+
+            {% for road in Roads %}
+
+                color = "{{ road.icon }}";
+                var points_array = makearrayfromstring("{{ road.area_or_path }}");
+
+                var Road_{{ road.shape_id }} = new google.maps.Polyline({
+                    path: points_array,
+                    strokeColor: color,
+                    strokeOpacity: 1,
+                    strokeWeight: 7
+                });
+
+                var marker_{{ road.shape_id }} = new google.maps.Marker({
+                    position: points_array[Math.round(points_array.length/2)]
+                });
+
+                var content_window_{{ road.shape_id }} = $('#info_window').html();
+                var infowindow_{{ road.shape_id }} = new google.maps.InfoWindow({
+                    content: content_window_{{ road.shape_id }}
+                });
+
+                var theline_{{ road.shape_id }} = Road_{{ road.shape_id }};
+
+                points_array = [];
+                Road_{{ road.shape_id }}.setMap(map);
+                marker_{{ road.shape_id }}.setMap(map);
+                infowindow_{{ road.shape_id }}.open(map, marker_{{ road.shape_id }});
+                infowindow_{{ road.shape_id }}.close();
+                line_{{ road.shape_id }} = null;
+
+                new_road_{{ road.shape_id }} = {
+                    "shape": theline_{{ road.shape_id }},
+                    "marker": marker_{{ road.shape_id }},
+                    "type": "ROAD",
+                    "infowindow": infowindow_{{ road.shape_id }},
+                    "center": {{ road.shape_center }},
+                    "title": "{{ road.title }}",
+                    "description": "{{ road.description }}".replace("{n}","\n"),
+                    "rating": "{{ road.rating }}",
+                    "area_or_path": "{{ road.area_or_path }}",
+                    "road": Road_{{ road.shape_id }},
+                    "shape_creater": "{{ road.shape_creater }}",
+                    "respondent_id": "{{ road.respondent_ID }}"
+                };
+                shapes[{{ road.shape_id }}] = new_road_{{ road.shape_id }};
+
+                if (clicklistener_{{ road.shape_id }} == undefined) var first_time_{{ road.shape_id }} = true;
+                var clicklistener_{{ road.shape_id }} = google.maps.event.addListener(marker_{{ road.shape_id }}, 'click', function (event) {
+                    handle_marker_click(infowindow_{{ road.shape_id }}, marker_{{ road.shape_id }});
+                    if (first_time_{{ road.shape_id }})
+                    {
+                        $("input[name~='title']").val(shapes[{{ road.shape_id }}]['title']);
+                        $("textarea[name~='description']").val(shapes[{{ road.shape_id }}]['description']);
+                        $("input[name~='rating']").val(shapes[{{ road.shape_id }}]['rating']);
+                        first_time_{{ road.shape_id }} = false;
+                    }
+
+                });
+
+                google.maps.event.addListener(infowindow_{{ road.shape_id }}, 'closeclick', function () {
+                    handle_outside_bounds_click();
+                    handle_on_close_info_window();
+                });
+
+                /*
+                google.maps.event.addListener(infowindow_{{ road.shape_id }}, 'domready', function () {
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
+                        shapes[{{ road.shape_id }}]['title'] = $("input[name~='title']").val();
+                        shapes[{{ road.shape_id }}]['description'] = $("textarea[name~='description']").val();
+                        shapes[{{ road.shape_id }}]['rating'] = $("input[name~='rating']").val();
+                    });
+
+                    $("#delete_btn").off('click');
+                    $("#delete_btn").on('click', function() {
+                        delete_shape({{ road.shape_id }});
+                    });
+                });
+                */
+
+            {% endfor %}
+
+
+            {% for area in Areas %}
+                color = "{{ area.icon }}";
+                var points_array = makearrayfromstring("{{ area.area_or_path }}");
+
+                var Area_{{ area.shape_id }} = new google.maps.Polygon({
+                    path: points_array,
+                    strokeColor: color,
+                    strokeOpacity: 1,
+                    strokeWeight: 7,
+                    fillColor: color,
+                    fillOpacity:0.4,
+                    clickable: false
+                });
+
+                var marker_{{ area.shape_id }} = new google.maps.Marker({
+                    position: computeCentroid(points_array)
+                });
+
+                var content_window_{{ area.shape_id }} = $('#info_window').html();
+                var infowindow_{{ area.shape_id }} = new google.maps.InfoWindow({
+                    content: content_window_{{ area.shape_id }}
+                });
+
+                var thearea_{{ area.shape_id }} = Area_{{ area.shape_id }};
+
+                points_array = [];
+                Area_{{ area.shape_id }}.setMap(map);
+                marker_{{ area.shape_id }}.setMap(map);
+                infowindow_{{ area.shape_id }}.open(map, marker_{{ area.shape_id }});
+                infowindow_{{ area.shape_id }}.close();
+
+                new_area_{{ area.shape_id }} = {
+                    "shape": thearea_{{ area.shape_id }},
+                    "marker": marker_{{ area.shape_id }},
+                    "type": "AREA",
+                    "infowindow": infowindow_{{ area.shape_id }},
+                    "center": {{ area.shape_center }},
+                    "title": "{{ area.title }}",
+                    "description": "{{ area.description }}".replace("{n}","\n"),
+                    "rating": "{{ area.rating }}",
+                    "area_or_path": "{{ area.area_or_path }}",
+                    "road": Area_{{ area.shape_id }},
+                    "shape_creater": "{{ area.shape_creater }}",
+                    "respondent_id": "{{ area.respondent_ID }}"
+                };
+                shapes[{{ area.shape_id }}] = new_area_{{ area.shape_id }};
+
+                if (clicklistener_{{ area.shape_id }} == undefined) var first_time_{{ area.shape_id }} = true;
+                var clicklistener_{{ area.shape_id }} = google.maps.event.addListener(marker_{{ area.shape_id }}, 'click', function (event) {
+                    handle_marker_click(infowindow_{{ area.shape_id }}, marker_{{ area.shape_id }});
+
+                    if (first_time_{{ area.shape_id }})
+                    {
+                        $("input[name~='title']").val(shapes[{{ area.shape_id }}]['title']);
+                        $("textarea[name~='description']").val(shapes[{{ area.shape_id }}]['description']);
+                        $("input[name~='rating']").val(shapes[{{ area.shape_id }}]['rating']);
+                        first_time_{{ area.shape_id }} = false;
+                    }
+
+                });
+
+                google.maps.event.addListener(infowindow_{{ area.shape_id }}, 'closeclick', function () {
+                    handle_outside_bounds_click();
+                    handle_on_close_info_window();
+                });
+
+                /*
+                google.maps.event.addListener(infowindow_{{ area.shape_id }}, 'domready', function () {
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
+                    $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
+                        shapes[{{ area.shape_id }}]['title'] = $("input[name~='title']").val();
+                        shapes[{{ area.shape_id }}]['description'] = $("textarea[name~='description']").val();
+                        shapes[{{ area.shape_id }}]['rating'] = $("input[name~='rating']").val();
+                    });
+
+                    $("#delete_btn").off('click');
+                    $("#delete_btn").on('click', function() {
+                        delete_shape({{ area.shape_id }});
+                    });
+                });
+                */
+            {% endfor %}
+
+            current_shapes = shapes;
+
+            draw_current_shapes();
+
+        }
+        // function to draw all current(filtered) shapes
+        function draw_current_shapes() {
+            for (var key in current_shapes) {
+                current_shapes[key]["marker"].setMap(map);
+                if (current_shapes[key]["type"] != "POINT") {
+                    current_shapes[key]["shape"].setMap(map);
+                }
+            }
+        }
+
+        function Filter_Shapes() {
+
+            clear_map();
+            relevant_shapes = {};
+
+            // relevant answers
+            number_of_blank_answers = 0;
+            {% for question in Questions %}
+                Question_Field_nr_{{ question.question_ID }} = $("#question_{{ question.question_ID }}").val();
+                if (Question_Field_nr_{{ question.question_ID }} != "") {
+                    for (var i = 0; i < Question_Responses.length; i++) {
+                        if (Question_Responses[i]["Answer"].includes(Question_Field_nr_{{ question.question_ID }})
+                        && Question_Responses[i]["question_ID"] == "{{ question.question_ID }}") {
+                            shape_respondent_id = Question_Responses[i]["respondent_ID"];
+                            for (var key in shapes) {
+                                if (shapes[key]["respondent_id"] == shape_respondent_id) {
+                                    relevant_shapes[key] = shapes[key]
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    number_of_blank_answers++;
+                }
+            {% endfor %}
+
+            // relevant interviewers
+            selected_interviewers = $("#filter_interviewers").val();
+            if (selected_interviewers == null) selected_interviewers = [];
+            if (selected_interviewers.length > 0) {
+                for (var key in shapes) {
+                    if (selected_interviewers.includes(shapes[key]["shape_creater"])) {
+                        relevant_shapes[key] = shapes[key];
+                    }
+                }
+            }
+
+
+            // relevant shape types
+            type_point = "";
+            type_road = "";
+            type_area = "";
+            if ($("#Point").is(':checked')) type_point = "POINT";
+            if ($("#Area").is(':checked')) type_area = "AREA";
+            if ($("#Road").is(':checked')) type_road = "ROAD";
+
+            if (type_area != "" || type_road != "" || type_point != "") {
+                for (var key in shapes) {
+                    if (shapes[key]["type"] == type_point
+                        || shapes[key]["type"] == type_road
+                        || shapes[key]["type"] == type_area) {
+                        relevant_shapes[key] = shapes[key];
+                    }
+                }
+            }
+
+
+            // relevant shape title
+            title = $("#title_search").val();
+            if (title != "") {
+                for (var key in shapes) {
+                    if (shapes[key]["title"].includes(title)) {
+                        relevant_shapes[key] = shapes[key];
+                    }
+                }
+            }
+
+            // relevant shape description
+            description = $("#description_search").val();
+            if (description != "") {
+                for (var key in shapes) {
+                    if (shapes[key]["description"].includes(description)) {
+                        relevant_shapes[key] = shapes[key];
+                    }
+                }
+            }
+
+            // relevant shape rating
+            rating = $("#rating_search").val();
+            if (rating != "") {
+                for (var key in shapes) {
+                    if (shapes[key]["rating"].includes(rating)) {
+                        relevant_shapes[key] = shapes[key];
+                    }
+                }
+            }
+
+
+            if (Object.keys(relevant_shapes).length > 0) {
+                current_shapes = relevant_shapes;
+                alert("Fant "+Object.keys(relevant_shapes).length+" resulter");
+            }
+            else {
+                current_shapes = shapes;
+                alert("Fant ingen resulter, viser alle objekter på kartet nå");
+            }
+            draw_current_shapes();
+        };
+
+        function clear_map_events() {
+            // removing previous eventlisteners from map
+            if (listeners.length > 0) {
+                for (var i = 0; i < listeners.length; i++) {
+                    google.maps.event.removeListener(listeners[i]);
+                    listeners[i].remove();
+                }
+            }
+        }
+
+        function Download_Map_AS_CSV_File() {
+
+            shapes_ids = [];
+            respondents_ids = [];
+            for (var key in current_shapes) {
+                shapes_ids.push(key.toString());
+                respondents_ids.push(current_shapes[key]["respondent_id"]);
+            }
+
+            $.post("/DownloadMapAsCSVFile",
+                    {
+                        Map_id: "{{ Map.mapid }}",
+                        Respondoents: JSON.stringify(respondents_ids),
+                        Data: (JSON.stringify(shapes_ids)),
+                    },
+                    function (data, status) {
+                        if (data != "Fail") {
+                            download("citydata_uis_map_nr_number.csv".replace("number", "{{ Map.mapid }}"), data);
+                            return;
+                        } else {
+                            alert("En feil har skjedd, Kan ikke lagre filen, sjekk internett forbindelse");
+                            return;
+                        }
+                    });
+
+        }
+
+        function download(filename, text) {
+          var element = document.createElement('a');
+          element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+          element.setAttribute('download', filename);
+
+          element.style.display = 'none';
+          document.body.appendChild(element);
+
+          element.click();
+
+          document.body.removeChild(element);
+        }
+
+        var current_shape_id = null;
+
+        var last_valid_center;
+        var last_valid_zoom;
+        function handle_outside_bounds_click() {
+            if (open_info_window != null) {
+                open_info_window.close();
+                open_info_window = null;
+                map.setZoom(last_valid_zoom);
+                map.setCenter(last_valid_center);
+            } else {
+                map.fitBounds(new google.maps.LatLngBounds(northeastcorner, southwestcorner));
+            }
+        }
+        function handle_on_close_info_window() {
+
+            if (open_info_window != null) {
+                open_info_window.close();
+                open_info_window = null;
+                $("#pac-card").show();
+            }
+            /*
+            if (current_shape_id != null) {
+                update_shape(current_shape_id);
+            }
+            */
+            $("#pac-card").show();
+
+        }
+        function handle_marker_click(infowindow, marker) {
+
+            /*
+            if (current_shape_id != null) {
+                update_shape(current_shape_id);
+            }
+            */
+
+            for (var key in shapes) {
+                if (shapes[key]["marker"] == marker) {
+                    current_shape_id = key;
+                }
+            }
+
+            if (open_info_window != null) {
+                open_info_window.close();
+            }
+            $("#pac-card").hide();
+            infowindow.open(map, marker);
+            open_info_window = infowindow;
+
+        }
+
+        function getBoundsZoomLevel(bounds, mapDim) {
+            var WORLD_DIM = { height: 256, width: 256 };
+            var ZOOM_MAX = 21;
+
+            function latRad(lat) {
+                var sin = Math.sin(lat * Math.PI / 180);
+                var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+                return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+            }
+
+            function zoom(mapPx, worldPx, fraction) {
+                return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+            }
+
+            var ne = bounds.getNorthEast();
+            var sw = bounds.getSouthWest();
+
+            var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+
+            var lngDiff = ne.lng() - sw.lng();
+            var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+            var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+            var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+            return Math.min(latZoom, lngZoom, ZOOM_MAX);
+        }
+
+        // function to compute the centroid
+        function computeCentroid(pointsarray) {
+            var number_of_points = pointsarray.length;
+            var latitude = 0;
+            var longtitude = 0;
+            for (var i = 0; i < number_of_points; i++) {
+                latitude += pointsarray[i].lat();
+                longtitude += pointsarray[i].lng();
+            }
+            centroid = new google.maps.LatLng((latitude / number_of_points), (longtitude / number_of_points));
+            return centroid;
+        };
+
+        // function to make a string out of the array of points
+        function makestringfromarray(array) {
+            string = ""
+            for (var i = 0; i < array.length; i++) {
+                treat_point = array[i].toString().replace("(","").replace(")","").replace(", "," ");
+                string += ","+treat_point;
+            }
+            string = string.slice(1);
+            return string;
+        }
+
+        // function to make an array of points out of a string of points
+        function makearrayfromstring(str) {
+            array = [];
+            str = str.split(",");
+            for (var i = 0; i < str.length; i++) {
+                point = str[i].replace(" ",", ");
+                point = point.split(", ")
+                point = new google.maps.LatLng(parseFloat(point[0]),parseFloat(point[1]));
+                array.push(point);
+            }
+            return array;
+        }
+
+        // function to initilize and load the map from google API map services
+        var markers = [];
+        var markerCluster;
+        function initMap() {
+
+            northeastcorner = new google.maps.LatLng({{ Map.northeastcorner }});
+            southwestcorner = new google.maps.LatLng({{ Map.southwestcorner }});
+            bounds = new google.maps.LatLngBounds(northeastcorner, southwestcorner);
+
+            var $mapDiv = $('#Map');
+            var mapDim = { height: $mapDiv.height(), width: $mapDiv.width() };
+            calculated_zoom = getBoundsZoomLevel(bounds, mapDim);
+
+            map = new google.maps.Map(document.getElementById('Map'), {
+                center: computeCentroid([northeastcorner, southwestcorner]),
+                //zoom: {{ Map.zoom }},
+                zoom: calculated_zoom,
+                gestureHandling: true, // true to turn on hand scroll or 'none'
+                zoomControl: true,
+                fullscreenControl: false,
+                bounds: bounds,
+
+                mapTypeControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_CENTER
+                },
+                streetViewControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_CENTER
+                },
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_CENTER
+                },
+                fullscreenControl: false
+            });
+
+            last_valid_center = map.getCenter();
+            last_valid_zoom = map.getZoom();
+
+
+            var card = document.getElementById('pac-card');
+            var input = document.getElementById('pac-input');
+            map.controls[google.maps.ControlPosition.LEFT_TOP].push(card);
+
+            var autocomplete = new google.maps.places.Autocomplete(input);
+
+            // Bind the map's bounds (viewport) property to the autocomplete object,
+            // so that the autocomplete requests use the current map bounds for the
+            // bounds option in the request.
+            autocomplete.bindTo('bounds', map);
+
+            autocomplete.addListener('place_changed', function() {
+
+                var place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    // User entered the name of a Place that was not suggested and
+                    // pressed the Enter key, or the Place Details request failed.
+                    window.alert("No details available for input: '" + place.name + "'");
+                    return;
+                }
+
+                // If the place has a geometry, then present it on a map.
+                if (place.geometry.viewport) {
+                    bounds = new google.maps.LatLngBounds(northeastcorner, southwestcorner);
+                    if (bounds.contains(place.geometry.viewport.getNorthEast()) && bounds.contains(place.geometry.viewport.getSouthWest())) {
+                        map.fitBounds(place.geometry.viewport);
+                    } else {
+                        alert("Stedet er ikke inkludert i karet!");
+                    }
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17);  // Why 17? Because it looks good.
+                }
+
+
+                var address = '';
+                if (place.address_components) {
+                    address = [
+                        (place.address_components[0] && place.address_components[0].short_name || ''),
+                        (place.address_components[1] && place.address_components[1].short_name || ''),
+                        (place.address_components[2] && place.address_components[2].short_name || '')
+                    ].join(' ');
+                }
+
+            });
+
+            google.maps.event.addListener(map,'click',function(event) {
+                if (open_info_window != null) {
+                    open_info_window.close();
+                    open_info_window = null;
+                    $("#pac-card").show();
+                    handle_outside_bounds_click()
+                }
+                /*
+                if (current_shape_id != null) {
+                    update_shape(current_shape_id);
+                }
+                */
+            });
+
+            // event to keep the user inside the map bound, and prevent adding markers outside the target geo area
+            google.maps.event.addListener(map,'drag',function () {
+                northeast = map.getBounds().getNorthEast(); // LatLng of the north-east corner
+                southwest = map.getBounds().getSouthWest(); // LatLng of the south-west corder
+
+                south = southwest.lat();
+                west = southwest.lng();
+
+                north = northeast.lat();
+                east = northeast.lng();
+
+                fixed_south = southwestcorner.lat();
+                fixed_west = southwestcorner.lng();
+
+                fixed_north = northeastcorner.lat();
+                fixed_east = northeastcorner.lng();
+
+                if ((east > fixed_west) || (west < fixed_east) || (north > fixed_south) || (south < fixed_north)) {
+                    map.setCenter(last_valid_center);
+                    map.setZoom(last_valid_zoom);
+                } else {
+                    last_valid_center = map.getCenter();
+                    last_valid_zoom = map.getZoom();
+                }
+            });
+
+
+            google.maps.event.addListener(map,'bounds_changed',function () {
+                if (map.getZoom() < calculated_zoom) {
+                    map.fitBounds(bounds);
+                    map.setZoom(calculated_zoom);
+                }
+            });
+
+            var outerCoords = [
+                {lat: northeastcorner.lat()+10, lng: southwestcorner.lng()-10}, // north west
+                {lat: southwestcorner.lat()-10, lng: southwestcorner.lng()-10}, // south west
+                {lat: southwestcorner.lat()-10, lng: northeastcorner.lng()+10}, // south east
+                {lat: northeastcorner.lat()+10, lng: northeastcorner.lng()+10} // north east
+            ];
+            var innerCoords = [
+                {lat: northeastcorner.lat(), lng: southwestcorner.lng()}, // north west
+                {lat: southwestcorner.lat(), lng: southwestcorner.lng()}, // south west
+                {lat: southwestcorner.lat(), lng: northeastcorner.lng()}, // south east
+                {lat: northeastcorner.lat(), lng: northeastcorner.lng()}  // north east
+            ];
+            map.data.add({
+                geometry: new google.maps.Data.Polygon([outerCoords, innerCoords])
+            });
+            map.data.setStyle(function(feature) {
+              var color = 'white';
+              if (feature.getProperty('isColorful')) {
+                color = feature.getProperty('color');
+              }
+              return /** @type {google.maps.Data.StyleOptions} */({
+                  fillColor: color,
+                  fillOpacity: 1,
+                  strokeColor: color,
+                  strokeWeight: 2
+              });
+            });
+
+
+            loadShapes();
+
+        }
+
+    </script>
+
+{% endblock %}
+
+{% block content %}
+
+    <!-- Choice panel to the left of the map or hidden/shown on small width devices -->
+    <div id="ChoicePanel" class="part">
+        <div class="panel-group" id="accordion">
+
+            <div>
+                <button type="button" id="show_map_btn" class="btn btn-warning" style="width: 100%">Back to Map</button>
+            </div>
+
+            <br>
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
+                            <strong>Kontrollpanel</strong></a>
+                    </h4>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse in">
+                    <div class="panel-body">
+
+                        <div class="slidecontainer">
+                            <label for="Weight">Linjevekt</label>
+                            <input type="range" name="Weight" min="1" max="10" value="5" class="slider" id="Weight">
+                        </div>
+
+                        <br>
+
+                        <div class="slidecontainer">
+                            <label for="Opacity">Området Opasitet/Synlighet</label>
+                            <input type="range" name="Opacity" min="1" max="10" value="5" class="slider" id="Opacity">
+                        </div>
+
+                        <br>
+
+                        <div class="slidecontainer">
+                            <h4>Clustring/Gruppering av Markører <br> <code>(kun for punkt/kategorier)</code>: </h4>
+                            <label class="switch">
+                              <input id="clustring_switch" type="checkbox" hidden>
+                              <span class="slider_clustring round"></span>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">
+                            <strong>Filtrer Objekter</strong></a>
+                    </h4>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div style="padding: 5%; margin: 5%; border-radius: 5px; border: 1px solid red">
+                            {% for question in Questions %}
+                                <div class="form-group">
+                                    <label for="question_{{ question.question_ID }}">{{ question.question }}</label>
+                                    <input type="text" class="form-control" id="question_{{ question.question_ID }}" placeholder="Søkeord" name="question.{{ question.question_ID }}">
+                                </div>
+                            {% endfor %}
+
+                                {% if Users|length > 0 %}
+                                    <div class="form-group" aria-placeholder="Filtrer etter brukere">
+                                        <label for="Weight">Viser data fra følgende Interviewere</label>
+                                        <select id="filter_interviewers" multiple="true">
+                                            {% for user in Users %}
+                                                <option value="{{ user.username }}">
+                                                    {{ user.username }},
+                                                    <br>
+                                                    {{ user.email }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endif %}
+
+                                <div class="form-group">
+                                    <label>Vis kun:
+                                        <br>
+                                        <input type="checkbox" name="point" id="Point" value="" checked="true"> <strong>Punkter</strong>
+                                        <br>
+                                        <input type="checkbox" name="road" id="Road" value="" checked="true"> <strong>Linjer</strong>
+                                        <br>
+                                        <input type="checkbox" name="area" id="Area" value="" checked="true"> <strong>Områder</strong>
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="title">Objekter med Title: </label>
+                                    <input type="text" class="form-control" id="title_search" placeholder="Titel" name="title_search">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="description">Objekter med Beskrivelse: </label>
+                                    <input type="text" class="form-control" id="description_search" placeholder="Beskrivelse" name="description_search">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="rating">Objekter med Vurdering: </label>
+                                    <input type="number" min="1" max="5" class="form-control" id="rating_search" placeholder="Vurdering = 2" name="rating_search">
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-success btn-block" onclick="Filter_Shapes();">Filtrer</button>
+                                    <button type="button" class="btn btn-primary btn-block" onclick="Download_Map_AS_CSV_File();">Skriv til .CSV fil</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Address Search Bar on map -->
+    <div class="pac-card" id="pac-card">
+        <div id="pac-container" class="input-group" style="margin-bottom: 0;">
+            <span id="toggle_panel" class="input-group-addon" style="background-color: #ffffff"><i class="fa fa-cog" style="width: 24px; color: #2a62bc"></i></span>
+            <input id="pac-input" class="form-control" type="text" placeholder="Søk her">
+        </div>
+    </div>
+
+    <!-- a div to hold the map -->
+    <div id="Map" class="part"></div>
+
+    <!-- Info_Window on map -->
+    <div id="info_window">
+        <input type="hidden" name="position" value="">
+        <div class='form-group'>
+            <label for='title'>Titel:</label>
+            <input type='title' class='form-control' id='title' placeholder='Titel' name='title' required>
+        </div>
+        <div class='form-group'>
+            <label for='description'>Beskrivelse:</label>
+            <textarea name='description' class='form-control' rows='2' id='description' placeholder='Beskrivelse' required></textarea>
+        </div>
+        <div class='slidecontainer'>
+            <p>Din Vurdering: <span id='currentRating'></span></p>
+            <input name='rating' type='range' min='1' max='5' value='2' class='slider' id='rating' required>
+        </div>
+        <br>
+        <button type="button" id="delete_btn" class="btn btn-danger">Slett</button>
+    </div>
+
+    <!-- Link to download the map from google API services -->
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY&libraries=places&callback=initMap">
+    </script>
+    <!-- Link to include google clustering Library -->
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+
+{% endblock %}

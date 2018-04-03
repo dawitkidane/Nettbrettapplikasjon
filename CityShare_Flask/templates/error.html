@@ -9,7 +9,9 @@
 
         <h1 >Obs! En feil har skjedd!</h1>
 
-        <p id="errtxt">{{ session.get('err') }}</p>
+        {% if msg or Fail %}
+            <strong>{{ msg }}{{ Fail }}</strong>
+        {% endif %}
 
         <a href="/">Gå tilbake til hjemsiden</a>
 
