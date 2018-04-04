@@ -1,0 +1,85 @@
+{% extends "index.html" %}
+{% block stylingblock %}
+    <!-- Link to static/stylesheets/feedback_stylesheet.css -->
+
+    <style>
+        #feedbacks{
+            height: 30%;
+            max-height: 700px;
+            width: 90%;
+            border-left: 1px solid grey;
+            border-right: 1px solid grey;
+            border-radius: 5px;
+            overflow: auto;
+            margin: auto;
+            padding: 2%;
+            margin-top: 2%;
+        }
+        .feedback_box{
+            overflow: auto;
+            max-height: 300px;
+            font-size: 1.5em;
+            padding: 5px;
+            border: 1px solid;
+            border-style:outset;
+            margin: 2%;
+
+        }
+        #dat{
+            font-style: italic;
+            font-size: small;
+        }
+        #new_feedbacks{
+            height: 50%;
+            width: 70%;
+            border: 1px solid grey;
+            border-radius: 5px;
+            overflow: auto;
+            margin: auto;
+            text-align: center;
+            padding: 2%;
+        }
+        h1{
+            font-size: 2em;
+            border-top: 1px solid grey;
+            margin-left: 5%;
+            margin-right: 5%;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div id="new_feedbacks">
+
+            <form action='/addfeedback' method="post">
+                <fieldset>
+                <legend>GIVE YOUR FEEDBACK</legend>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="name" placeholder="name" name="name" required>
+                </div>
+                <div class="form-group">
+
+                    <textarea type="description" id="cmt" name="cmt" placeholder="comment" class="form-control" rows="5" required></textarea>
+                </div>
+                <div>
+                    <button id="submitbutton" type="submit" class="btn btn-success">Save</button>
+                </div>
+                </fieldset>
+            </form>
+    </div>
+    <h1>FEEDBACKS</h1>
+    <div id="feedbacks">
+
+        {% for feedback in feedo %}
+
+            <div class="feedback_box">
+                    <p><strong>{{ feedback.name }} &nbsp</strong><span id="dat">{{ feedback.date }}</span></p>
+                    <p>{{ feedback.cmt }}</p>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

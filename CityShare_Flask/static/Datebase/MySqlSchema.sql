@@ -105,6 +105,14 @@ FOREIGN KEY (shape_creater) REFERENCES Persons(username),
 FOREIGN KEY (respondent_ID) REFERENCES Maps_Respondents(respondent_ID)
 );
 
+CREATE TABLE Feedbacks (
+feedback_id INT AUTO_INCREMENT,
+name VARCHAR(30),
+date TIMESTAMP DEFAULT now(),
+cmt VARCHAR(30000),
+PRIMARY KEY (feedback_id)
+);
+
 
 INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone, is_admin) 
 VALUES('Mohammed','Mohammed1992','Mohammed','Guniem','mghunime@yahoo.no',004748338891,TRUE);

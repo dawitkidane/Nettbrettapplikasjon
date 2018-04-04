@@ -2,11 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f8e2d6b3-469e-4397-bd43-99d303659aa5" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/CityShare_Flask/static/stylesheets/error_stylesheet.css" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/CityShare_Flask/templates/change_map.html" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/CityShare_Flask/templates/feedback.html" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/CityShare_Flask/static/ExportMapFiles/result_id_'+theid+'.csv" afterPath="$PROJECT_DIR$/CityShare_Flask/static/ExportMapFiles/result_id_'+theid+'.csv" />
-      <change beforePath="$PROJECT_DIR$/CityShare_Flask/templates/edit_map.html" afterPath="$PROJECT_DIR$/CityShare_Flask/templates/edit_map.html" />
-      <change beforePath="$PROJECT_DIR$/CityShare_Flask/templates/error.html" afterPath="$PROJECT_DIR$/CityShare_Flask/templates/error.html" />
+      <change beforePath="$PROJECT_DIR$/CityShare_Flask/CityShare.py" afterPath="$PROJECT_DIR$/CityShare_Flask/CityShare.py" />
+      <change beforePath="$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql" afterPath="$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql" />
+      <change beforePath="$PROJECT_DIR$/CityShare_Flask/templates/home.html" afterPath="$PROJECT_DIR$/CityShare_Flask/templates/home.html" />
+      <change beforePath="$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html" afterPath="$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,19 +18,130 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Nettbrettapplikasjon$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1521623061758" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CityShare_Flask" />
+    <SUITE FILE_PATH="coverage/Nettbrettapplikasjon$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1522842444622" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CityShare_Flask" />
   </component>
   <component name="FavoritesManager">
     <favorites_list name="Nettbrettapplikasjon" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="CityShare.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CityShare_Flask/CityShare.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="644">
+              <caret line="627" column="21" lean-forward="false" selection-start-line="627" selection-start-column="13" selection-end-line="627" selection-end-column="21" />
+              <folding>
+                <element signature="e#546#581#0" expanded="false" />
+                <element signature="e#648#1830#0" expanded="false" />
+                <element signature="e#2042#2951#0" expanded="false" />
+                <element signature="e#3026#3579#0" expanded="false" />
+                <element signature="e#7125#8753#0" expanded="false" />
+                <element signature="e#12916#18288#0" expanded="false" />
+                <element signature="e#18360#23727#0" expanded="false" />
+                <element signature="e#27650#30026#0" expanded="false" />
+                <element signature="e#30118#34259#0" expanded="false" />
+                <element signature="e#34323#35423#0" expanded="false" />
+                <element signature="e#35493#35921#0" expanded="false" />
+                <marker date="1522840497089" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
+                <marker date="1522840497089" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
+                <marker date="1522840497089" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
+                <marker date="1522840497089" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
+                <marker date="1522840497089" expanded="true" signature="25553:25660" ph="UPDATE Maps... " />
+                <marker date="1522840497089" expanded="true" signature="25553:25671" ph="UPDATE Maps... " />
+                <marker date="1522840497089" expanded="true" signature="25553:25676" ph="UPDATE Maps... " />
+                <marker date="1522840497089" expanded="true" signature="25553:25709" ph="UPDATE Maps... " />
+                <marker date="1522840497089" expanded="true" signature="25553:25724" ph="UPDATE Maps... " />
+                <marker date="1522840497089" expanded="true" signature="25861:25922" ph="INSERT INTO Maps_Interviewers... " />
+                <marker date="1522840497089" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
+                <marker date="1522840497089" expanded="true" signature="26162:26225" ph="INSERT INTO Maps_Administrators... " />
+                <marker date="1522840497089" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
+                <marker date="1522840497089" expanded="true" signature="26589:26727" ph="INSERT INTO Maps_Categories... " />
+                <marker date="1522840497089" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
+                <marker date="1522840497089" expanded="true" signature="26754:26942" ph="UPDATE Maps_Categories... " />
+                <marker date="1522840497089" expanded="true" signature="27074:27132" ph="INSERT INTO Maps_Questions... " />
+                <marker date="1522840497089" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="view_map_result.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/view_map_result.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-515">
+              <caret line="203" column="63" lean-forward="true" selection-start-line="203" selection-start-column="63" selection-end-line="203" selection-end-column="63" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="change_map.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/change_map.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="43" column="22" lean-forward="false" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="new_map.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/new_map.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="332">
+              <caret line="1001" column="0" lean-forward="false" selection-start-line="1001" selection-start-column="0" selection-end-line="1001" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="view_maps.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="84">
+              <caret line="24" column="198" lean-forward="false" selection-start-line="24" selection-start-column="49" selection-end-line="24" selection-end-column="198" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="edit_map.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/edit_map.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="740">
+              <caret line="194" column="19" lean-forward="false" selection-start-line="194" selection-start-column="16" selection-end-line="194" selection-end-column="19" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MySqlSchema.sql" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-295">
+              <caret line="8" column="10" lean-forward="true" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="feedback.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/feedback.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="CSS File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -52,6 +165,11 @@
       <find>sign</find>
       <find>sess</find>
       <find>head</find>
+      <find>bruker</find>
+      <find>admin</find>
+      <find>question_</find>
+      <find>zoom</find>
+      <find>MAP</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -60,13 +178,15 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html" />
         <option value="$PROJECT_DIR$/CityShare_Flask/templates/index.html" />
-        <option value="$PROJECT_DIR$/CityShare_Flask/CityShare.py" />
-        <option value="$PROJECT_DIR$/CityShare_Flask/templates/home.html" />
         <option value="$PROJECT_DIR$/CityShare_Flask/templates/edit_map.html" />
         <option value="$PROJECT_DIR$/CityShare_Flask/static/stylesheets/error_stylesheet.css" />
         <option value="$PROJECT_DIR$/CityShare_Flask/templates/error.html" />
+        <option value="$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html" />
+        <option value="$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql" />
+        <option value="$PROJECT_DIR$/CityShare_Flask/templates/home.html" />
+        <option value="$PROJECT_DIR$/CityShare_Flask/CityShare.py" />
+        <option value="$PROJECT_DIR$/CityShare_Flask/templates/change_map.html" />
       </list>
     </option>
   </component>
@@ -77,9 +197,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="33" />
+    <option name="x" value="59" />
     <option name="y" value="23" />
-    <option name="width" value="1245" />
+    <option name="width" value="1264" />
     <option name="height" value="835" />
   </component>
   <component name="ProjectView">
@@ -97,6 +217,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -121,7 +242,14 @@
               <item name="Nettbrettapplikasjon" type="462c0819:PsiDirectoryNode" />
               <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="stylesheets" type="462c0819:PsiDirectoryNode" />
+              <item name="Datebase" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Nettbrettapplikasjon" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Nettbrettapplikasjon" type="462c0819:PsiDirectoryNode" />
+              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="Scripts" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Nettbrettapplikasjon" type="b2602c69:ProjectViewProjectNode" />
@@ -133,7 +261,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -143,6 +270,11 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="settings.editor.selected.configurable" value="tasks" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/CityShare_Flask/templates" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -208,29 +340,30 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="33" y="23" width="1245" height="835" extended-state="0" />
+    <frame x="59" y="23" width="1264" height="835" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32837838" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33783785" sideWeight="0.50377357" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32793522" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33783785" sideWeight="0.49622643" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32702702" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30174562" sideWeight="0.48686868" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22667758" sideWeight="0.48686868" order="0" side_tool="false" content_ui="combo" />
       <window_info id="R Packages" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="R Graphics" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24872057" sideWeight="0.49457994" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20752798" sideWeight="0.5131313" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20752798" sideWeight="0.5131313" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -242,7 +375,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="9" />
+      <option name="time" value="12" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -252,20 +385,321 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1521622454571" expanded="true" signature="1122:1250" ph="INSERT INTO Persons... " />
-            <marker date="1521622454571" expanded="true" signature="2220:2330" ph="SELECT COUNT... Persons" />
-            <marker date="1521622454571" expanded="true" signature="3211:3286" ph="SELECT usern... Persons" />
-            <marker date="1521622454571" expanded="true" signature="5878:5932" ph="INSERT INTO Maps_Users... " />
-            <marker date="1521622454571" expanded="true" signature="6320:6457" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1521622454571" expanded="true" signature="6951:7012" ph="SELECT map_i... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="7365:7495" ph="SELECT map_c... " />
-            <marker date="1521622454571" expanded="true" signature="8555:8679" ph="SELECT COUNT... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="8897:9065" ph="SELECT map_c... " />
-            <marker date="1521622454571" expanded="true" signature="9779:9825" ph="SELECT map_i... Maps" />
-            <marker date="1521622454571" expanded="true" signature="9981:10090" ph="SELECT M.use... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="10475:10811" ph="SELECT S.sha... Shapes" />
-            <marker date="1521622454571" expanded="true" signature="12022:12132" ph="SELECT categ... Maps_Categories" />
-            <marker date="1521622454571" expanded="true" signature="16114:16152" ph="DELETE FROM Shapes... " />
+            <element signature="e#546#581#0" expanded="false" />
+            <element signature="e#648#1830#0" expanded="false" />
+            <element signature="e#2042#2951#0" expanded="false" />
+            <element signature="e#3026#3579#0" expanded="false" />
+            <element signature="e#7125#8753#0" expanded="false" />
+            <element signature="e#12916#18288#0" expanded="false" />
+            <element signature="e#18360#23727#0" expanded="false" />
+            <element signature="e#27650#30026#0" expanded="false" />
+            <element signature="e#30118#34259#0" expanded="false" />
+            <element signature="e#34323#35423#0" expanded="false" />
+            <element signature="e#35493#35921#0" expanded="false" />
+            <marker date="1522840497089" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25660" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25671" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25676" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25709" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25724" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25861:25922" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="26162:26225" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26589:26727" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26942" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="27074:27132" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/view_map_result.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12375">
+          <caret line="825" column="108" lean-forward="false" selection-start-line="825" selection-start-column="85" selection-end-line="825" selection-end-column="108" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/change_map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="41" column="40" lean-forward="false" selection-start-line="41" selection-start-column="40" selection-end-line="41" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/new_map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="37" column="0" lean-forward="true" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="60" lean-forward="false" selection-start-line="32" selection-start-column="51" selection-end-line="32" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/edit_map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7635">
+          <caret line="509" column="136" lean-forward="false" selection-start-line="509" selection-start-column="136" selection-end-line="509" selection-end-column="164" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1635">
+          <caret line="109" column="16" lean-forward="false" selection-start-line="109" selection-start-column="8" selection-end-line="109" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="42" lean-forward="true" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/error.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="26" lean-forward="true" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/CityShare.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#546#581#0" expanded="false" />
+            <element signature="e#648#1830#0" expanded="false" />
+            <element signature="e#2042#2951#0" expanded="false" />
+            <element signature="e#3026#3579#0" expanded="false" />
+            <element signature="e#7125#8753#0" expanded="false" />
+            <element signature="e#12916#18288#0" expanded="false" />
+            <element signature="e#18360#23727#0" expanded="false" />
+            <element signature="e#27650#30026#0" expanded="false" />
+            <element signature="e#30118#34259#0" expanded="false" />
+            <element signature="e#34323#35423#0" expanded="false" />
+            <element signature="e#35493#35921#0" expanded="false" />
+            <marker date="1522840497089" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25660" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25671" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25676" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25709" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25724" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25861:25922" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="26162:26225" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26589:26727" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26942" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="27074:27132" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/CityShare.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1890">
+          <caret line="491" column="25" lean-forward="false" selection-start-line="491" selection-start-column="25" selection-end-line="491" selection-end-column="25" />
+          <folding>
+            <element signature="e#546#581#0" expanded="false" />
+            <element signature="e#648#1830#0" expanded="false" />
+            <element signature="e#2042#2951#0" expanded="false" />
+            <element signature="e#3026#3579#0" expanded="false" />
+            <element signature="e#7125#8753#0" expanded="false" />
+            <element signature="e#12916#18288#0" expanded="false" />
+            <element signature="e#18360#23727#0" expanded="false" />
+            <element signature="e#27650#30026#0" expanded="false" />
+            <element signature="e#30118#34259#0" expanded="false" />
+            <element signature="e#34323#35423#0" expanded="false" />
+            <element signature="e#35493#35921#0" expanded="false" />
+            <marker date="1522840497089" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25660" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25671" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25676" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25709" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25724" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25861:25922" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="26162:26225" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26589:26727" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26942" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="27074:27132" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1635">
+          <caret line="109" column="16" lean-forward="false" selection-start-line="109" selection-start-column="8" selection-end-line="109" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/CityShare.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1890">
+          <caret line="491" column="25" lean-forward="false" selection-start-line="491" selection-start-column="25" selection-end-line="491" selection-end-column="25" />
+          <folding>
+            <element signature="e#546#581#0" expanded="false" />
+            <element signature="e#648#1830#0" expanded="false" />
+            <element signature="e#2042#2951#0" expanded="false" />
+            <element signature="e#3026#3579#0" expanded="false" />
+            <element signature="e#7125#8753#0" expanded="false" />
+            <element signature="e#12916#18288#0" expanded="false" />
+            <element signature="e#18360#23727#0" expanded="false" />
+            <element signature="e#27650#30026#0" expanded="false" />
+            <element signature="e#30118#34259#0" expanded="false" />
+            <element signature="e#34323#35423#0" expanded="false" />
+            <element signature="e#35493#35921#0" expanded="false" />
+            <marker date="1522840497089" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25660" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25671" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25676" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25709" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25724" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25861:25922" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="26162:26225" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26589:26727" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26942" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="27074:27132" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1635">
+          <caret line="109" column="16" lean-forward="false" selection-start-line="109" selection-start-column="8" selection-end-line="109" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/CityShare.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1890">
+          <caret line="491" column="25" lean-forward="false" selection-start-line="491" selection-start-column="25" selection-end-line="491" selection-end-column="25" />
+          <folding>
+            <element signature="e#546#581#0" expanded="false" />
+            <element signature="e#648#1830#0" expanded="false" />
+            <element signature="e#2042#2951#0" expanded="false" />
+            <element signature="e#3026#3579#0" expanded="false" />
+            <element signature="e#7125#8753#0" expanded="false" />
+            <element signature="e#12916#18288#0" expanded="false" />
+            <element signature="e#18360#23727#0" expanded="false" />
+            <element signature="e#27650#30026#0" expanded="false" />
+            <element signature="e#30118#34259#0" expanded="false" />
+            <element signature="e#34323#35423#0" expanded="false" />
+            <element signature="e#35493#35921#0" expanded="false" />
+            <marker date="1522840497089" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25660" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25671" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25676" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25709" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25724" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25861:25922" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="26162:26225" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26589:26727" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26942" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="27074:27132" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1635">
+          <caret line="109" column="16" lean-forward="false" selection-start-line="109" selection-start-column="8" selection-end-line="109" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/new_map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="14280">
+          <caret line="952" column="123" lean-forward="false" selection-start-line="952" selection-start-column="117" selection-end-line="952" selection-end-column="123" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/CityShare.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#546#581#0" expanded="false" />
+            <element signature="e#648#1830#0" expanded="false" />
+            <element signature="e#2042#2951#0" expanded="false" />
+            <element signature="e#3026#3579#0" expanded="false" />
+            <element signature="e#7125#8753#0" expanded="false" />
+            <element signature="e#12916#18288#0" expanded="false" />
+            <element signature="e#18360#23727#0" expanded="false" />
+            <element signature="e#27650#30026#0" expanded="false" />
+            <element signature="e#30118#34259#0" expanded="false" />
+            <element signature="e#34323#35423#0" expanded="false" />
+            <element signature="e#35493#35921#0" expanded="false" />
+            <marker date="1522840497089" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25660" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25671" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25676" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25709" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25724" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25861:25922" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="26162:26225" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26589:26727" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26942" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="27074:27132" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
           </folding>
         </state>
       </provider>
@@ -282,7 +716,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22785">
           <caret line="1519" column="23" lean-forward="true" selection-start-line="1519" selection-start-column="23" selection-end-line="1519" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -298,7 +731,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1200">
           <caret line="80" column="54" lean-forward="false" selection-start-line="80" selection-start-column="54" selection-end-line="80" selection-end-column="84" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -306,7 +738,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
           <caret line="11" column="84" lean-forward="false" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="84" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -314,7 +745,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -323,20 +753,35 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1521622454571" expanded="true" signature="1122:1250" ph="INSERT INTO Persons... " />
-            <marker date="1521622454571" expanded="true" signature="2220:2330" ph="SELECT COUNT... Persons" />
-            <marker date="1521622454571" expanded="true" signature="3211:3286" ph="SELECT usern... Persons" />
-            <marker date="1521622454571" expanded="true" signature="5878:5932" ph="INSERT INTO Maps_Users... " />
-            <marker date="1521622454571" expanded="true" signature="6320:6457" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1521622454571" expanded="true" signature="6951:7012" ph="SELECT map_i... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="7365:7495" ph="SELECT map_c... " />
-            <marker date="1521622454571" expanded="true" signature="8555:8679" ph="SELECT COUNT... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="8897:9065" ph="SELECT map_c... " />
-            <marker date="1521622454571" expanded="true" signature="9779:9825" ph="SELECT map_i... Maps" />
-            <marker date="1521622454571" expanded="true" signature="9981:10090" ph="SELECT M.use... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="10475:10811" ph="SELECT S.sha... Shapes" />
-            <marker date="1521622454571" expanded="true" signature="12022:12132" ph="SELECT categ... Maps_Categories" />
-            <marker date="1521622454571" expanded="true" signature="16114:16152" ph="DELETE FROM Shapes... " />
+            <element signature="e#546#581#0" expanded="false" />
+            <element signature="e#648#1830#0" expanded="false" />
+            <element signature="e#2042#2951#0" expanded="false" />
+            <element signature="e#3026#3579#0" expanded="false" />
+            <element signature="e#7125#8753#0" expanded="false" />
+            <element signature="e#12916#18288#0" expanded="false" />
+            <element signature="e#18360#23727#0" expanded="false" />
+            <element signature="e#27650#30026#0" expanded="false" />
+            <element signature="e#30118#34259#0" expanded="false" />
+            <element signature="e#34323#35423#0" expanded="false" />
+            <element signature="e#35493#35921#0" expanded="false" />
+            <marker date="1522840497089" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25660" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25671" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25676" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25709" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25724" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25861:25922" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="26162:26225" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26589:26727" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26942" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="27074:27132" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
           </folding>
         </state>
       </provider>
@@ -345,7 +790,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="630">
           <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -353,7 +797,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22755">
           <caret line="1517" column="39" lean-forward="false" selection-start-line="1517" selection-start-column="39" selection-end-line="1517" selection-end-column="39" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -362,20 +805,35 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1521622454571" expanded="true" signature="1122:1250" ph="INSERT INTO Persons... " />
-            <marker date="1521622454571" expanded="true" signature="2220:2330" ph="SELECT COUNT... Persons" />
-            <marker date="1521622454571" expanded="true" signature="3211:3286" ph="SELECT usern... Persons" />
-            <marker date="1521622454571" expanded="true" signature="5878:5932" ph="INSERT INTO Maps_Users... " />
-            <marker date="1521622454571" expanded="true" signature="6320:6457" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1521622454571" expanded="true" signature="6951:7012" ph="SELECT map_i... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="7365:7495" ph="SELECT map_c... " />
-            <marker date="1521622454571" expanded="true" signature="8555:8679" ph="SELECT COUNT... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="8897:9065" ph="SELECT map_c... " />
-            <marker date="1521622454571" expanded="true" signature="9779:9825" ph="SELECT map_i... Maps" />
-            <marker date="1521622454571" expanded="true" signature="9981:10090" ph="SELECT M.use... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="10475:10811" ph="SELECT S.sha... Shapes" />
-            <marker date="1521622454571" expanded="true" signature="12022:12132" ph="SELECT categ... Maps_Categories" />
-            <marker date="1521622454571" expanded="true" signature="16114:16152" ph="DELETE FROM Shapes... " />
+            <element signature="e#546#581#0" expanded="false" />
+            <element signature="e#648#1830#0" expanded="false" />
+            <element signature="e#2042#2951#0" expanded="false" />
+            <element signature="e#3026#3579#0" expanded="false" />
+            <element signature="e#7125#8753#0" expanded="false" />
+            <element signature="e#12916#18288#0" expanded="false" />
+            <element signature="e#18360#23727#0" expanded="false" />
+            <element signature="e#27650#30026#0" expanded="false" />
+            <element signature="e#30118#34259#0" expanded="false" />
+            <element signature="e#34323#35423#0" expanded="false" />
+            <element signature="e#35493#35921#0" expanded="false" />
+            <marker date="1522840497089" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25660" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25671" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25676" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25709" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25724" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25861:25922" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="26162:26225" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26589:26727" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26942" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="27074:27132" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
           </folding>
         </state>
       </provider>
@@ -392,7 +850,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="930">
           <caret line="62" column="41" lean-forward="false" selection-start-line="62" selection-start-column="37" selection-end-line="62" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -400,7 +857,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="20100">
           <caret line="1340" column="35" lean-forward="false" selection-start-line="1340" selection-start-column="35" selection-end-line="1340" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -410,63 +866,60 @@
     <entry file="file://$USER_HOME$/Downloads/archive/grades.tsv" />
     <entry file="file://$USER_HOME$/Downloads/archive/index.html" />
     <entry file="file://$USER_HOME$/Downloads/archive/students.tsv" />
-    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="58" column="65" lean-forward="false" selection-start-line="58" selection-start-column="65" selection-end-line="58" selection-end-column="88" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="84" lean-forward="false" selection-start-line="12" selection-start-column="84" selection-end-line="12" selection-end-column="84" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/signup.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="23" lean-forward="false" selection-start-line="2" selection-start-column="23" selection-end-line="2" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/stylesheets/error_stylesheet.css">
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Stylesheets/error_stylesheet.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="12" column="1" lean-forward="true" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Scripts/new_map_JavaScript.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="310">
+          <caret line="237" column="35" lean-forward="true" selection-start-line="237" selection-start-column="35" selection-end-line="237" selection-end-column="35" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/error.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="26" lean-forward="true" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/edit_map.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2076">
-          <caret line="878" column="12" lean-forward="false" selection-start-line="878" selection-start-column="12" selection-end-line="878" selection-end-column="12" />
+          <caret line="0" column="26" lean-forward="false" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-295">
+          <caret line="8" column="10" lean-forward="true" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="13" column="11" lean-forward="false" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="12" column="22" lean-forward="false" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/feedback.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -474,34 +927,81 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/new_map.html">
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/edit_map.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="120" lean-forward="true" selection-start-line="3" selection-start-column="4" selection-end-line="4" selection-end-column="120" />
+        <state relative-caret-position="740">
+          <caret line="194" column="19" lean-forward="false" selection-start-line="194" selection-start-column="16" selection-end-line="194" selection-end-column="19" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CityShare_Flask/CityShare.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="491" column="25" lean-forward="false" selection-start-line="491" selection-start-column="25" selection-end-line="491" selection-end-column="25" />
+        <state relative-caret-position="644">
+          <caret line="627" column="21" lean-forward="false" selection-start-line="627" selection-start-column="13" selection-end-line="627" selection-end-column="21" />
           <folding>
-            <marker date="1521622454571" expanded="true" signature="1122:1250" ph="INSERT INTO Persons... " />
-            <marker date="1521622454571" expanded="true" signature="2220:2330" ph="SELECT COUNT... Persons" />
-            <marker date="1521622454571" expanded="true" signature="3211:3286" ph="SELECT usern... Persons" />
-            <marker date="1521622454571" expanded="true" signature="5878:5932" ph="INSERT INTO Maps_Users... " />
-            <marker date="1521622454571" expanded="true" signature="6320:6457" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1521622454571" expanded="true" signature="6951:7012" ph="SELECT map_i... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="7365:7495" ph="SELECT map_c... " />
-            <marker date="1521622454571" expanded="true" signature="8555:8679" ph="SELECT COUNT... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="8897:9065" ph="SELECT map_c... " />
-            <marker date="1521622454571" expanded="true" signature="9779:9825" ph="SELECT map_i... Maps" />
-            <marker date="1521622454571" expanded="true" signature="9981:10090" ph="SELECT M.use... Maps_Users" />
-            <marker date="1521622454571" expanded="true" signature="10475:10811" ph="SELECT S.sha... Shapes" />
-            <marker date="1521622454571" expanded="true" signature="12022:12132" ph="SELECT categ... Maps_Categories" />
-            <marker date="1521622454571" expanded="true" signature="16114:16152" ph="DELETE FROM Shapes... " />
+            <element signature="e#546#581#0" expanded="false" />
+            <element signature="e#648#1830#0" expanded="false" />
+            <element signature="e#2042#2951#0" expanded="false" />
+            <element signature="e#3026#3579#0" expanded="false" />
+            <element signature="e#7125#8753#0" expanded="false" />
+            <element signature="e#12916#18288#0" expanded="false" />
+            <element signature="e#18360#23727#0" expanded="false" />
+            <element signature="e#27650#30026#0" expanded="false" />
+            <element signature="e#30118#34259#0" expanded="false" />
+            <element signature="e#34323#35423#0" expanded="false" />
+            <element signature="e#35493#35921#0" expanded="false" />
+            <marker date="1522840497089" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25660" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25671" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25676" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25709" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25553:25724" ph="UPDATE Maps... " />
+            <marker date="1522840497089" expanded="true" signature="25861:25922" ph="INSERT INTO Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
+            <marker date="1522840497089" expanded="true" signature="26162:26225" ph="INSERT INTO Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
+            <marker date="1522840497089" expanded="true" signature="26589:26727" ph="INSERT INTO Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="26754:26942" ph="UPDATE Maps_Categories... " />
+            <marker date="1522840497089" expanded="true" signature="27074:27132" ph="INSERT INTO Maps_Questions... " />
+            <marker date="1522840497089" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/new_map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="332">
+          <caret line="1001" column="0" lean-forward="false" selection-start-line="1001" selection-start-column="0" selection-end-line="1001" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="24" column="198" lean-forward="false" selection-start-line="24" selection-start-column="49" selection-end-line="24" selection-end-column="198" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/view_map_result.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-515">
+          <caret line="203" column="63" lean-forward="true" selection-start-line="203" selection-start-column="63" selection-end-line="203" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/change_map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="43" column="22" lean-forward="false" selection-start-line="43" selection-start-column="22" selection-end-line="43" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>

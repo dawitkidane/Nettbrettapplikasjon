@@ -26,6 +26,8 @@
                 <div class="map_info_box">
                     <button type="button" class="btn btn-primary btn-block" onclick="location.href='/EditMap?mapid={{ map.mapid }}'">Åpne Kartet</button>
                     <button type="button" class="btn btn-primary btn-block" onclick="location.href='/ViewMapResult?mapid={{ map.mapid }}'">Analyse Kartet</button>
+                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='/ChangeMap?mapid={{ map.mapid }}'">Rediger Kartet</button>
+
                     <br>
                     <p><strong>Laget av: </strong>{{ map.creater }}</p>
                     <p><strong>Tittel: </strong>{{ map.title }}</p>

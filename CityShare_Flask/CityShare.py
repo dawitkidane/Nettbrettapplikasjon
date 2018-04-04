@@ -489,6 +489,232 @@ def view_map_result():
                            Questions=questions, Questions_response=questions_response,
                            Points=points, Areas=areas, Roads=roads)
 
+@app.route("/ChangeMap", methods=['POST','GET'])
+def ChangeMap():
+    mapid = request.args.get('mapid')
+    username = session.get("Logged_in")
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # TODO: Check if a user is logged in
+    if username is None:
+        return render_template("error.html")
+
+    # TODO: Determine if the logged_in_user who is requesing the map is an administrator or just an interviewer
+    Interviewers = []
+    Administrators = []
+    sql = "SELECT M.username, e_post FROM Maps_Interviewers AS M JOIN Persons AS P ON M.username = P.username " \
+          "WHERE map_id = 'MAP_ID';".replace("MAP_ID",str(mapid))
+    try:
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        for entry in data:
+            interviewer = {"username": entry[0], "email": entry[1]}
+            Interviewers.append(interviewer)
+
+        sql = "SELECT M.username, e_post FROM Maps_Administrators AS M JOIN Persons AS P ON M.username = P.username " \
+              "WHERE map_id = 'MAP_ID';".replace("MAP_ID", str(mapid))
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        for entry in data:
+            Administrator = {"username": entry[0], "email": entry[1]}
+            Administrators.append(Administrator)
+
+        Administrators_names = []
+        for user in Administrators:
+            Administrators_names.append(user["username"])
+
+        # TODO: Reading the map_details
+        sql = "SELECT map_creater, title, description, start_date, end_date, astext(geo_boundery), zoom ,map_id " \
+              "FROM Maps " \
+              "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+        cursor.execute(sql)
+        data = cursor.fetchone()
+        bounds = str(data[5]).strip("POLYGON((").strip("))").split(",")
+        map = {
+            "mapid": mapid,
+            "creater": data[0],
+            "title": data[1],
+            "description": data[2],
+            "issuedate": data[3],
+            "expirydate": data[4],
+            "bounds": bounds,
+            "zoom": data[6],
+            "northeastcorner": bounds[0].replace(" ", ","),
+            "southwestcorner": bounds[1].replace(" ", ","),
+            "logged_in_user": str(username)
+        }
+
+        # TODO: Reading registered Questions
+        sql = "SELECT question_ID, question FROM Maps_Questions WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        questions = []
+        for entry in data:
+            question = {
+                "question_ID": entry[0],
+                "question": entry[1]
+            }
+            questions.append(question)
+
+        # TODO: Reading registered responses including respondents, questions and respondent's answers
+        sql = "SELECT A.respondent_ID, A.question_ID, A.Answer " \
+              "FROM Respondent_Answers AS A JOIN Maps_Respondents AS R ON A.respondent_ID = R.respondent_ID " \
+              "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        questions_response = []
+        for entry in data:
+            Question_response = {
+                "respondent_ID": entry[0],
+                "question_ID": entry[1],
+                "Answer": entry[2]
+            }
+            questions_response.append(Question_response)
+
+
+        # TODO: Reading already registered shapes on map
+        sql = "SELECT S.shape_id, S.shape_creater, astext(S.center), astext(S.area_or_path), S.title, S.description, " \
+              "S.rate, M.category_type, M.category_image_or_color, respondent_ID " \
+              "FROM Shapes S JOIN Maps_Categories M ON S.category_ID = M.category_ID " \
+              "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        points = []
+        roads = []
+        areas = []
+        for entry in data:
+            shape = {
+                "shape_id": entry[0],
+                "shape_creater": entry[1],
+                "shape_center": str(entry[2]).strip('POINT').replace(" ", ", "),
+                "area_or_path": str(entry[3]).strip("LINESTRING").strip("(").strip(")"),
+                "title": entry[4],
+                "description": str((entry[5])).replace("\n", "{n}"),
+                "rating": entry[6],
+                "category_type": entry[7],
+                "icon": entry[8],
+                "respondent_ID": entry[9]
+            }
+
+            if shape['shape_creater'] == username or username in Administrators_names:
+                if shape['category_type'] == "Point":
+                    points.append(shape)
+                elif shape['category_type'] == "Road":
+                    roads.append(shape)
+                elif shape['category_type'] == "Area":
+                    areas.append(shape)
+
+
+    except mysql.connector.Error as err:
+        conn.close()
+        print(err.msg)
+        return render_template("error.html", Fail="En feil har skjedd, prøv igjen!")
+
+    conn.close()
+
+    all_users = []
+    if username in Administrators_names:
+        for user in (Administrators + Interviewers):
+            if user not in all_users:
+                all_users.append(user)
+
+    return render_template("change_map.html", Users=all_users, Map=map,
+                           Questions=questions, Questions_response=questions_response,
+                           Points=points, Areas=areas, Roads=roads)
+
+@app.route("/ChangeIt", methods=['POST','GET'])
+def ChangeIt():
+
+    if request.method == 'GET':
+        print("here")
+        return render_template("change_map.html")
+
+    else:
+        print("its happening")
+        map_creater = session.get("Logged_in")
+        title = request.form.get('title')
+        description = request.form.get('description')
+        mapid = request.args.get('mapid')
+        print(mapid)
+
+        date = request.form.get('date')
+        enddate = date[6:] + "-" + date[0:2] + "-" + date[3:5]
+
+        Interviewers = request.form.getlist('Interviewers')
+        Administrators = request.form.getlist('Administrators')
+        if map_creater not in Administrators:
+            Administrators.append(map_creater)
+
+        points_categories = request.form.getlist('point_categories')
+        roads_categories = request.form.getlist('road_categories')
+        areas_categories = request.form.getlist('area_categories')
+        questions = request.form.getlist('questions')
+        """
+        ['asdasd,Point,2hand.png', 'zoo,Point,zoo.png']
+        ['black,Road,#000000', 'blue,Road,#0000ff', 'green,Road,#008000']
+        ['red,Area,#ff0000', 'white,Area,#ffffff', 'yellow,Area,#ffff00', 'purple,Area,#e916d9']
+        ['How old are you ?', 'Where do you live ?']
+        """
+        # sql = "UPDATE Shapes " \
+        #       "SET title = '" + title + "', description = '" + description + "', rate = " + str(rating) + " " \
+        #                                                                                                   "WHERE shape_id = " + str(
+        #     shape_id) + ";"
+        # try:
+        #     cursor.execute(sql)
+        #     conn.commit()
+        ## TODO: ADD MAP TO DATABASE, 2 TABLES USERS AND MAPS
+        conn = get_db()
+        cursor = conn.cursor()
+        sql = "UPDATE Maps " \
+              "SET title = '" + title + "',description = '" + description + "',end_date = '" + enddate + "' " \
+            "WHERE map_id = "+str(mapid)+";"
+        try:
+            cursor.execute(sql)
+            conn.commit()
+
+
+            for user in Interviewers:
+                #sql = "INSERT INTO Maps_Interviewers(username, map_id) VALUES(%s,%s);"
+                sql = "UPDATE Maps_Interviewers SET username = '" + user + "',map_id = '" + mapid + "';"
+
+                cursor.execute(sql)
+                conn.commit()
+
+            for user in Administrators:
+                #sql = "INSERT INTO Maps_Administrators(username, map_id) VALUES(%s,%s);"
+                sql = "UPDATE Maps_Administrators SET username = '" + user + "',map_id = '" + mapid + "';"
+                cursor.execute(sql)
+                conn.commit()
+
+            categories = points_categories + roads_categories + areas_categories
+            for category in categories:
+                cat = category.split(',')
+                #sql = "INSERT INTO Maps_Categories(category_name, category_type, category_image_or_color, map_id) " \
+                      #"VALUES(%s,%s,%s,%s);"
+
+                sql = "UPDATE Maps_Categories SET category_name = '" + cat[0] + "',category_type = '" + cat[1] + "\
+                      ""',category_image_or_color = '" + cat[2] + "',map_id = '" + mapid + "';"
+
+                cursor.execute(sql)
+                conn.commit()
+
+            for question in questions:
+                #sql = "INSERT INTO Maps_Questions(question, map_id) values(%s,%s);"
+                sql = "UPDATE Maps_Questions SET question = '" + question + "',map_id = '" + mapid + "';"
+                cursor.execute(sql)
+                conn.commit()
+
+        except mysql.connector.Error as err:
+            conn.close()
+            print(err.msg)
+            return render_template("change_map.html", Fail="En Feil har skjedd, prøv igjen!")
+
+        conn.close()
+        return render_template("home.html")
+
 @app.route("/RegisterRespondoent", methods=['POST'])
 def RegisterRespondoent():
     Respondoent = json.loads(request.form.get('Respondoent'))
@@ -641,6 +867,74 @@ def Download_Map_As_CSV_File():
         return "Fail"
 
     return file_content
+
+@app.route("/feedback", methods=['GET'])
+def feedback():
+
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = "SELECT feedback_id FROM Feedbacks;"
+    try:
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        feedids = []
+        for entry in data:
+            feedids.append(entry[0])
+
+        feedo = []
+        for feed in reversed(feedids):
+            fee = {
+                "feedid": feed,
+            }
+            conn = get_db()
+            cursor = conn.cursor()
+
+            sql = "SELECT name, cmt, date FROM Feedbacks WHERE feedback_id = " + str(
+                feed) + ";"
+            try:
+                cursor.execute(sql)
+                data = cursor.fetchone()
+                fee['name'] = data[0]
+                fee['cmt'] = data[1]
+                fee['date'] = data[2]
+                feedo.append(fee)
+
+            except mysql.connector.Error as err:
+                conn.close()
+                print(err.msg)
+
+    except mysql.connector.Error as err:
+        conn.close()
+        print(err.msg)
+        return "Failed"
+    finally:
+        conn.close()
+
+    return render_template("feedback.html", feedo=feedo)
+
+@app.route("/addfeedback", methods=['POST'])
+def addfeedback():
+    name = request.form.get('name')
+    comment = request.form.get('cmt')
+
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = "INSERT INTO Feedbacks(name, cmt)" \
+        "VALUES(%s,%s);"
+
+    try:
+        cursor.execute(sql, (name, comment))
+        conn.commit()
+
+    except mysql.connector.Error as err:
+        conn.close()
+        print(err.msg)
+
+    finally:
+        conn.close()
+
+    return render_template("home.html")
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
