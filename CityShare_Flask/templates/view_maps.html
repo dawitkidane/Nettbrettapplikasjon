@@ -14,7 +14,7 @@
     <!-- Link to static/view_maps_stylesheet.css -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/view_maps_stylesheet.css') }}">
 
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -93,7 +93,7 @@
                     {% if map.Can_Update_Map %}
                         <a href="/UpdateMapDetails?mapid={{ map.mapid }}" class="btn btn-warning">Rediger</a>
                     {% endif %}
-                    <a href="/feedback?mapid={{ map.mapid }}" class="btn btn-info">Tilbakemelding</a>
+                    <a href="/feedso/{{ map.mapid }}" class="btn btn-info">Tilbakemelding</a>
                 </div>
 
                 <div class="map_details_box">
@@ -106,6 +106,12 @@
             </div>
 
         {% endfor %}
+
+        {% if not maps %}
+            <div id="errdiv"class="alert alert-danger">
+                <p id="errtxt">{{ session.get('err') }}</p>
+            </div>
+        {% endif %}
 
     </div>
 

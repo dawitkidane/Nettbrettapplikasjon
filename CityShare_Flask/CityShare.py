@@ -924,12 +924,7 @@ def Update_Map_Details():
         return render_template("error.html", Fail="Noe Feil har skjedd, prøv igjen")
 
 
-@app.route("/feedback", methods=['POST', 'GET'])
-def feedback():
-    mapid = request.args.get('mapid')
-    session["mapid"] = mapid
-
-    print(str(mapid))
+def feedbacks(mapid):
 
     conn = get_db()
     cursor = conn.cursor()
@@ -950,8 +945,6 @@ def feedback():
             conn = get_db()
             cursor = conn.cursor()
 
-            #sql = "SELECT name, cmt, date FROM Feedbacks WHERE feedback_id = " + str(
-             #   feed) + ";"
             sql = "SELECT P.first_name, P.last_name, date, cmt FROM Feedbacks AS F JOIN Persons AS P ON P.username = F.user " \
                   "WHERE feedback_id = 'MAP_ID';".replace("MAP_ID", str(feed))
 
@@ -985,11 +978,9 @@ def feedback():
         map['description'] = str(test[4])
         map['center'] = (str(test[5]).strip("POINT(").strip(")")).replace(" ", ",")
         map['zoom'] = str(test[6])
+        map['mapid'] = str(mapid)
 
         maps.append(map)
-
-
-
 
     except mysql.connector.Error as err:
         conn.close()
@@ -1000,35 +991,33 @@ def feedback():
 
     return render_template("feedback.html", maps=maps, feedo=feedo)
 
+@app.route("/feedso/<int:mapid>")
+def feedback(mapid):
+    return feedbacks(mapid)
 
-@app.route("/addfeedback", methods=['POST', 'GET'])
-def addfeedback():
 
+@app.route("/addfeedback/<int:mapid>", methods=['POST', 'GET'])
+def addfeedback(mapid):
+    mapid = mapid
     user = session.get("Logged_in")
-    mapid = request.args.get('mapid')
     comment = request.form.get('cmt')
 
-    print(str(user))
-    print(str(mapid +"yess"))
-    print(str(comment))
-
     conn = get_db()
-    cursor = conn.cursor()
+    data = conn.cursor()
     sql = "INSERT INTO Feedbacks(map_id, user, cmt)" \
         "VALUES(%s,%s, %s);"
 
     try:
-        cursor.execute(sql, (mapid, user, comment))
+        data.execute(sql, (mapid, user, comment))
         conn.commit()
 
+        return feedbacks(mapid)
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
 
     finally:
         conn.close()
-
-    return render_template("home.html")
 
 
 @app.route("/filter", methods=['POST', 'GET'])
