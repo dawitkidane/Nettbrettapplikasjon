@@ -2,7 +2,7 @@
     text-align: center;
 }
 
-.map_box {
+#map_box {
     display: inline-block;
     width: 45%;
     margin: 5px;

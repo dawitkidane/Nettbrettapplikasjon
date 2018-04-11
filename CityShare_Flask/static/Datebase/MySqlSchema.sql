@@ -1,6 +1,6 @@
-DROP SCHEMA sql2217838;
-CREATE SCHEMA sql2217838;
-USE sql2217838;
+DROP SCHEMA sql11230434;
+CREATE SCHEMA sql11230434;
+USE sql11230434;
 
 /*
 Server: sql2.freemysqlhosting.net
@@ -107,10 +107,13 @@ FOREIGN KEY (respondent_ID) REFERENCES Maps_Respondents(respondent_ID)
 
 CREATE TABLE Feedbacks (
 feedback_id INT AUTO_INCREMENT,
-name VARCHAR(30),
+map_id INT,
+user VARCHAR(30),
 date TIMESTAMP DEFAULT now(),
 cmt VARCHAR(30000),
-PRIMARY KEY (feedback_id)
+PRIMARY KEY (feedback_id),
+FOREIGN KEY (user) REFERENCES Persons(username),
+FOREIGN KEY (map_id) REFERENCES Maps(map_id)
 );
 
 
