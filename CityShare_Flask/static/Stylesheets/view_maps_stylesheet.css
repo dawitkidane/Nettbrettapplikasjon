@@ -1,3 +1,4 @@
+<<<<<<< HEAD
     .map_box {
         display: inline-block;
         width: 45%;
@@ -7,6 +8,20 @@
         box-shadow: 5px 5px #d3d3d3;
         border-radius: 50px 20px
     }
+=======
+#maps {
+    text-align: center;
+}
+
+#map_box {
+    display: inline-block;
+    width: 45%;
+    margin: 5px;
+    padding: 5px;
+    height: 200px;
+    border: 1px solid black;
+}
+>>>>>>> 398bc3fd14d82821175e2a4d2d0ef4508cf8b9d3
 
     @media only screen and (max-width: 800px) {
         .map_box {

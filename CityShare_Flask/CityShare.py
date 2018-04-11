@@ -6,11 +6,19 @@ app.secret_key = "any random string"
 
 
 def get_db():
+<<<<<<< HEAD
     if not hasattr(g, '_database'):
         g._database = mysql.connector.connect(host='sql2.freemysqlhosting.net',
                                               user='sql2217838',
                                               passwd='cR3!bC4!',
                                               db='sql2217838')
+=======
+    if not hasattr(g,'_database'):
+        g._database = mysql.connector.connect(host='sql11.freemysqlhosting.net',
+                                                user='sql11230434',
+                                                passwd='mqcmmEAzq7',
+                                                db='sql11230434')
+>>>>>>> 398bc3fd14d82821175e2a4d2d0ef4508cf8b9d3
     return g._database
 
 
@@ -755,6 +763,7 @@ def Download_Map_As_CSV_File():
 
     return file_content
 
+<<<<<<< HEAD
 
 @app.route("/UpdateMapDetails", methods=['POST', 'GET'])
 def Update_Map_Details():
@@ -924,6 +933,174 @@ def Update_Map_Details():
         print(err.msg)
         return render_template("error.html", Fail="Noe Feil har skjedd, prøv igjen")
 
+=======
+@app.route("/feedback", methods=['POST', 'GET'])
+def feedback():
+    mapid = request.args.get('mapid')
+    session["mapid"] = mapid
+
+    print(str(mapid))
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    sql = "SELECT feedback_id FROM Feedbacks WHERE map_id = " + str(mapid) + ";"
+    try:
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        feedids = []
+        for entry in data:
+            feedids.append(entry[0])
+
+        feedo = []
+        for feed in reversed(feedids):
+            fee = {
+                "feedid": feed,
+            }
+            conn = get_db()
+            cursor = conn.cursor()
+
+            #sql = "SELECT name, cmt, date FROM Feedbacks WHERE feedback_id = " + str(
+             #   feed) + ";"
+            sql = "SELECT P.first_name, P.last_name, date, cmt FROM Feedbacks AS F JOIN Persons AS P ON P.username = F.user " \
+                  "WHERE feedback_id = 'MAP_ID';".replace("MAP_ID", str(feed))
+
+            try:
+                cursor.execute(sql)
+                data = cursor.fetchone()
+                fee['firstname'] = data[0]
+                fee['lastname'] = data[1]
+                fee['date'] = data[2]
+                fee['cmt'] = data[3]
+                fee['mapid'] = mapid
+                feedo.append(fee)
+
+            except mysql.connector.Error as err:
+                conn.close()
+                print(err.msg)
+
+        map = {
+            "mapid": mapid,
+        }
+        maps= []
+        sql = "SELECT map_creater, title, date(start_date), end_date, description, astext(Centroid(geo_boundery)), zoom FROM Maps WHERE map_id = " + str(
+            mapid) + ";"
+
+        cursor.execute(sql)
+        test = cursor.fetchone()
+        map['creater'] = test[0]
+        map['title'] = test[1]
+        map['issuedate'] = str(test[2])
+        map['expirydate'] = str(test[3])
+        map['description'] = str(test[4])
+        map['center'] = (str(test[5]).strip("POINT(").strip(")")).replace(" ", ",")
+        map['zoom'] = str(test[6])
+
+        maps.append(map)
+
+
+
+
+    except mysql.connector.Error as err:
+        conn.close()
+        print(err.msg)
+        return "Failed"
+    finally:
+        conn.close()
+
+    return render_template("feedback.html", maps=maps, feedo=feedo)
+
+
+@app.route("/addfeedback", methods=['POST', 'GET'])
+def addfeedback():
+
+    user = session.get("Logged_in")
+    mapid = request.args.get('mapid')
+    comment = request.form.get('cmt')
+
+    print(str(user))
+    print(str(mapid +"yess"))
+    print(str(comment))
+
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = "INSERT INTO Feedbacks(map_id, user, cmt)" \
+        "VALUES(%s,%s, %s);"
+
+    try:
+        cursor.execute(sql, (mapid, user, comment))
+        conn.commit()
+
+    except mysql.connector.Error as err:
+        conn.close()
+        print(err.msg)
+
+    finally:
+        conn.close()
+
+    return render_template("home.html")
+
+
+@app.route("/filter", methods=['POST', 'GET'])
+def filter():
+    title = " "
+    creater = " "
+    username = session.get("Logged_in")
+    title = request.form.get("title")
+    creater = request.form.get("creater")
+    firstdate = request.form.get("datepicker")
+    date = firstdate[6:] + "-" + firstdate[0:2] + "-" + firstdate[3:5]
+
+    conn = get_db()
+    cursor = conn.cursor()
+    sql = "(SELECT map_id FROM Maps_Interviewers WHERE username = 'person')" \
+          "UNION ALL" \
+          "(SELECT map_id FROM Maps_Administrators WHERE username = 'person');".replace('person', str(username))
+    try:
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        mapids = []
+        for entry in data:
+            mapids.append(entry[0])
+
+        if mapids.__len__() == 0:
+            return render_template("view_maps.html", maps={}, msg="Det er ingen registrerte kart på deg!")
+
+        maps = []
+        for mapid in mapids:
+            map = {
+                "mapid": mapid,
+            }
+            conn = get_db()
+            cursor = conn.cursor()
+
+            sql = "SELECT map_creater, title, date(start_date), end_date, description, astext(Centroid(geo_boundery)), zoom FROM Maps WHERE map_id = " + str(
+                mapid) + ";"
+
+            cursor.execute(sql)
+            data = cursor.fetchone()
+            map['creater'] = str(data[0])
+            map['title'] = str(data[1])
+            map['issuedate'] = str(data[2])
+            map['expirydate'] = str(data[3])
+            map['description'] = str(data[4])
+            map['center'] = (str(data[5]).strip("POINT(").strip(")")).replace(" ", ",")
+            map['zoom'] = str(data[6])
+
+            if (str(creater.lower()) == str(data[0].lower()) or str(title.lower()) == str(data[1].lower()) or str(date) == str(data[3])):
+                maps.append(map)
+
+        if not maps:
+            session["err"] = "INGEN TREFF!"
+    except mysql.connector.Error as err:
+        conn.close()
+        print(err.msg)
+        return render_template("view_maps.html", maps={}, Fail="En feil har skjedd, prøv igjen!")
+
+    conn.close()
+
+    return render_template("view_maps.html", maps=maps)
+>>>>>>> 398bc3fd14d82821175e2a4d2d0ef4508cf8b9d3
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
