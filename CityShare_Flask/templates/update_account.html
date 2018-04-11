@@ -1,16 +1,16 @@
 {% extends 'index.html' %}
 
 {% block stylingblock %}
-    <!-- Link to static/signup_stylesheet.css -->
+    <!-- Link to static/signup_and_update_account_stylesheet.css -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/signup_and_update_account_stylesheet.css') }}">
 {% endblock %}
 
 {% block content %}
 
-    <h2>Registrer deg</h2>
+    <h2>Endre din Konto</h2>
 
     <div class="container">
-        <form action="/signup" method="post">
+        <form action="/Update_Account" method="post">
 
         {% if fail %}
             <div class="alert alert-danger alert-dismissable">
@@ -21,36 +21,42 @@
 
         <div class="form-group">
             <label for="username">Brukernavn:</label>
-            <input name="username" type="text" class="form-control" id="username" placeholder="Brukernavn" required>
+            <input name="username" type="text" class="form-control"
+                   id="username" placeholder="{{ person.username }}" value="{{ person.username }}" disabled required>
         </div>
 
         <div class="form-group">
             <label for="password">Passord:</label>
-            <input name="password" type="password" class="form-control" id="password" placeholder="Passord" required>
+            <input name="password" type="password" class="form-control"
+                   value="{{ person.pass }}" id="password" placeholder="Passord" required>
         </div>
 
         <div class="form-group">
             <label for="firstname">Fornavn:</label>
-            <input name="firstname" type="text" class="form-control" id="fornavn" placeholder="Ole" required>
+            <input name="firstname" type="text" class="form-control"
+                   id="fornavn" value="{{ person.first_name }}" placeholder="{{ person.first_name }}" required>
         </div>
 
         <div class="form-group">
             <label for="surname">Etterrnavn:</label>
-            <input name="surname" type="text" class="form-control" id="etternavn" placeholder="Nordmann" required>
+            <input name="surname" type="text" class="form-control"
+                   id="etternavn" value="{{ person.last_name }}" placeholder="{{ person.last_name }}" required>
         </div>
 
         <div class="form-group">
             <label for="email">e-post:</label>
-            <input name="email" type="email" class="form-control" id="email" placeholder="example@uis.no" required>
+            <input name="email" type="email" class="form-control"
+                   id="email" value="{{ person.e_post }}" placeholder="{{ person.e_post }}" required>
         </div>
 
         <div class="form-group">
             <label for="telephone">Telefon:</label>
-            <input name="telephone" type="number" class="form-control" id="telephone" placeholder="12345678" required>
+            <input name="telephone" type="number" class="form-control"
+                   id="telephone" value="{{ person.tele }}" placeholder="{{ person.tele }}" required>
         </div>
 
         <div class="input-group">
-            <button type="submit" id="submitbtn" class="btn btn-success">Registrer meg</button>
+            <button type="submit" id="submitbtn" class="btn btn-success">Lagre</button>
             <button type="button" id="cancelbtn" onclick="location.href='/'" class="btn btn-danger">Avbryt</button>
         </div>
 

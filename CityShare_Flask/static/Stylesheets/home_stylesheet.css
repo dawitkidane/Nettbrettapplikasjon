@@ -20,10 +20,11 @@ iframe, img {
     width: 350px;
     text-align: center;
     vertical-align: middle;
+    border-radius: 50px 20px;
 }
 
 .box:hover {
-    border: 5px ridge #ff1493;
+    border: 5px solid #5277ff;
 }
 
 .box h3 {

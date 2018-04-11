@@ -12,28 +12,33 @@
     <!-- Link to static/view_maps_stylesheet.css -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/view_maps_stylesheet.css') }}">
 
+
 {% endblock %}
 
 {% block content %}
 
-
-    <div id="maps">
+    <div class="container">
 
         {% for map in maps %}
 
             <div class="map_box">
-                <img class="static_map_box"  src="https://maps.googleapis.com/maps/api/staticmap?center={{ map.center }}&zoom={{ map.zoom }}&size=400x400&key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY"/>
-                <div class="map_info_box">
-                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='/EditMap?mapid={{ map.mapid }}'">Åpne Kartet</button>
-                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='/ViewMapResult?mapid={{ map.mapid }}'">Analyse Kartet</button>
-                    <br>
+                <img class="static_map_box img-thumbnail img-responsive"  src="https://maps.googleapis.com/maps/api/staticmap?center={{ map.center }}&zoom={{ map.zoom }}&size=400x400&key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY"/>
+
+                <div class="btn-group btn-group-justified">
+                    <a href="/EditMap?mapid={{ map.mapid }}" class="btn btn-primary">Åpne</a>
+                    <a href="/ViewMapResult?mapid={{ map.mapid }}" class="btn btn-success">Analyser</a>
+                    {% if map.Can_Update_Map %}
+                        <a href="/UpdateMapDetails?mapid={{ map.mapid }}" class="btn btn-warning">Rediger</a>
+                    {% endif %}
+                </div>
+
+                <div class="map_details_box">
                     <p><strong>Laget av: </strong>{{ map.creater }}</p>
                     <p><strong>Tittel: </strong>{{ map.title }}</p>
                     <p><strong>Utstedet den: </strong>{{ map.issuedate }}</p>
                     <p><strong>Gyldig til: </strong>{{ map.expirydate }}</p>
                     <p><strong>Beskrivelse: </strong>{{ map.description }}</p>
                 </div>
-
             </div>
 
         {% endfor %}

@@ -30,19 +30,19 @@ function getBoundsZoomLevel(bounds, mapDim) {
 var map = null;
 function initMap() {
     map = new google.maps.Map(document.getElementById('Map'), {
-                zoom: 11,
-                center: {lat: 58.969975, lng: 5.733107},
-                mapTypeControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_BOTTOM
-                },
-                streetViewControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_CENTER
-                },
-                zoomControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_CENTER
-                },
-                fullscreenControl: false
-            });
+        zoom: 11,
+        center: {lat: 58.969975, lng: 5.733107},
+        mapTypeControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_BOTTOM
+        },
+        streetViewControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_CENTER
+        },
+        zoomControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_CENTER
+        },
+        fullscreenControl: false
+    });
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -73,6 +73,8 @@ function initMap() {
     });
 
     map.addListener('bounds_changed', function() {
+        if (map.getZoom() < 3) map.setZoom(3);
+
         lat_center = map.getCenter().lat();
         lng_center = map.getCenter().lng();
         n = (map.getBounds().getNorthEast().lat()+lat_center)/2;
@@ -98,6 +100,9 @@ function initMap() {
         calculated_zoom = getBoundsZoomLevel(rectangle.getBounds(), mapDim);
         $('#geo_zoom').val(calculated_zoom+1);
         });
+
+
+
 
     var card = document.getElementById('pac-card');
     var input = document.getElementById('pac-input');
@@ -143,142 +148,78 @@ function initMap() {
 
     $(document).ready(function () {
 
-        $('#AddQuestionButton').on('click', function () {
-           added_questions = $("#category_body_questions").children().text();
-           current_question = $("#Question").val();
-
-           if (added_questions.includes(current_question) || current_question == "") {
-               alert("Dette spørsmålet er allerede lagt til.");
-               return;
-           } else {
-               question_ID = current_question.replace(/ /g, "_");
-               var newelement = "<li class='list-group-item'>"+current_question
-                                    +"<span id='"+question_ID+"' class='badge'>"
-                                    +"<i class='fa fa-minus'></i>"
-                                    +"</span>"
-                                    +"<input name='questions' value='"+current_question+"' type='hidden' class='form-control'>"
-                                    +"</li>";
-               $('#category_body_questions').append(newelement);
-               $('#Question').empty();
-               $('#'+question_ID+'').off('click');
-               $('#'+question_ID+'').on('click', function(e) {
-                   $(this).parent().remove();
-               });
-           }
-        });
-
-        // Adding Interviewers / jQuery
-        $('#SearchInterviewersButton').on('click', function (e) {
-            var username = $('#searchInterviewers').val();
-
-            if (username != '') {
-                $.post("/searchUsers",{ username: username }, function(data,status){
-                    if (status === "success") {
-                        var results = JSON.parse(data);
-                        var user = results[0];
-
-                        if (results.length > 0) {
-                            var addedusers = $("#category_body_Interviewers").children().text();
-                            if (addedusers.includes(username) || addedusers.includes(user)) return;
-                            $('#AddInterviewersButton').show();
-                            $('#AddInterviewersButton').off('click');
-                            $('#AddInterviewersButton').on('click', function(e) {
-                                var newelement = "<li class='list-group-item'>"+user
-                                    +"<span id='"+user+"_Interviewer' class='badge'>"
-                                    +"<i class='fa fa-minus'></i>"
-                                    +"</span>"
-                                    +"<input name='Interviewers' value='"+user+"' type='hidden' class='form-control'>"
-                                    +"</li>";
-                                $('#category_body_Interviewers').append(newelement);
-                                $('#AddInterviewersButton').hide();
-                                $('#searchInterviewers').empty();
-                                $('#'+user+'_Interviewer').off('click');
-                                    $('#'+user+'_Interviewer').on('click', function(e) {
-                                        $(this).parent().remove();
-                                    });
-                                });
-                        }
-
-                    } else {
-                        alert("Database Connection failure");
-                    }
-                });
-            }
-        });
-
-        // Adding Administrators / jQuery
-        $('#SearchAdministratorsButton').on('click', function (e) {
-            var username = $('#searchAdministrators').val();
-
-            if (username != '') {
-                $.post("/searchUsers",{ username: username }, function(data,status){
-                    if (status === "success") {
-                        var results = JSON.parse(data);
-                        var user = results[0];
-
-                        if (results.length > 0) {
-                            var addedusers = $("#category_body_Administrators").children().text();
-                            if (addedusers.includes(username) || addedusers.includes(user)) return;
-                            $('#AddAdministratorsButton').show();
-                            $('#AddAdministratorsButton').off('click');
-                            $('#AddAdministratorsButton').on('click', function(e) {
-                                var newelement = "<li class='list-group-item'>"+user
-                                    +"<span id='"+user+"_Admin' class='badge'>"
-                                    +"<i class='fa fa-minus'></i>"
-                                    +"</span>"
-                                    +"<input name='Administrators' value='"+user+"' type='hidden' class='form-control'>"
-                                    +"</li>";
-                                $('#category_body_Administrators').append(newelement);
-                                $('#AddAdministratorsButton').hide();
-                                $('#searchAdministrators').empty();
-                                $('#'+user+'_Admin').off('click');
-                                    $('#'+user+'_Admin').on('click', function(e) {
-                                        $(this).parent().remove();
-                                    });
-                                });
-                        }
-
-                    } else {
-                        alert("Database Connection failure");
-                    }
-                });
-            }
-        });
-
         $('#AddInterviewersButton').hide();
         $('#AddAdministratorsButton').hide();
 
-        // Datepicker - jQuery
-        var dateToday = new Date();
-        var dates = $("#date").datepicker({
-            defaultDate: "+3m",
-            changeMonth: true,
-            numberOfMonths: 1,
-            minDate: dateToday,
-            onSelect: function(selectedDate) {
-                var option = this.id == "from" ? "minDate" : "maxDate",
-                    instance = $(this).data("datepicker")//.css({"position": "relative", "z-index": 999999});
-                date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
-                dates.not(this).datepicker("option", option, date);
-                $(this).blur();
-            }
-        });
-
         // Checking that users are added to the map before submitting
-        $("#form").submit(function(){
-            if ( $("#category_body_Interviewers").children().length === 0) {
-                alert("Du må legge til minst en Interviewer !");
-                return false;
-            }
-            if ($("#category_body_questions").children().length === 0) {
-                alert("Du må legge til minst et spørsmål !");
-                return false;
-            }
-            if ($("#category_body_Administrators").children().length === 0) {
-                alert("Du må legge til minst en Administrator !");
-                return false;
+        $("#form").submit(function (e) {
+            var missing_values = true;
+            alert_msg = "Manglende Input Verdier: \nDu må legge til minst en av følgende";
+
+            if ($("#category_body_point").children().length === 0) {
+                alert_msg += "\n -> Punkt Kategorier !";
+                missing_values = false;
+                $("#add_points_btn").removeClass("btn-info");
+                $("#add_points_btn").addClass("btn-danger");
+            } else {
+                $("#add_points_btn").removeClass("btn-danger");
+                $("#add_points_btn").addClass("btn-info");
             }
 
+            if ($("#category_body_Road").children().length === 0) {
+                alert_msg += "\n -> Vei Kategorier !";
+                missing_values = false;
+                $("#add_roads_btn").removeClass("btn-info");
+                $("#add_roads_btn").addClass("btn-danger");
+            } else {
+                $("#add_roads_btn").removeClass("btn-danger");
+                $("#add_roads_btn").addClass("btn-info");
+            }
+
+            if ($("#category_body_area").children().length === 0) {
+                alert_msg += "\n -> Område Kategorier !";
+                missing_values = false;
+                $("#add_areas_btn").removeClass("btn-info");
+                $("#add_areas_btn").addClass("btn-danger");
+            } else {
+                $("#add_areas_btn").removeClass("btn-danger");
+                $("#add_areas_btn").addClass("btn-info");
+            }
+
+            if ($("#category_body_Interviewers").children().length === 0) {
+                alert_msg += "\n -> Interviewer !";
+                missing_values = false;
+                $("#add_interviewers_btn").removeClass("btn-info");
+                $("#add_interviewers_btn").addClass("btn-danger");
+            } else {
+                $("#add_interviewers_btn").removeClass("btn-danger");
+                $("#add_interviewers_btn").addClass("btn-info");
+            }
+
+            if ($("#category_body_Administrators").children().length === 0) {
+                alert_msg += "\n -> Administratorer !";
+                missing_values = false;
+                $("#add_administrators_btn").removeClass("btn-info");
+                $("#add_administrators_btn").addClass("btn-danger");
+            } else {
+                $("#add_administrators_btn").removeClass("btn-danger");
+                $("#add_administrators_btn").addClass("btn-info");
+            }
+
+            if ($("#category_body_questions").children().length === 0) {
+                alert_msg += "\n -> Spørsmål !";
+                missing_values = false;
+                $("#add_questions_btn").removeClass("btn-info");
+                $("#add_questions_btn").addClass("btn-danger");
+            } else {
+                $("#add_questions_btn").removeClass("btn-danger");
+                $("#add_questions_btn").addClass("btn-info");
+            }
+
+            if (!missing_values) {
+                alert(alert_msg);
+            }
+            return missing_values;
         });
 
         // Method to add Point categories
@@ -311,6 +252,7 @@ function initMap() {
             if (icon_name != "" && brukt != true) {
                 var list = $('#category_body_point');
                 list.append(new_category);
+                $('#point_name').val("");
 
                 $('.delete_cat').off();
                 $('.delete_cat').on('click', function () {
@@ -354,6 +296,7 @@ function initMap() {
             if (icon_name != "" && brukt != true) {
                 var list = $('#category_body_Road');
                 list.append(new_category);
+                $('#road_name').val("");
 
                 $('.delete_cat').off();
                 $('.delete_cat').on('click', function () {
@@ -395,6 +338,7 @@ function initMap() {
             if (icon_name != "" && brukt != true) {
                 var list = $('#category_body_area');
                 list.append(new_category);
+                $('#area_name').val("");
 
                 $('.delete_cat').off();
                 $('.delete_cat').on('click', function () {
@@ -407,6 +351,128 @@ function initMap() {
             }
         });
 
+        // Adding Interviewers / jQuery
+        $('#SearchInterviewersButton').on('click', function (e) {
+            var username = $('#searchInterviewers').val();
+
+            if (username != '') {
+                $.post("/searchUsers",{ username: username }, function(data,status){
+                    if (status === "success") {
+                        var results = JSON.parse(data);
+                        var user = results[0];
+
+                        if (results.length > 0) {
+                            var addedusers = $("#category_body_Interviewers").children().text();
+                            if (addedusers.includes(username) || addedusers.includes(user)) return;
+                            $('#AddInterviewersButton').show();
+                            $('#AddInterviewersButton').off('click');
+                            $('#AddInterviewersButton').on('click', function(e) {
+                                var newelement = "<li class='list-group-item'>"+user
+                                    +"<span id='"+user+"_Interviewer' class='badge'>"
+                                    +"<i class='fa fa-minus'></i>"
+                                    +"</span>"
+                                    +"<input name='Interviewers' value='"+user+"' type='hidden' class='form-control'>"
+                                    +"</li>";
+                                $('#category_body_Interviewers').append(newelement);
+                                $('#AddInterviewersButton').hide();
+                                $('#searchInterviewers').val("");
+                                $('#'+user+'_Interviewer').off('click');
+                                    $('#'+user+'_Interviewer').on('click', function(e) {
+                                        $(this).parent().remove();
+                                    });
+                                });
+                        }
+
+                    } else {
+                        alert("Database Connection failure");
+                    }
+                });
+            }
+        });
+
+        // Adding Administrators / jQuery
+        $('#SearchAdministratorsButton').on('click', function (e) {
+            var username = $('#searchAdministrators').val();
+
+            if (username != '') {
+                $.post("/searchUsers",{ username: username }, function(data,status){
+                    if (status === "success") {
+                        var results = JSON.parse(data);
+                        var user = results[0];
+
+                        if (results.length > 0) {
+                            var addedusers = $("#category_body_Administrators").children().text();
+                            if (addedusers.includes(username) || addedusers.includes(user)) return;
+                            $('#AddAdministratorsButton').show();
+                            $('#AddAdministratorsButton').off('click');
+                            $('#AddAdministratorsButton').on('click', function(e) {
+                                var newelement = "<li class='list-group-item'>"+user
+                                    +"<span id='"+user+"_Admin' class='badge'>"
+                                    +"<i class='fa fa-minus'></i>"
+                                    +"</span>"
+                                    +"<input name='Administrators' value='"+user+"' type='hidden' class='form-control'>"
+                                    +"</li>";
+                                $('#category_body_Administrators').append(newelement);
+                                $('#AddAdministratorsButton').hide();
+                                $('#searchAdministrators').val("");
+                                $('#'+user+'_Admin').off('click');
+                                    $('#'+user+'_Admin').on('click', function(e) {
+                                        $(this).parent().remove();
+                                    });
+                                });
+                        }
+
+                    } else {
+                        alert("Database Connection failure");
+                    }
+                });
+            }
+        });
+
+        // Adding Questions
+        $('#AddQuestionButton').on('click', function () {
+           added_questions = $("#category_body_questions").children().text();
+           current_question = $("#Question").val();
+
+           if (current_question == "") {
+               alert("Du må skrive et spørsmål !");
+               return;
+           } else if (added_questions.includes(current_question)) {
+               alert("Dette spørsmålet er allerede lagt til.");
+               return;
+           } else {
+               question_ID = current_question.replace(/ /g, "_");
+               var newelement = "<li class='list-group-item'>"+current_question
+                                    +"<span id='"+question_ID+"' class='badge'>"
+                                    +"<i class='fa fa-minus'></i>"
+                                    +"</span>"
+                                    +"<input name='questions' value='"+current_question+"' type='hidden' class='form-control'>"
+                                    +"</li>";
+               $('#category_body_questions').append(newelement);
+               $('#Question').val("");
+
+               $('#'+question_ID+'').off('click');
+               $('#'+question_ID+'').on('click', function(e) {
+                   $(this).parent().remove();
+               });
+           }
+        });
+
+        // Datepicker - jQuery
+        var dateToday = new Date();
+        var dates = $("#date").datepicker({
+            defaultDate: "+3m",
+            changeMonth: true,
+            numberOfMonths: 1,
+            minDate: dateToday,
+            onSelect: function(selectedDate) {
+                var option = this.id == "from" ? "minDate" : "maxDate",
+                    instance = $(this).data("datepicker")//.css({"position": "relative", "z-index": 999999});
+                date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
+                dates.not(this).datepicker("option", option, date);
+                $(this).blur();
+            }
+        });
 
         // code for adjusting dimentions on big and small screen devices
         var choice_panel_toggled;
@@ -458,8 +524,6 @@ function initMap() {
         $("#show_map_btn").click(function () {
             auto_adjust_dimentions();
         });
-
-
 
         $("#colorpicker_road").spectrum({
             color: "#3355cc"

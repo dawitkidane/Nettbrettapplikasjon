@@ -33,6 +33,7 @@
         {% endif %}
     </script>
 
+
 {% endblock %}
 
 
@@ -68,27 +69,27 @@
             </div>
 
             <div class="form-group">
-                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#PointModal" data-backdrop="false">
+                <button type="button" id="add_points_btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#PointModal" data-backdrop="false">
                     Legg til Punkt Kategorier
                 </button>
 
-                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#RoadModal" data-backdrop="false">
+                <button type="button" id="add_roads_btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#RoadModal" data-backdrop="false">
                     Legg til Vei Kategorier
                 </button>
 
-                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#AreaModal" data-backdrop="false">
+                <button type="button" id="add_areas_btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#AreaModal" data-backdrop="false">
                     Legg til Område Kategorier
                 </button>
 
-                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#InterviewersModal" data-backdrop="false">
+                <button type="button" id="add_interviewers_btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#InterviewersModal" data-backdrop="false">
                     Legg til Interviewere
                 </button>
 
-                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#AdministratorsModal" data-backdrop="false">
+                <button type="button" id="add_administrators_btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#AdministratorsModal" data-backdrop="false">
                     Legg til Administratorer
                 </button>
 
-                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#QuestionsModal" data-backdrop="false">
+                <button type="button" id="add_questions_btn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#QuestionsModal" data-backdrop="false">
                     Legg til Spørsmål
                 </button>
             </div>
@@ -105,7 +106,7 @@
 
                         <div class="input-group">
                             <span id="add_point_category" class="input-group-addon"><span class="badge"><i class="fa fa-plus"></i></span></span>
-                            <input type="text" id="point_name" name="category" class="form-control" placeholder="Kategori Navn" required>
+                            <input type="text" id="point_name" name="category" class="form-control" placeholder="Kategori Navn">
                         </div>
 
                         <div class="input-group" id="point_icon">
@@ -838,15 +839,13 @@
 
                         <div class="input-group">
                             <span id="add_road_category" class="input-group-addon"><span class="badge"><i class="fa fa-plus"></i></span></span>
-                            <input type="text" id="road_name" name="category" class="form-control" placeholder="Kategori Navn" required>
+                            <input type="text" id="road_name" name="category" class="form-control" placeholder="Kategori Navn">
                         </div>
 
                         <div class="input-group">
                             <div class="input-group" id="road_color">
                                 Velg farge: <input id="colorpicker_road" type="color" value='#3355cc' class="form-group">
                             </div>
-
-
                         </div>
 
                         <div class="input-group">
@@ -877,7 +876,7 @@
 
                         <div class="input-group">
                             <span id="add_area_category" class="input-group-addon"><span class="badge"><i class="fa fa-plus"></i></span></span>
-                            <input type="text" id="area_name" name="category" class="form-control" placeholder="Kategori Navn" required>
+                            <input type="text" id="area_name" name="category" class="form-control" placeholder="Kategori Navn">
                         </div>
 
                         <div class="input-group">

@@ -41,25 +41,11 @@
         // a map to store te shapes by their id's
         var shapes = [];
 
+        // a map to store the filtered shapes, (this will always contains the shapes drawn on the map)
         var current_shapes = [];
 
-        var Question_Responses = [];
-        function Load_Questions_Responses() {
-            {% for question in Questions_response %}
+        var Map_id = "{{ Map.mapid }}";
 
-                response = {
-                    "question_ID": "{{ question.question_ID }}",
-                    "respondent_ID": "{{ question.respondent_ID }}",
-                    "Answer": "{{ question.Answer }}"
-                };
-
-                Question_Responses.push(response);
-
-            {% endfor %}
-        }
-
-
-        Load_Questions_Responses();
 
         // function to clear all drawn shapes
         function clear_map() {
@@ -71,6 +57,7 @@
                 }
             }
         }
+
         // function to load the registered shapes on this map
         function loadShapes() {
 
@@ -121,7 +108,6 @@
                     }
                 });
 
-                /*
                 google.maps.event.addListener(infowindow_{{ point.shape_id }}, 'domready', function () {
                     $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
                     $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
@@ -130,12 +116,7 @@
                         shapes[{{ point.shape_id }}]['rating'] = $("input[name~='rating']").val();
                     });
 
-                    $("#delete_btn").off('click');
-                    $("#delete_btn").on('click', function() {
-                        delete_shape({{ point.shape_id }});
-                    });
                 });
-                */
 
                 google.maps.event.addListener(infowindow_{{ point.shape_id }}, 'closeclick', function () {
                     handle_outside_bounds_click();
@@ -211,7 +192,7 @@
                     handle_on_close_info_window();
                 });
 
-                /*
+
                 google.maps.event.addListener(infowindow_{{ road.shape_id }}, 'domready', function () {
                     $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
                     $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
@@ -219,13 +200,7 @@
                         shapes[{{ road.shape_id }}]['description'] = $("textarea[name~='description']").val();
                         shapes[{{ road.shape_id }}]['rating'] = $("input[name~='rating']").val();
                     });
-
-                    $("#delete_btn").off('click');
-                    $("#delete_btn").on('click', function() {
-                        delete_shape({{ road.shape_id }});
-                    });
                 });
-                */
 
             {% endfor %}
 
@@ -296,7 +271,6 @@
                     handle_on_close_info_window();
                 });
 
-                /*
                 google.maps.event.addListener(infowindow_{{ area.shape_id }}, 'domready', function () {
                     $("input[name~='title'], textarea[name~='description'], input[name~='rating']").off('blur change');
                     $("input[name~='title'], textarea[name~='description'], input[name~='rating']").on('blur change', function () {
@@ -304,13 +278,8 @@
                         shapes[{{ area.shape_id }}]['description'] = $("textarea[name~='description']").val();
                         shapes[{{ area.shape_id }}]['rating'] = $("input[name~='rating']").val();
                     });
-
-                    $("#delete_btn").off('click');
-                    $("#delete_btn").on('click', function() {
-                        delete_shape({{ area.shape_id }});
-                    });
                 });
-                */
+
             {% endfor %}
 
             current_shapes = shapes;
@@ -318,6 +287,7 @@
             draw_current_shapes();
 
         }
+
         // function to draw all current(filtered) shapes
         function draw_current_shapes() {
             for (var key in current_shapes) {
@@ -328,105 +298,131 @@
             }
         }
 
-        function Filter_Shapes() {
+        // functions to filter the shapes and respondents answers, and then show the wanted shapes
+        // All input must match spesified in the fields (not empty fields) must match with the shape and respondent answers
+        function Compare_Shape_inclusive(shape, selected_interviewers, types, title, description, rating, expected_question_answer) {
 
+            shape_check = false;
+            if (selected_interviewers.includes(shape["shape_creater"])
+                && types.includes(shape["type"])
+                && shape["title"].includes(title)
+                && shape["description"].includes(description)
+                && shape["rating"].includes(rating)) {
+                shape_check = true;
+            }
+
+            respondent_answers_check = true;
+            for (var question_id in expected_question_answer) {
+                {% for question in Questions_response %}
+                    if (question_id == "{{ question.question_ID }}"
+                        && shape["respondent_id"] == "{{ question.respondent_ID }}"
+                        && expected_question_answer[question_id] == "{{ question.Answer }}") {
+                        respondent_answers_check = true;
+                    } else if (question_id == "{{ question.question_ID }}"
+                        && shape["respondent_id"] == "{{ question.respondent_ID }}"
+                        && expected_question_answer[question_id] != "{{ question.Answer }}"){
+                        respondent_answers_check = false;
+                        break;
+                    }
+                {% endfor %}
+            }
+            return (shape_check && respondent_answers_check);
+        }
+        // At least one input spesified in the fields (not empty fields) must match with the shape and respondent answers
+        function Compare_Shape_exclusive(shape, selected_interviewers, types, title, description, rating, expected_question_answer) {
+
+            shape_check = false;
+            if (selected_interviewers.includes(shape["shape_creater"])
+                || types.includes(shape["type"])
+                || shape["title"].includes(title)
+                || shape["description"].includes(description)
+                || shape["rating"].includes(rating)) {
+                shape_check = true;
+            }
+
+            if (shape_check) return true;
+
+            respondent_answers_check = false;
+            for (var question_id in expected_question_answer) {
+                {% for question in Questions_response %}
+                    if (question_id == "{{ question.question_ID }}"
+                        && shape["respondent_id"] == "{{ question.respondent_ID }}"
+                        && expected_question_answer[question_id] == "{{ question.Answer }}") {
+                        respondent_answers_check = (respondent_answers_check || true)
+                    } else if (question_id == "{{ question.question_ID }}"
+                        && shape["respondent_id"] == "{{ question.respondent_ID }}"
+                        && expected_question_answer[question_id] != "{{ question.Answer }}"){
+                        respondent_answers_check = (respondent_answers_check || false)
+                    }
+                {% endfor %}
+            }
+
+            return (shape_check || respondent_answers_check);
+        }
+        // Main Filter function
+        function Filter_Shapes() {
             clear_map();
             relevant_shapes = {};
 
-            // relevant answers
-            number_of_blank_answers = 0;
+            keys = [];
+
+            selected_interviewers = $("#filter_interviewers").val();
+
+            types = ["Not_Checked","Not_Checked","Not_Checked"];
+            if ($("#Point").is(':checked')) types[0] = "POINT";
+            if ($("#Road").is(':checked')) types[1] = "ROAD";
+            if ($("#Area").is(':checked')) types[2] = "AREA";
+
+            title = $("#title_search").val();
+            description = $("#description_search").val();
+            rating = $("#rating_search").val();
+
+            expected_question_answer = {};
+
             {% for question in Questions %}
                 Question_Field_nr_{{ question.question_ID }} = $("#question_{{ question.question_ID }}").val();
                 if (Question_Field_nr_{{ question.question_ID }} != "") {
-                    for (var i = 0; i < Question_Responses.length; i++) {
-                        if (Question_Responses[i]["Answer"].includes(Question_Field_nr_{{ question.question_ID }})
-                        && Question_Responses[i]["question_ID"] == "{{ question.question_ID }}") {
-                            shape_respondent_id = Question_Responses[i]["respondent_ID"];
-                            for (var key in shapes) {
-                                if (shapes[key]["respondent_id"] == shape_respondent_id) {
-                                    relevant_shapes[key] = shapes[key]
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    number_of_blank_answers++;
+                    expected_question_answer["{{ question.question_ID }}"] = $("#question_{{ question.question_ID }}").val();
                 }
             {% endfor %}
 
-            // relevant interviewers
-            selected_interviewers = $("#filter_interviewers").val();
-            if (selected_interviewers == null) selected_interviewers = [];
-            if (selected_interviewers.length > 0) {
-                for (var key in shapes) {
-                    if (selected_interviewers.includes(shapes[key]["shape_creater"])) {
-                        relevant_shapes[key] = shapes[key];
+            for (var key in shapes) {
+
+                filter_type = $("input[name~='filter_type']:checked").val();
+                if (filter_type == "Exclusive") {
+                    if (selected_interviewers == null) {
+                        selected_interviewers = [];
                     }
+                    if (title == "") title = "NOT_CHECKED";
+                    if (description == "") description = "NOT_CHECKED";
+                    if (rating == "") rating = "NOT_CHECKED";
+                    match = Compare_Shape_exclusive(shapes[key], selected_interviewers, types, title, description, rating, expected_question_answer);
+                } else if (filter_type == "Inclusive") {
+                    if (selected_interviewers == null) {
+                        selected_interviewers = [];
+                        {% for user in Users %}
+                            selected_interviewers.push("{{ user.username }}");
+                        {% endfor %}
+                    }
+                    match = Compare_Shape_inclusive(shapes[key], selected_interviewers, types, title, description, rating, expected_question_answer);
+                }
+
+                if (match) {
+                    relevant_shapes[key] = shapes[key];
                 }
             }
 
-
-            // relevant shape types
-            type_point = "";
-            type_road = "";
-            type_area = "";
-            if ($("#Point").is(':checked')) type_point = "POINT";
-            if ($("#Area").is(':checked')) type_area = "AREA";
-            if ($("#Road").is(':checked')) type_road = "ROAD";
-
-            if (type_area != "" || type_road != "" || type_point != "") {
-                for (var key in shapes) {
-                    if (shapes[key]["type"] == type_point
-                        || shapes[key]["type"] == type_road
-                        || shapes[key]["type"] == type_area) {
-                        relevant_shapes[key] = shapes[key];
-                    }
-                }
-            }
-
-
-            // relevant shape title
-            title = $("#title_search").val();
-            if (title != "") {
-                for (var key in shapes) {
-                    if (shapes[key]["title"].includes(title)) {
-                        relevant_shapes[key] = shapes[key];
-                    }
-                }
-            }
-
-            // relevant shape description
-            description = $("#description_search").val();
-            if (description != "") {
-                for (var key in shapes) {
-                    if (shapes[key]["description"].includes(description)) {
-                        relevant_shapes[key] = shapes[key];
-                    }
-                }
-            }
-
-            // relevant shape rating
-            rating = $("#rating_search").val();
-            if (rating != "") {
-                for (var key in shapes) {
-                    if (shapes[key]["rating"].includes(rating)) {
-                        relevant_shapes[key] = shapes[key];
-                    }
-                }
-            }
-
-
-            if (Object.keys(relevant_shapes).length > 0) {
-                current_shapes = relevant_shapes;
-                alert("Fant "+Object.keys(relevant_shapes).length+" resulter");
-            }
-            else {
-                current_shapes = shapes;
-                alert("Fant ingen resulter, viser alle objekter på kartet nå");
-            }
+            current_shapes = relevant_shapes;
             draw_current_shapes();
-        };
+        }
+        // function to remove the filtering effect and show all shapes on map again
+        function Deaktivate_Filter() {
+            current_shapes = shapes;
+            draw_current_shapes();
+        }
 
+
+        // function to clear the events on the map
         function clear_map_events() {
             // removing previous eventlisteners from map
             if (listeners.length > 0) {
@@ -437,6 +433,7 @@
             }
         }
 
+        // functions to download a csv file containing the shapes and respondents currently draw on the map
         function Download_Map_AS_CSV_File() {
 
             shapes_ids = [];
@@ -463,7 +460,6 @@
                     });
 
         }
-
         function download(filename, text) {
           var element = document.createElement('a');
           element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -476,6 +472,7 @@
 
           document.body.removeChild(element);
         }
+
 
         var current_shape_id = null;
 
@@ -498,21 +495,10 @@
                 open_info_window = null;
                 $("#pac-card").show();
             }
-            /*
-            if (current_shape_id != null) {
-                update_shape(current_shape_id);
-            }
-            */
             $("#pac-card").show();
 
         }
         function handle_marker_click(infowindow, marker) {
-
-            /*
-            if (current_shape_id != null) {
-                update_shape(current_shape_id);
-            }
-            */
 
             for (var key in shapes) {
                 if (shapes[key]["marker"] == marker) {
@@ -685,11 +671,6 @@
                     $("#pac-card").show();
                     handle_outside_bounds_click()
                 }
-                /*
-                if (current_shape_id != null) {
-                    update_shape(current_shape_id);
-                }
-                */
             });
 
             // event to keep the user inside the map bound, and prevent adding markers outside the target geo area
@@ -759,6 +740,64 @@
 
         }
 
+        // function to update the shape when the user click the green button on the infow window to save
+        function Update_Shape() {
+
+            title = $("#title").val();
+            description = $("#description").val();
+            rating = $("#rating").val();
+
+            $.post("/Edit_Shape",
+                {
+                    map_id: Map_id,
+                    shape_id: current_shape_id,
+                    title: title,
+                    description: description,
+                    rating: rating,
+                    task: "Update"
+                },
+                function(data, status){
+                    if (data == "Success") {
+                        shapes[current_shape_id]["title"] = title;
+                        shapes[current_shape_id]["description"] = description;
+                        shapes[current_shape_id]["rating"] = rating;
+                        (shapes[current_shape_id]["infowindow"]).close();
+                        handle_on_close_info_window();
+                    } else if (data == "Error") {
+                        alert("En feil har skjedd, prøv igjen")
+                    }
+                });
+        }
+
+        // function to delete the shape when the user click the red button on the infow window to delete
+        function Delete_Shape() {
+            answer = confirm("Er du sikke at du vil slette denne markøren ?");
+
+            if (answer == true) {
+                $.post("/Edit_Shape",
+                    {
+                        map_id: Map_id,
+                        shape_id: current_shape_id,
+                        task: "Delete"
+                    },
+                    function (data, status) {
+                        if (data == "Success") {
+                            current_shapes[current_shape_id]["marker"].setMap(null);
+                            if (current_shapes[current_shape_id]["type"] != "POINT") {
+                                current_shapes[current_shape_id]["shape"].setMap(null);
+                            }
+                            delete shapes[current_shape_id];
+                            delete current_shapes[current_shape_id];
+                            $("#pac-card").show();
+
+                        } else if (data == "Error") {
+                            alert("En feil har skjedd, prøv igjen")
+                        }
+                    });
+            }
+
+        }
+
     </script>
 
 {% endblock %}
@@ -807,6 +846,13 @@
                             </label>
                         </div>
 
+                        <br>
+
+                        <div class="slidecontainer">
+                            <button onclick="Deaktivate_Filter();" style="width: 100%;" type="button" class="btn btn-warning" data-toggle="modal" data-target="#AreaModal" data-backdrop="false">
+                                Deakriver Filter / Vis alt
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -820,7 +866,16 @@
                 </div>
                 <div id="collapse2" class="panel-collapse collapse">
                     <div class="panel-body">
+
                         <div style="padding: 5%; margin: 5%; border-radius: 5px; border: 1px solid red">
+
+                        <div class="form-group">
+                            <label>Velg Filter Typen:</label>
+                            <input type="radio" name="filter_type" value="Inclusive" checked> Inclusive Filter (Alle må matche)
+                            <br>
+                            <input type="radio" name="filter_type" value="Exclusive"> Exclusive Filter (Minst en må matche)
+                        </div>
+
                             {% for question in Questions %}
                                 <div class="form-group">
                                     <label for="question_{{ question.question_ID }}">{{ question.question }}</label>
@@ -828,20 +883,20 @@
                                 </div>
                             {% endfor %}
 
-                                {% if Users|length > 0 %}
-                                    <div class="form-group" aria-placeholder="Filtrer etter brukere">
-                                        <label for="Weight">Viser data fra følgende Interviewere</label>
-                                        <select id="filter_interviewers" multiple="true">
-                                            {% for user in Users %}
-                                                <option value="{{ user.username }}">
-                                                    {{ user.username }},
-                                                    <br>
-                                                    {{ user.email }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                {% endif %}
+                            {% if Users|length > 0 %}
+                                <div class="form-group" aria-placeholder="Filtrer etter brukere">
+                                    <label for="Weight">Viser data fra følgende Interviewere</label>
+                                    <select id="filter_interviewers" multiple="true">
+                                        {% for user in Users %}
+                                            <option value="{{ user.username }}">
+                                                {{ user.username }},
+                                                <br>
+                                                {{ user.email }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            {% endif %}
 
                                 <div class="form-group">
                                     <label>Vis kun:
@@ -911,7 +966,8 @@
             <input name='rating' type='range' min='1' max='5' value='2' class='slider' id='rating' required>
         </div>
         <br>
-        <button type="button" id="delete_btn" class="btn btn-danger">Slett</button>
+        <button style="width: 49%;" type="button" onclick="Update_Shape();" class="btn btn-success">Lagre</button>
+        <button style="width: 49%;" type="button" onclick="Delete_Shape();" class="btn btn-danger">Slett</button>
     </div>
 
     <!-- Link to download the map from google API services -->

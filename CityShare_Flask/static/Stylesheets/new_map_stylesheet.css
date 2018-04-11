@@ -32,7 +32,7 @@ a, a:hover, a:active, a:visited, a:focus {
     position: relative; z-index: 9999;
 }
 
-.btn-info {
+.btn-info, .btn-danger, .btn-success {
     width: 100%;
     padding: 5px;
     margin: 5px 0px 5px 0px;
@@ -58,6 +58,7 @@ a, a:hover, a:active, a:visited, a:focus {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     background-color: #fff;
     font-family: Roboto;
+    height: 40px;
 }
 
 #pac-input {
@@ -66,8 +67,11 @@ a, a:hover, a:active, a:visited, a:focus {
     font-size: 15px;
     font-weight: 300;
     text-overflow: ellipsis;
+    height: 40px;
 }
 
 #pac-input:focus {
     border-color: #4d90fe;
+    height: 40px;
 }
+
