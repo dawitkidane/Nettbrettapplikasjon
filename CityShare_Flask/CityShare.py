@@ -6,19 +6,11 @@ app.secret_key = "any random string"
 
 
 def get_db():
-<<<<<<< HEAD
     if not hasattr(g, '_database'):
         g._database = mysql.connector.connect(host='sql2.freemysqlhosting.net',
                                               user='sql2217838',
                                               passwd='cR3!bC4!',
                                               db='sql2217838')
-=======
-    if not hasattr(g,'_database'):
-        g._database = mysql.connector.connect(host='sql11.freemysqlhosting.net',
-                                                user='sql11230434',
-                                                passwd='mqcmmEAzq7',
-                                                db='sql11230434')
->>>>>>> 398bc3fd14d82821175e2a4d2d0ef4508cf8b9d3
     return g._database
 
 
@@ -763,8 +755,6 @@ def Download_Map_As_CSV_File():
 
     return file_content
 
-<<<<<<< HEAD
-
 @app.route("/UpdateMapDetails", methods=['POST', 'GET'])
 def Update_Map_Details():
     username = session.get("Logged_in", None)
@@ -933,7 +923,7 @@ def Update_Map_Details():
         print(err.msg)
         return render_template("error.html", Fail="Noe Feil har skjedd, prøv igjen")
 
-=======
+
 @app.route("/feedback", methods=['POST', 'GET'])
 def feedback():
     mapid = request.args.get('mapid')
@@ -1100,7 +1090,7 @@ def filter():
     conn.close()
 
     return render_template("view_maps.html", maps=maps)
->>>>>>> 398bc3fd14d82821175e2a4d2d0ef4508cf8b9d3
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

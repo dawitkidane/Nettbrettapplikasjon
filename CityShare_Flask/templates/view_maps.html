@@ -1,3 +1,5 @@
+<!-- new -->
+
 {% extends 'index.html' %}
 
 {% block stylingblock %}
@@ -12,10 +14,7 @@
     <!-- Link to static/view_maps_stylesheet.css -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/view_maps_stylesheet.css') }}">
 
-<<<<<<< HEAD
-
-=======
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -52,29 +51,32 @@
         $( "#datepicker" ).datepicker();
         } );
     </script>
->>>>>>> 398bc3fd14d82821175e2a4d2d0ef4508cf8b9d3
+
 {% endblock %}
 
-
 {% block content %}
+
     <div id="filter_div">
         <form id="form" action="/filter" method="post">
-<legend> SEARCH</legend>
+            <legend> SEARCH</legend>
             <div class="form-group">
                 <div class="form-group">
-
-                        <input name="title" type="title" class="form-control" id="title" placeholder="Search by Map Title" >
+                    <input name="title" type="title" class="form-control" id="title" placeholder="Search by Map Title" >
                 </div>
                 <div class="form-group">
-
-                        <input name="creater" type="creater" class="form-control" id="creater" placeholder="Search by Map Creater" >
+                    <input name="creater" type="creater" class="form-control" id="creater" placeholder="Search by Map Creater" >
                 </div>
                 <div class="form-group">
-
-                        <input class="form-control" id="datepicker" name="datepicker" placeholder="Search by Map Expiry Date: MM/DD/YYYY" type="text"/>
+                    <input class="form-control" id="datepicker" name="datepicker" placeholder="Search by Map Expiry Date: MM/DD/YYYY" type="text"/>
                 </div>
+                <div class="input-group">
+                    <button type="submit" id="btn" class="btn btn-success">Search</button> &nbsp
+                    <button type="button" id="cancelbtn" onclick="location.href='/showmaps'" class="btn btn-danger">showall</button>
+                </div>
+            </div>
+        </form>
+    </div>
 
-<<<<<<< HEAD
     <div class="container">
 
         {% for map in maps %}
@@ -85,37 +87,17 @@
                 <div class="btn-group btn-group-justified">
                     <a href="/EditMap?mapid={{ map.mapid }}" class="btn btn-primary">Åpne</a>
                     <a href="/ViewMapResult?mapid={{ map.mapid }}" class="btn btn-success">Analyser</a>
+                </div>
+
+                <div class="btn-group btn-group-justified">
                     {% if map.Can_Update_Map %}
                         <a href="/UpdateMapDetails?mapid={{ map.mapid }}" class="btn btn-warning">Rediger</a>
                     {% endif %}
+                    <a href="/feedback?mapid={{ map.mapid }}" class="btn btn-info">Tilbakemelding</a>
                 </div>
 
                 <div class="map_details_box">
                     <p><strong>Laget av: </strong>{{ map.creater }}</p>
-=======
-                <div class="input-group">
-                    <button type="submit" id="btn" class="btn btn-success">Search</button> &nbsp
-                    <button type="button" id="cancelbtn" onclick="location.href='/showmaps'" class="btn btn-danger">showall</button>
-                </div>
-            </div>
-
-        </form>
-    </div>
-    <div id="maps">
-
-        {% for map in maps %}
-
-            <div id="map_box">
-                <img class="static_map_box"  src="https://maps.googleapis.com/maps/api/staticmap?center={{ map.center }}&zoom={{ map.zoom }}&size=400x400&key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY"/>
-                <div class="map_info_box">
-                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='/EditMap?mapid={{ map.mapid }}'">Åpne Kartet</button>
-                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='/ViewMapResult?mapid={{ map.mapid }}'">Analyse Kartet</button>
-                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='/ChangeMap?mapid={{ map.mapid }}'">Rediger Kartet</button>
-                    <button type="button" class="btn btn-primary btn-block" onclick="location.href='/feedback?mapid={{ map.mapid }}'">feedback</button>
-
-                    <br>
-                    <p id="creater_filter"><strong>Laget av: </strong>{{ map.creater }}</p>
->>>>>>> 398bc3fd14d82821175e2a4d2d0ef4508cf8b9d3
                     <p><strong>Tittel: </strong>{{ map.title }}</p>
                     <p><strong>Utstedet den: </strong>{{ map.issuedate }}</p>
                     <p><strong>Gyldig til: </strong>{{ map.expirydate }}</p>
@@ -124,11 +106,6 @@
             </div>
 
         {% endfor %}
-        {% if not maps %}
-            <div id="errdiv"class="alert alert-danger">
-                <p id="errtxt">{{ session.get('err') }}</p>
-            </div>
-        {% endif %}
 
     </div>
 

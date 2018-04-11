@@ -1,6 +1,6 @@
-DROP SCHEMA sql11230434;
-CREATE SCHEMA sql11230434;
-USE sql11230434;
+DROP SCHEMA sql2217838;
+CREATE SCHEMA sql2217838;
+USE sql2217838;
 
 /*
 Server: sql2.freemysqlhosting.net
@@ -105,18 +105,6 @@ FOREIGN KEY (shape_creater) REFERENCES Persons(username),
 FOREIGN KEY (respondent_ID) REFERENCES Maps_Respondents(respondent_ID)
 );
 
-CREATE TABLE Feedbacks (
-feedback_id INT AUTO_INCREMENT,
-map_id INT,
-user VARCHAR(30),
-date TIMESTAMP DEFAULT now(),
-cmt VARCHAR(30000),
-PRIMARY KEY (feedback_id),
-FOREIGN KEY (user) REFERENCES Persons(username),
-FOREIGN KEY (map_id) REFERENCES Maps(map_id)
-);
-
-
 INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone, is_admin) 
 VALUES('Mohammed','Mohammed1992','Mohammed','Guniem','mghunime@yahoo.no',004748338891,TRUE);
 
@@ -126,3 +114,6 @@ VALUES('Dawit','Dawit1995','Dawit','Kidane','d_kzzz@yahoo.com',0047450088910,TRU
 INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone) 
 VALUES('Rami','Rami1992','Rami','Guniem','rami@yahoo.no',004777665544);
 
+select * from Respondent_Answers;
+
+select * from Shapes;
