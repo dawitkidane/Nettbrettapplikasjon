@@ -1,11 +1,15 @@
 .map_box {
     display: inline-block;
-    width: 45%;
+    width: 48%;
     margin: 10px;
     padding: 10px;
     border: 1px solid grey;
     box-shadow: 5px 5px #d3d3d3;
     border-radius: 50px 20px
+}
+
+.glyphicon-search {
+    color: #5277ff;
 }
 
 @media only screen and (max-width: 800px) {
@@ -20,6 +24,7 @@
     width: 95%;
     height: 190px;
     margin: 10px;
+    border-radius: 16px 16px 16px 16px;
 }
 
 .map_details_box {

@@ -16,31 +16,30 @@ mohammed?!?!?
 */
 
 CREATE TABLE Persons (
-username VARCHAR(30),
-login_pass VARCHAR(25),
-first_name VARCHAR(15),
-last_name VARCHAR(15),
+username VARCHAR(20),
+login_pass VARCHAR(20),
+first_name VARCHAR(20),
+last_name VARCHAR(20),
 e_post VARCHAR(30),
 telephone LONG,
-is_admin BOOLEAN DEFAULT 0,
 PRIMARY KEY(username)
 );
 
 CREATE TABLE Maps (
 map_id INT auto_increment,
-map_creater VARCHAR(30),
-title VARCHAR(50),
+map_creater VARCHAR(20),
+title VARCHAR(40),
 description TEXT,
 start_date TIMESTAMP DEFAULT now(),
 end_date DATE,
 geo_boundery POLYGON,
-zoom int,
+zoom INT,
 PRIMARY KEY(map_id),
 FOREIGN KEY (map_creater) REFERENCES Persons(username)
 );
 
 CREATE TABLE Maps_Interviewers(
-username VARCHAR(30),
+username VARCHAR(20),
 map_id INT,
 PRIMARY KEY (username, map_id),
 FOREIGN KEY (username) REFERENCES Persons(username),
@@ -48,7 +47,7 @@ FOREIGN KEY (map_id) REFERENCES Maps(map_id)
 );
 
 CREATE TABLE Maps_Administrators(
-username VARCHAR(30),
+username VARCHAR(20),
 map_id INT,
 PRIMARY KEY (username, map_id),
 FOREIGN KEY (username) REFERENCES Persons(username),
@@ -92,10 +91,10 @@ FOREIGN KEY (question_ID) REFERENCES Maps_Questions(question_ID)
 CREATE TABLE Shapes (
 shape_id INT AUTO_INCREMENT,
 category_ID INT,
-shape_creater VARCHAR(30),
+shape_creater VARCHAR(20),
 center POINT,
 area_or_path LINESTRING,
-title VARCHAR(50),
+title VARCHAR(40),
 description TEXT,
 rate INT DEFAULT 0,
 respondent_ID INT,
@@ -105,15 +104,29 @@ FOREIGN KEY (shape_creater) REFERENCES Persons(username),
 FOREIGN KEY (respondent_ID) REFERENCES Maps_Respondents(respondent_ID)
 );
 
-INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone, is_admin) 
-VALUES('Mohammed','Mohammed1992','Mohammed','Guniem','mghunime@yahoo.no',004748338891,TRUE);
+CREATE TABLE Feedbacks (
+feedback_id INT AUTO_INCREMENT,
+map_id INT,
+user VARCHAR(20),
+date TIMESTAMP DEFAULT now(),
+cmt VARCHAR(30000),
+PRIMARY KEY (feedback_id),
+FOREIGN KEY (user) REFERENCES Persons(username),
+FOREIGN KEY (map_id) REFERENCES Maps(map_id)
 
-INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone, is_admin) 
-VALUES('Dawit','Dawit1995','Dawit','Kidane','d_kzzz@yahoo.com',0047450088910,TRUE);
+);
+
+INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone) 
+VALUES('Mohammed','Mohammed1992','Mohammed','Guniem','mghunime@yahoo.no',004748338891);
+
+INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone) 
+VALUES('Dawit','Dawit1995','Dawit','Kidane','d_kzzz@yahoo.com',0047450088910);
 
 INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone) 
 VALUES('Rami','Rami1992','Rami','Guniem','rami@yahoo.no',004777665544);
 
-select * from Respondent_Answers;
+CREATE FULLTEXT INDEX Text_Search_Index ON Persons(username, first_name, last_name, e_post, telephone);
 
-select * from Shapes;
+SELECT username FROM Persons WHERE match(username) against('mo');
+
+

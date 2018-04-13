@@ -192,9 +192,8 @@
             if (open_info_window != null) {
                 open_info_window.close();
                 open_info_window = null;
-                map.setZoom(last_valid_zoom);
-                map.setCenter(last_valid_center);
-            } else {
+            }
+            if (map.getZoom() < {{ map.zoom }}+1) {
                 map.fitBounds(new google.maps.LatLngBounds(northeastcorner, southwestcorner));
             }
         }
@@ -301,20 +300,19 @@
 
             map = new google.maps.Map(document.getElementById('Map'), {
                 center: computeCentroid([northeastcorner, southwestcorner]),
-                //zoom: {{ map.zoom }},
-                zoom: calculated_zoom,
+                zoom: {{ map.zoom }},
                 gestureHandling: true, // true to turn on hand scroll or 'none'
                 zoomControl: true,
                 fullscreenControl: false,
                 bounds: bounds,
 
-                mapTypeControlOptions: {
+                streetViewControlOptions: {
                     position: google.maps.ControlPosition.LEFT_CENTER
                 },
-                streetViewControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_CENTER
-                },
                 zoomControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_CENTER
+                },
+                mapTypeControlOptions: {
                     position: google.maps.ControlPosition.RIGHT_CENTER
                 },
                 fullscreenControl: false
@@ -325,7 +323,7 @@
 
             var card = document.getElementById('pac-card');
             var input = document.getElementById('pac-input');
-            map.controls[google.maps.ControlPosition.LEFT_TOP].push(card);
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(card);
 
             var autocomplete = new google.maps.places.Autocomplete(input);
 
@@ -403,39 +401,43 @@
                 }
             });
 
-            google.maps.event.addListener(map,'bounds_changed',function () {
-                if (map.getZoom() < calculated_zoom) {
-                    map.fitBounds(bounds);
-                    map.setZoom(calculated_zoom);
-                }
 
-                var outerCoords = [
-                {lat: northeastcorner.lat()+10, lng: southwestcorner.lng()-10}, // north west
-                {lat: southwestcorner.lat()-10, lng: southwestcorner.lng()-10}, // south west
-                {lat: southwestcorner.lat()-10, lng: northeastcorner.lng()+10}, // south east
-                {lat: northeastcorner.lat()+10, lng: northeastcorner.lng()+10} // north east
+            google.maps.event.addListener(map,'bounds_changed',function () {
+                if (map.getZoom() < {{ map.zoom }}-1) {
+                    map.fitBounds(bounds);
+                    map.setZoom({{ map.zoom }});
+                }
+            });
+
+            lat_constant = Math.abs(northeastcorner.lat()-southwestcorner.lat());
+            lng_constant = Math.abs(northeastcorner.lng()-southwestcorner.lng());
+            var outerCoords = [
+                {lat: northeastcorner.lat()+lat_constant, lng: southwestcorner.lng()-lng_constant}, // north west
+                {lat: southwestcorner.lat()-lat_constant, lng: southwestcorner.lng()-lng_constant}, // south west
+                {lat: southwestcorner.lat()-lat_constant, lng: northeastcorner.lng()+lng_constant}, // south east
+                {lat: northeastcorner.lat()+lat_constant, lng: northeastcorner.lng()+lng_constant} // north east
             ];
-                var innerCoords = [
-                    {lat: northeastcorner.lat(), lng: southwestcorner.lng()}, // north west
-                    {lat: southwestcorner.lat(), lng: southwestcorner.lng()}, // south west
-                    {lat: southwestcorner.lat(), lng: northeastcorner.lng()}, // south east
-                    {lat: northeastcorner.lat(), lng: northeastcorner.lng()}  // north east
-                ];
-                map.data.add({
-                    geometry: new google.maps.Data.Polygon([outerCoords, innerCoords])
-                });
-                map.data.setStyle(function(feature) {
-                  var color = 'white';
-                  if (feature.getProperty('isColorful')) {
-                    color = feature.getProperty('color');
-                  }
-                  return ({
-                      fillColor: color,
-                      fillOpacity: 1,
-                      strokeColor: color,
-                      strokeWeight: 2
-                  });
-                });
+            var innerCoords = [
+                {lat: northeastcorner.lat(), lng: northeastcorner.lng()},  // north east
+                {lat: southwestcorner.lat(), lng: northeastcorner.lng()}, // south east
+                {lat: southwestcorner.lat(), lng: southwestcorner.lng()}, // south west
+                {lat: northeastcorner.lat(), lng: southwestcorner.lng()}, // north west
+
+            ];
+            map.data.add({
+                geometry: new google.maps.Data.Polygon([outerCoords, innerCoords])
+            });
+            map.data.setStyle(function(feature) {
+              var color = 'white';
+              if (feature.getProperty('isColorful')) {
+                color = feature.getProperty('color');
+              }
+              return /** @type {google.maps.Data.StyleOptions} */({
+                  fillColor: color,
+                  fillOpacity: 1,
+                  strokeColor: color,
+                  strokeWeight: 2
+              });
             });
 
         }

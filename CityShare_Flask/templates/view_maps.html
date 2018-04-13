@@ -1,8 +1,6 @@
-<!-- new -->
-
 {% extends 'index.html' %}
 
-{% block stylingblock %}
+{% block scriptblock %}
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -11,78 +9,80 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <!-- Link to static/view_maps_stylesheet.css -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/view_maps_stylesheet.css') }}">
-
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="/resources/demos/style.css">
+    <!-- Link to jQuery Library -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    <style>
-        #filter_div{
-            padding: 5px;
-            width: 40%;
-            border-radius: 5px;
-            text-align: center;
-            border: 1px solid;
-            margin-right: 25%;
-            margin-left: 25%;
-        }
-        #errdiv{
-            height: 50%;
-            width: 50%;
-            border: 1px solid grey;
-            border-radius: 5px;
-            margin: auto;
-            margin-top: 5%;
-            text-align: center;
-        }
-
-        #errtxt{
-            margin-top: 10%;
-            font-size: 1.5em;
-        }
-
-    </style>
+    <!-- link to static/Scripts/view_maps_JavaScript.js -->
+    <script src="{{ url_for('static',filename='Scripts/view_maps_JavaScript.js') }}"></script>
 
     <script>
-        $( function() {
-        $( "#datepicker" ).datepicker();
-        } );
+    function read_maps() {
+        Maps = {};
+            {% for map in maps -%}
+                Maps["{{ map.mapid }}"] = {
+                    creater: "{{ map.creater }}",
+                    title: "{{ map.title }}",
+                    expirydate: "{{ map.expirydate }}",
+                    issuedate: "{{ map.issuedate }}",
+                    description: "{{ map.description }}".replace("\n","")
+                };
+            {% endfor %}
+        return Maps;
+    }
+    var Maps = read_maps();
+    $(document).ready(function(){
+          $("#filter").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            if (value != "") {
+                for (var key in Maps) {
+                    title = (Maps[key]["title"]).toLowerCase();
+                    description = (Maps[key]["description"]).toLowerCase();
+                    creater = (Maps[key]["creater"]).toLowerCase();
+                    expirydate = (Maps[key]["expirydate"]).toLowerCase();
+                    issuedate = (Maps[key]["issuedate"]).toLowerCase();
+
+                    if ((title.includes(value)) || (description.includes(value))
+                        || (creater.includes(value)) || (expirydate.includes(value))
+                        || (issuedate.includes(value))) {
+                        $("#Map_"+key).css("display","inline-block");
+                    } else {
+                        $("#Map_"+key).css("display","none");
+                    }
+                }
+            } else {
+                for (var key in Maps) {
+                    $("#Map_"+key).css("display","inline-block");
+                }
+            }
+          });
+        });
     </script>
+
+{% endblock %}
+
+{% block stylingblock %}
+
+    <!-- Link to static/view_maps_stylesheet.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/view_maps_stylesheet.css') }}">
 
 {% endblock %}
 
 {% block content %}
 
-    <div id="filter_div">
-        <form id="form" action="/filter" method="post">
-            <legend> SEARCH</legend>
-            <div class="form-group">
-                <div class="form-group">
-                    <input name="title" type="title" class="form-control" id="title" placeholder="Search by Map Title" >
-                </div>
-                <div class="form-group">
-                    <input name="creater" type="creater" class="form-control" id="creater" placeholder="Search by Map Creater" >
-                </div>
-                <div class="form-group">
-                    <input class="form-control" id="datepicker" name="datepicker" placeholder="Search by Map Expiry Date: MM/DD/YYYY" type="text"/>
-                </div>
-                <div class="input-group">
-                    <button type="submit" id="btn" class="btn btn-success">Search</button> &nbsp
-                    <button type="button" id="cancelbtn" onclick="location.href='/showmaps'" class="btn btn-danger">showall</button>
-                </div>
-            </div>
-        </form>
-    </div>
+    <div class="container" id="Maps_box">
 
-    <div class="container">
+        <div class="input-group" style="width: 100%">
+            <span style="background-color: #ffffff;" class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+            <input class="form-control" name="filter" id="filter" type="text" placeholder="Søk med title, beskrivelse eller dato">
+        </div>
+
 
         {% for map in maps %}
 
-            <div class="map_box">
-                <img class="static_map_box img-thumbnail img-responsive"  src="https://maps.googleapis.com/maps/api/staticmap?center={{ map.center }}&zoom={{ map.zoom }}&size=400x400&key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY"/>
+            <div class="map_box" id="Map_{{ map.mapid }}">
+                <img class="static_map_box" src="https://maps.googleapis.com/maps/api/staticmap?center={{ map.center }}&zoom={{ map.zoom }}&size=400x400&key=AIzaSyACs8v_iZ7Y9-XS3KmTOL_JHvYGkmddERY"/>
 
                 <div class="btn-group btn-group-justified">
                     <a href="/EditMap?mapid={{ map.mapid }}" class="btn btn-primary">Åpne</a>
@@ -96,7 +96,7 @@
                     <a href="/feedback?mapid={{ map.mapid }}" class="btn btn-info">Tilbakemelding</a>
                 </div>
 
-                <div class="map_details_box">
+                <div class="map_details_box" id="Map_details_id_{{ map.mapid }}">
                     <p><strong>Laget av: </strong>{{ map.creater }}</p>
                     <p><strong>Tittel: </strong>{{ map.title }}</p>
                     <p><strong>Utstedet den: </strong>{{ map.issuedate }}</p>

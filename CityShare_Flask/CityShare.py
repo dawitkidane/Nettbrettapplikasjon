@@ -44,18 +44,18 @@ def signup():
         except mysql.connector.Error as err:
             conn.close()
             if err.msg == "Duplicate entry '" + username + "' for key 'PRIMARY'":
-                return render_template("signup.html", fail=True, msg="Brukernavn er allerede tatt, prøv en annen!")
+                return render_template("signup.html", fail=True, msg="Brukernavn er allerede tatt, prov en annen!")
         finally:
             conn.close()
 
-    return render_template("signup.html", fail=True, msg='Noe gikk galt, prøv igjen!')
+    return render_template("signup.html", fail=True, msg='Noe gikk galt, prov igjen!')
 
 
 @app.route('/Update_Account', methods=['POST', 'GET'])
 def update_account():
     username = session.get('Logged_in', None)
     if username is None:
-        return render_template("error.html", msg="Du må være innlogget for å åpne din konto !")
+        return render_template("error.html", msg="Du ma vaere innlogget for a apne din konto !")
 
     try:
         conn = get_db()
@@ -109,23 +109,16 @@ def login():
 
     conn = get_db()
     cursor = conn.cursor()
-    sql = "SELECT COUNT(username), is_admin FROM Persons WHERE BINARY username = %s AND BINARY login_pass = %s LIMIT 0, 1;"
+    sql = "SELECT COUNT(username) FROM Persons WHERE BINARY username = %s AND BINARY login_pass = %s LIMIT 0, 1;"
     try:
         cursor.execute(sql, (username, password))
         row = cursor.fetchone()
         does_exist = row[0]
-        is_admin = row[1]
-
-        Error = None
 
         if does_exist == 1:
             session["Logged_in"] = username
 
-            if is_admin == 1:
-                session["is_Admin"] = is_admin
-
-            return render_template("home.html", Error=Error)
-
+            return render_template("home.html")
 
         else:
             Error = "Feil brukernavn eller passord"
@@ -167,7 +160,7 @@ def search_for_users():
 def add_new_map():
     map_creater = session.get("Logged_in", None)
     if map_creater is None:
-        return render_template("error.html", msg="Du må være innlogget for å kunne lage et kart !")
+        return render_template("error.html", msg="Du ma vaere innlogget for a kunne lage et kart !")
 
     if request.method == 'GET':
         return render_template("new_map.html")
@@ -176,7 +169,6 @@ def add_new_map():
 
         title = request.form.get('title')
         description = request.form.get('description')
-
         date = request.form.get('date')
         enddate = date[6:] + "-" + date[0:2] + "-" + date[3:5]
 
@@ -247,7 +239,7 @@ def add_new_map():
         except mysql.connector.Error as err:
             conn.close()
             print(err.msg)
-            return render_template("new_map.html", Fail="En Feil har skjedd, prøv igjen!")
+            return render_template("new_map.html", Fail="En Feil har skjedd, prov igjen!")
 
         conn.close()
         return render_template("home.html")
@@ -257,7 +249,7 @@ def add_new_map():
 def show_maps():
     username = session.get("Logged_in", None)
     if username is None:
-        return render_template("error.html", msg="Du må være innlogget for å se dine kart !")
+        return render_template("error.html", msg="Du ma vaere innlogget for a se dine kart !")
 
     conn = get_db()
     cursor = conn.cursor()
@@ -272,7 +264,7 @@ def show_maps():
             mapids.append(entry[0])
 
         if mapids.__len__() == 0:
-            return render_template("view_maps.html", maps={}, msg="Det er ingen registrerte kart på deg!")
+            return render_template("view_maps.html", maps={}, msg="Det er ingen registrerte kart pa deg!")
 
         maps = []
         for mapid in mapids:
@@ -304,7 +296,7 @@ def show_maps():
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return render_template("view_maps.html", maps={}, Fail="En feil har skjedd, prøv igjen!")
+        return render_template("view_maps.html", maps={}, Fail="En feil har skjedd, prov igjen!")
 
     conn.close()
     return render_template("view_maps.html", maps=maps)
@@ -315,7 +307,7 @@ def edit_map():
     mapid = request.args.get('mapid')
     username = session.get("Logged_in", None)
     if username is None:
-        return render_template("error.html", msg="Du må være innlogget for å se ditt kart !")
+        return render_template("error.html", msg="Du ma vaere innlogget for a se ditt kart !")
 
     conn = get_db()
     cursor = conn.cursor()
@@ -409,12 +401,13 @@ def edit_map():
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return render_template("view_maps.html", Fail="En feil har skjedd, prøv igjen!")
+        return render_template("view_maps.html", Fail="En feil har skjedd, prov igjen!")
 
     conn.close()
     return render_template("edit_map.html", map=map, points_categories=points_categories,
                            roads_categories=roads_categories, questions=questions,
                            areas_categories=areas_categories)
+
 
 @app.route("/RegisterRespondoent", methods=['POST'])
 def RegisterRespondoent():
@@ -467,7 +460,7 @@ def view_map_result():
     mapid = request.args.get('mapid')
     username = session.get("Logged_in", None)
     if username is None:
-        return render_template("error.html", msg="Du må være innlogget for å se ditt kart !")
+        return render_template("error.html", msg="Du ma vaere innlogget for a se ditt kart !")
 
     conn = get_db()
     cursor = conn.cursor()
@@ -585,7 +578,7 @@ def view_map_result():
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return render_template("error.html", Fail="En feil har skjedd, prøv igjen!")
+        return render_template("error.html", Fail="En feil har skjedd, prov igjen!")
 
     conn.close()
 
@@ -624,7 +617,7 @@ def edit_shape():
         for name in data:
             names.append(name[0])
         if username not in names:
-            return "Du har ikke rettighet til å gjøre dette!"
+            return "Du har ikke rettighet til a gjore dette!"
 
         ## TODO: Do the requested task to update
         if Task == "Update":
@@ -672,7 +665,7 @@ def Download_Map_As_CSV_File():
     # TODO: Check if a user is logged in
     if username is None:
         return render_template("error.html",
-                               Fail="Du må være logget inn for å kunne laste ned ditt kart som en .csv fil!")
+                               Fail="Du ma vaere logget inn for a kunne laste ned ditt kart som en .csv fil!")
 
     # TODO: Determine if the logged_in_user who is requesing the map is an administrator or an interviewer
     All_Users = []
@@ -755,11 +748,12 @@ def Download_Map_As_CSV_File():
 
     return file_content
 
+
 @app.route("/UpdateMapDetails", methods=['POST', 'GET'])
 def Update_Map_Details():
     username = session.get("Logged_in", None)
     if username is None:
-        return render_template("error.html", msg="Du må være innlogget for å se å kunne redigere ditt kart !")
+        return render_template("error.html", msg="Du ma vaere innlogget for a se a kunne redigere ditt kart !")
 
     if request.method == "GET":
         Map_id = request.args.get("mapid")
@@ -777,7 +771,7 @@ def Update_Map_Details():
         cursor.execute(sql)
         data = cursor.fetchone()
         if data is None:
-            return render_template("error.html", msg="Du har ikke rettighet til å oppdatere dette kartet")
+            return render_template("error.html", msg="Du har ikke rettighet til a oppdatere dette kartet")
 
         Map = {}
         Map["id"] = data[0]
@@ -921,7 +915,7 @@ def Update_Map_Details():
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return render_template("error.html", Fail="Noe Feil har skjedd, prøv igjen")
+        return render_template("error.html", Fail="Noe Feil har skjedd, prov igjen")
 
 
 @app.route("/feedback", methods=['POST', 'GET'])
@@ -950,8 +944,6 @@ def feedback():
             conn = get_db()
             cursor = conn.cursor()
 
-            #sql = "SELECT name, cmt, date FROM Feedbacks WHERE feedback_id = " + str(
-             #   feed) + ";"
             sql = "SELECT P.first_name, P.last_name, date, cmt FROM Feedbacks AS F JOIN Persons AS P ON P.username = F.user " \
                   "WHERE feedback_id = 'MAP_ID';".replace("MAP_ID", str(feed))
 
@@ -1031,66 +1023,5 @@ def addfeedback():
     return render_template("home.html")
 
 
-@app.route("/filter", methods=['POST', 'GET'])
-def filter():
-    title = " "
-    creater = " "
-    username = session.get("Logged_in")
-    title = request.form.get("title")
-    creater = request.form.get("creater")
-    firstdate = request.form.get("datepicker")
-    date = firstdate[6:] + "-" + firstdate[0:2] + "-" + firstdate[3:5]
-
-    conn = get_db()
-    cursor = conn.cursor()
-    sql = "(SELECT map_id FROM Maps_Interviewers WHERE username = 'person')" \
-          "UNION ALL" \
-          "(SELECT map_id FROM Maps_Administrators WHERE username = 'person');".replace('person', str(username))
-    try:
-        cursor.execute(sql)
-        data = cursor.fetchall()
-        mapids = []
-        for entry in data:
-            mapids.append(entry[0])
-
-        if mapids.__len__() == 0:
-            return render_template("view_maps.html", maps={}, msg="Det er ingen registrerte kart på deg!")
-
-        maps = []
-        for mapid in mapids:
-            map = {
-                "mapid": mapid,
-            }
-            conn = get_db()
-            cursor = conn.cursor()
-
-            sql = "SELECT map_creater, title, date(start_date), end_date, description, astext(Centroid(geo_boundery)), zoom FROM Maps WHERE map_id = " + str(
-                mapid) + ";"
-
-            cursor.execute(sql)
-            data = cursor.fetchone()
-            map['creater'] = str(data[0])
-            map['title'] = str(data[1])
-            map['issuedate'] = str(data[2])
-            map['expirydate'] = str(data[3])
-            map['description'] = str(data[4])
-            map['center'] = (str(data[5]).strip("POINT(").strip(")")).replace(" ", ",")
-            map['zoom'] = str(data[6])
-
-            if (str(creater.lower()) == str(data[0].lower()) or str(title.lower()) == str(data[1].lower()) or str(date) == str(data[3])):
-                maps.append(map)
-
-        if not maps:
-            session["err"] = "INGEN TREFF!"
-    except mysql.connector.Error as err:
-        conn.close()
-        print(err.msg)
-        return render_template("view_maps.html", maps={}, Fail="En feil har skjedd, prøv igjen!")
-
-    conn.close()
-
-    return render_template("view_maps.html", maps=maps)
-
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0',port="5000")
