@@ -4,8 +4,6 @@
     <list default="true" id="f8e2d6b3-469e-4397-bd43-99d303659aa5" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/CityShare_Flask/CityShare.py" afterPath="$PROJECT_DIR$/CityShare_Flask/CityShare.py" />
-      <change beforePath="$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql" afterPath="$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql" />
-      <change beforePath="$PROJECT_DIR$/CityShare_Flask/templates/change_map.html" afterPath="$PROJECT_DIR$/CityShare_Flask/templates/change_map.html" />
       <change beforePath="$PROJECT_DIR$/CityShare_Flask/templates/feedback.html" afterPath="$PROJECT_DIR$/CityShare_Flask/templates/feedback.html" />
       <change beforePath="$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html" afterPath="$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html" />
     </list>
@@ -17,137 +15,25 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Nettbrettapplikasjon$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1523191405280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CityShare_Flask" />
+    <SUITE FILE_PATH="coverage/Nettbrettapplikasjon$CityShare.coverage" NAME="CityShare Coverage Results" MODIFIED="1523482828965" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CityShare_Flask" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_TABLE_DETAILS" value="true" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <expand />
+    <select />
   </component>
   <component name="FavoritesManager">
     <favorites_list name="Nettbrettapplikasjon" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CityShare.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CityShare_Flask/CityShare.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="927" column="19" lean-forward="false" selection-start-line="927" selection-start-column="19" selection-end-line="927" selection-end-column="19" />
-              <folding>
-                <element signature="e#546#581#0" expanded="false" />
-                <element signature="e#648#1830#0" expanded="false" />
-                <element signature="e#2042#2951#0" expanded="false" />
-                <element signature="e#3026#3579#0" expanded="false" />
-                <element signature="e#7125#8753#0" expanded="false" />
-                <element signature="e#18360#23727#0" expanded="false" />
-                <element signature="e#23798#27564#0" expanded="false" />
-                <element signature="e#27650#30026#0" expanded="false" />
-                <marker date="1523105109642" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-                <marker date="1523105109642" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-                <marker date="1523105109642" expanded="true" signature="3176:3251" ph="SELECT usern... Persons" />
-                <marker date="1523105109642" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
-                <marker date="1523105109642" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
-                <marker date="1523105109642" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
-                <marker date="1523105109642" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
-                <marker date="1523105109642" expanded="true" signature="7916:8046" ph="SELECT map_c... " />
-                <marker date="1523105109642" expanded="true" signature="9078:9215" ph="SELECT M.use... Maps_Interviewers" />
-                <marker date="1523105109642" expanded="true" signature="9473:9616" ph="SELECT M.use... Maps_Administrators" />
-                <marker date="1523105109642" expanded="true" signature="10334:10500" ph="SELECT map_c... Maps" />
-                <marker date="1523105109642" expanded="true" signature="11171:11281" ph="SELECT categ... Maps_Categories" />
-                <marker date="1523105109642" expanded="true" signature="12053:12123" ph="SELECT quest... Maps_Questions" />
-                <marker date="1523105109642" expanded="true" signature="13320:13457" ph="SELECT M.use... Maps_Interviewers" />
-                <marker date="1523105109642" expanded="true" signature="13715:13858" ph="SELECT M.use... Maps_Administrators" />
-                <marker date="1523105109642" expanded="true" signature="14283:14449" ph="SELECT map_c... Maps" />
-                <marker date="1523105109642" expanded="true" signature="15120:15190" ph="SELECT quest... Maps_Questions" />
-                <marker date="1523105109642" expanded="true" signature="15609:15809" ph="SELECT A.res... Respondent_Answers" />
-                <marker date="1523105109642" expanded="true" signature="16260:16576" ph="SELECT S.sha... Shapes" />
-                <marker date="1523105109642" expanded="true" signature="18764:18901" ph="SELECT M.use... Maps_Interviewers" />
-                <marker date="1523105109642" expanded="true" signature="19159:19302" ph="SELECT M.use... Maps_Administrators" />
-                <marker date="1523105109642" expanded="true" signature="19727:19893" ph="SELECT map_c... Maps" />
-                <marker date="1523105109642" expanded="true" signature="20564:20634" ph="SELECT quest... Maps_Questions" />
-                <marker date="1523105109642" expanded="true" signature="21053:21253" ph="SELECT A.res... Respondent_Answers" />
-                <marker date="1523105109642" expanded="true" signature="21704:22020" ph="SELECT S.sha... Shapes" />
-                <marker date="1523105109642" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
-                <marker date="1523105109642" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
-                <marker date="1523105109642" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
-                <marker date="1523105109642" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
-                <marker date="1523105109642" expanded="true" signature="28669:28720" ph="INSERT INTO Maps_Respondents... " />
-                <marker date="1523105109642" expanded="true" signature="28996:29079" ph="INSERT INTO Respondent_Answers... " />
-                <marker date="1523105109642" expanded="true" signature="31609:31668" ph="SELECT quest... Maps_Questions" />
-                <marker date="1523105109642" expanded="true" signature="31940:32001" ph="SELECT astex... Maps" />
-                <marker date="1523105109642" expanded="true" signature="32371:32690" ph="SELECT astex... Shapes" />
-                <marker date="1523105109642" expanded="true" signature="33606:33828" ph="SELECT Q.que... Respondent_Answers" />
-                <marker date="1523105109642" expanded="true" signature="34456:34489" ph="SELECT feedb... Feedbacks" />
-                <marker date="1523105109642" expanded="true" signature="34456:34504" ph="SELECT feedb... Feedbacks" />
-                <marker date="1523105109642" expanded="true" signature="34456:34505" ph="SELECT feedb... Feedbacks" />
-                <marker date="1523105109642" expanded="true" signature="34890:34948" ph="SELECT name,... " />
-                <marker date="1523105109642" expanded="true" signature="35005:35161" ph="SELECT P.fir... " />
-                <marker date="1523105109642" expanded="true" signature="36074:36144" ph="INSERT INTO Feedbacks... " />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="feedback.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/feedback.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="74" column="71" lean-forward="false" selection-start-line="74" selection-start-column="71" selection-end-line="74" selection-end-column="71" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="view_maps.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="378">
-              <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="change_map.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/change_map.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="41" column="57" lean-forward="false" selection-start-line="41" selection-start-column="57" selection-end-line="41" selection-end-column="57" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="new_map_JavaScript.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Scripts/new_map_JavaScript.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="237" column="35" lean-forward="false" selection-start-line="237" selection-start-column="35" selection-end-line="237" selection-end-column="35" />
-              <folding>
-                <marker date="1522775888999" expanded="true" signature="13923:13981" ph="..." />
-                <marker date="1522775888999" expanded="true" signature="15838:15896" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="new_map.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/new_map.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="41" column="58" lean-forward="false" selection-start-line="41" selection-start-column="58" selection-end-line="41" selection-end-column="58" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MySqlSchema.sql" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1332">
-              <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -196,10 +82,10 @@
         <option value="$PROJECT_DIR$/CityShare_Flask/templates/error.html" />
         <option value="$PROJECT_DIR$/CityShare_Flask/templates/home.html" />
         <option value="$PROJECT_DIR$/CityShare_Flask/templates/change_map.html" />
-        <option value="$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html" />
-        <option value="$PROJECT_DIR$/CityShare_Flask/templates/feedback.html" />
-        <option value="$PROJECT_DIR$/CityShare_Flask/CityShare.py" />
         <option value="$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql" />
+        <option value="$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html" />
+        <option value="$PROJECT_DIR$/CityShare_Flask/CityShare.py" />
+        <option value="$PROJECT_DIR$/CityShare_Flask/templates/feedback.html" />
       </list>
     </option>
   </component>
@@ -210,10 +96,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="59" />
+    <option name="x" value="46" />
     <option name="y" value="23" />
-    <option name="width" value="1264" />
-    <option name="height" value="835" />
+    <option name="width" value="1287" />
+    <option name="height" value="837" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -230,7 +116,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -238,48 +123,11 @@
               <item name="Nettbrettapplikasjon" type="b2602c69:ProjectViewProjectNode" />
               <item name="Nettbrettapplikasjon" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="Nettbrettapplikasjon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Nettbrettapplikasjon" type="462c0819:PsiDirectoryNode" />
-              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Nettbrettapplikasjon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Nettbrettapplikasjon" type="462c0819:PsiDirectoryNode" />
-              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Nettbrettapplikasjon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Nettbrettapplikasjon" type="462c0819:PsiDirectoryNode" />
-              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="Datebase" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Nettbrettapplikasjon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Nettbrettapplikasjon" type="462c0819:PsiDirectoryNode" />
-              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="Scripts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Nettbrettapplikasjon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Nettbrettapplikasjon" type="462c0819:PsiDirectoryNode" />
-              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="Stylesheets" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Nettbrettapplikasjon" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Nettbrettapplikasjon" type="462c0819:PsiDirectoryNode" />
-              <item name="CityShare_Flask" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -360,24 +208,23 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="59" y="23" width="1264" height="835" extended-state="0" />
-    <editor active="true" />
+    <frame x="46" y="23" width="1287" height="837" extended-state="0" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32837838" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33783785" sideWeight="0.50377357" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33783785" sideWeight="0.49622643" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32702702" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33692724" sideWeight="0.49622643" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.200491" sideWeight="0.48686868" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17751004" sideWeight="0.48686868" order="0" side_tool="false" content_ui="combo" />
       <window_info id="R Packages" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="R Graphics" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24872057" sideWeight="0.49457994" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20752798" sideWeight="0.5131313" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -395,77 +242,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="13" />
+      <option name="time" value="14" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CityShare_Flask/CityShare.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#648#1830#0" expanded="false" />
-            <element signature="e#2042#2951#0" expanded="false" />
-            <element signature="e#3026#3579#0" expanded="false" />
-            <element signature="e#7125#8753#0" expanded="false" />
-            <element signature="e#18360#23727#0" expanded="false" />
-            <element signature="e#23798#27564#0" expanded="false" />
-            <element signature="e#27650#30026#0" expanded="false" />
-            <marker date="1523105109642" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1523105109642" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1523105109642" expanded="true" signature="3176:3251" ph="SELECT usern... Persons" />
-            <marker date="1523105109642" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="7916:8046" ph="SELECT map_c... " />
-            <marker date="1523105109642" expanded="true" signature="9078:9215" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="9473:9616" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="10334:10500" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="11171:11281" ph="SELECT categ... Maps_Categories" />
-            <marker date="1523105109642" expanded="true" signature="12053:12123" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="13320:13457" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="13715:13858" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="14283:14449" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="15120:15190" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="15609:15809" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="16260:16576" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="18764:18901" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="19159:19302" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="19727:19893" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="20564:20634" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="21053:21253" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="21704:22020" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="28669:28720" ph="INSERT INTO Maps_Respondents... " />
-            <marker date="1523105109642" expanded="true" signature="28996:29079" ph="INSERT INTO Respondent_Answers... " />
-            <marker date="1523105109642" expanded="true" signature="31609:31668" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="31940:32001" ph="SELECT astex... Maps" />
-            <marker date="1523105109642" expanded="true" signature="32371:32690" ph="SELECT astex... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="33606:33828" ph="SELECT Q.que... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="34456:34489" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34504" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34505" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34890:34948" ph="SELECT name,... " />
-            <marker date="1523105109642" expanded="true" signature="35005:35161" ph="SELECT P.fir... " />
-            <marker date="1523105109642" expanded="true" signature="36074:36144" ph="INSERT INTO Feedbacks... " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/view_map_result.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12375">
-          <caret line="825" column="108" lean-forward="false" selection-start-line="825" selection-start-column="85" selection-end-line="825" selection-end-column="108" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/change_map.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="615">
@@ -527,55 +308,22 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#648#1830#0" expanded="false" />
-            <element signature="e#2042#2951#0" expanded="false" />
-            <element signature="e#3026#3579#0" expanded="false" />
-            <element signature="e#7125#8753#0" expanded="false" />
-            <element signature="e#18360#23727#0" expanded="false" />
-            <element signature="e#23798#27564#0" expanded="false" />
-            <element signature="e#27650#30026#0" expanded="false" />
-            <marker date="1523105109642" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1523105109642" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1523105109642" expanded="true" signature="3176:3251" ph="SELECT usern... Persons" />
-            <marker date="1523105109642" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="7916:8046" ph="SELECT map_c... " />
-            <marker date="1523105109642" expanded="true" signature="9078:9215" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="9473:9616" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="10334:10500" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="11171:11281" ph="SELECT categ... Maps_Categories" />
-            <marker date="1523105109642" expanded="true" signature="12053:12123" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="13320:13457" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="13715:13858" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="14283:14449" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="15120:15190" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="15609:15809" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="16260:16576" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="18764:18901" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="19159:19302" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="19727:19893" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="20564:20634" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="21053:21253" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="21704:22020" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="28669:28720" ph="INSERT INTO Maps_Respondents... " />
-            <marker date="1523105109642" expanded="true" signature="28996:29079" ph="INSERT INTO Respondent_Answers... " />
-            <marker date="1523105109642" expanded="true" signature="31609:31668" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="31940:32001" ph="SELECT astex... Maps" />
-            <marker date="1523105109642" expanded="true" signature="32371:32690" ph="SELECT astex... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="33606:33828" ph="SELECT Q.que... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="34456:34489" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34504" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34505" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34890:34948" ph="SELECT name,... " />
-            <marker date="1523105109642" expanded="true" signature="35005:35161" ph="SELECT P.fir... " />
-            <marker date="1523105109642" expanded="true" signature="36074:36144" ph="INSERT INTO Feedbacks... " />
+            <element signature="e#656#1847#0" expanded="false" />
+            <element signature="e#1931#3630#0" expanded="false" />
+            <element signature="e#3675#3779#0" expanded="false" />
+            <element signature="e#3845#4754#0" expanded="false" />
+            <element signature="e#4830#5383#0" expanded="false" />
+            <element signature="e#5459#9033#0" expanded="false" />
+            <element signature="e#9098#10969#0" expanded="false" />
+            <element signature="e#11032#15154#0" expanded="false" />
+            <element signature="e#15240#16906#0" expanded="false" />
+            <element signature="e#16982#22479#0" expanded="false" />
+            <element signature="e#22548#24633#0" expanded="false" />
+            <element signature="e#24726#28892#0" expanded="false" />
+            <element signature="e#28981#36558#0" expanded="false" />
+            <element signature="e#36588#38591#0" expanded="false" />
+            <element signature="e#38770#39222#0" expanded="false" />
+            <element signature="e#39290#41391#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -585,55 +333,22 @@
         <state relative-caret-position="1890">
           <caret line="491" column="25" lean-forward="false" selection-start-line="491" selection-start-column="25" selection-end-line="491" selection-end-column="25" />
           <folding>
-            <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#648#1830#0" expanded="false" />
-            <element signature="e#2042#2951#0" expanded="false" />
-            <element signature="e#3026#3579#0" expanded="false" />
-            <element signature="e#7125#8753#0" expanded="false" />
-            <element signature="e#18360#23727#0" expanded="false" />
-            <element signature="e#23798#27564#0" expanded="false" />
-            <element signature="e#27650#30026#0" expanded="false" />
-            <marker date="1523105109642" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1523105109642" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1523105109642" expanded="true" signature="3176:3251" ph="SELECT usern... Persons" />
-            <marker date="1523105109642" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="7916:8046" ph="SELECT map_c... " />
-            <marker date="1523105109642" expanded="true" signature="9078:9215" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="9473:9616" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="10334:10500" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="11171:11281" ph="SELECT categ... Maps_Categories" />
-            <marker date="1523105109642" expanded="true" signature="12053:12123" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="13320:13457" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="13715:13858" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="14283:14449" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="15120:15190" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="15609:15809" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="16260:16576" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="18764:18901" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="19159:19302" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="19727:19893" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="20564:20634" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="21053:21253" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="21704:22020" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="28669:28720" ph="INSERT INTO Maps_Respondents... " />
-            <marker date="1523105109642" expanded="true" signature="28996:29079" ph="INSERT INTO Respondent_Answers... " />
-            <marker date="1523105109642" expanded="true" signature="31609:31668" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="31940:32001" ph="SELECT astex... Maps" />
-            <marker date="1523105109642" expanded="true" signature="32371:32690" ph="SELECT astex... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="33606:33828" ph="SELECT Q.que... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="34456:34489" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34504" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34505" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34890:34948" ph="SELECT name,... " />
-            <marker date="1523105109642" expanded="true" signature="35005:35161" ph="SELECT P.fir... " />
-            <marker date="1523105109642" expanded="true" signature="36074:36144" ph="INSERT INTO Feedbacks... " />
+            <element signature="e#656#1847#0" expanded="false" />
+            <element signature="e#1931#3630#0" expanded="false" />
+            <element signature="e#3675#3779#0" expanded="false" />
+            <element signature="e#3845#4754#0" expanded="false" />
+            <element signature="e#4830#5383#0" expanded="false" />
+            <element signature="e#5459#9033#0" expanded="false" />
+            <element signature="e#9098#10969#0" expanded="false" />
+            <element signature="e#11032#15154#0" expanded="false" />
+            <element signature="e#15240#16906#0" expanded="false" />
+            <element signature="e#16982#22479#0" expanded="false" />
+            <element signature="e#22548#24633#0" expanded="false" />
+            <element signature="e#24726#28892#0" expanded="false" />
+            <element signature="e#28981#36558#0" expanded="false" />
+            <element signature="e#36588#38591#0" expanded="false" />
+            <element signature="e#38770#39222#0" expanded="false" />
+            <element signature="e#39290#41391#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -651,55 +366,22 @@
         <state relative-caret-position="1890">
           <caret line="491" column="25" lean-forward="false" selection-start-line="491" selection-start-column="25" selection-end-line="491" selection-end-column="25" />
           <folding>
-            <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#648#1830#0" expanded="false" />
-            <element signature="e#2042#2951#0" expanded="false" />
-            <element signature="e#3026#3579#0" expanded="false" />
-            <element signature="e#7125#8753#0" expanded="false" />
-            <element signature="e#18360#23727#0" expanded="false" />
-            <element signature="e#23798#27564#0" expanded="false" />
-            <element signature="e#27650#30026#0" expanded="false" />
-            <marker date="1523105109642" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1523105109642" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1523105109642" expanded="true" signature="3176:3251" ph="SELECT usern... Persons" />
-            <marker date="1523105109642" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="7916:8046" ph="SELECT map_c... " />
-            <marker date="1523105109642" expanded="true" signature="9078:9215" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="9473:9616" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="10334:10500" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="11171:11281" ph="SELECT categ... Maps_Categories" />
-            <marker date="1523105109642" expanded="true" signature="12053:12123" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="13320:13457" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="13715:13858" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="14283:14449" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="15120:15190" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="15609:15809" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="16260:16576" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="18764:18901" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="19159:19302" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="19727:19893" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="20564:20634" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="21053:21253" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="21704:22020" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="28669:28720" ph="INSERT INTO Maps_Respondents... " />
-            <marker date="1523105109642" expanded="true" signature="28996:29079" ph="INSERT INTO Respondent_Answers... " />
-            <marker date="1523105109642" expanded="true" signature="31609:31668" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="31940:32001" ph="SELECT astex... Maps" />
-            <marker date="1523105109642" expanded="true" signature="32371:32690" ph="SELECT astex... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="33606:33828" ph="SELECT Q.que... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="34456:34489" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34504" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34505" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34890:34948" ph="SELECT name,... " />
-            <marker date="1523105109642" expanded="true" signature="35005:35161" ph="SELECT P.fir... " />
-            <marker date="1523105109642" expanded="true" signature="36074:36144" ph="INSERT INTO Feedbacks... " />
+            <element signature="e#656#1847#0" expanded="false" />
+            <element signature="e#1931#3630#0" expanded="false" />
+            <element signature="e#3675#3779#0" expanded="false" />
+            <element signature="e#3845#4754#0" expanded="false" />
+            <element signature="e#4830#5383#0" expanded="false" />
+            <element signature="e#5459#9033#0" expanded="false" />
+            <element signature="e#9098#10969#0" expanded="false" />
+            <element signature="e#11032#15154#0" expanded="false" />
+            <element signature="e#15240#16906#0" expanded="false" />
+            <element signature="e#16982#22479#0" expanded="false" />
+            <element signature="e#22548#24633#0" expanded="false" />
+            <element signature="e#24726#28892#0" expanded="false" />
+            <element signature="e#28981#36558#0" expanded="false" />
+            <element signature="e#36588#38591#0" expanded="false" />
+            <element signature="e#38770#39222#0" expanded="false" />
+            <element signature="e#39290#41391#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -717,55 +399,22 @@
         <state relative-caret-position="1890">
           <caret line="491" column="25" lean-forward="false" selection-start-line="491" selection-start-column="25" selection-end-line="491" selection-end-column="25" />
           <folding>
-            <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#648#1830#0" expanded="false" />
-            <element signature="e#2042#2951#0" expanded="false" />
-            <element signature="e#3026#3579#0" expanded="false" />
-            <element signature="e#7125#8753#0" expanded="false" />
-            <element signature="e#18360#23727#0" expanded="false" />
-            <element signature="e#23798#27564#0" expanded="false" />
-            <element signature="e#27650#30026#0" expanded="false" />
-            <marker date="1523105109642" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1523105109642" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1523105109642" expanded="true" signature="3176:3251" ph="SELECT usern... Persons" />
-            <marker date="1523105109642" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="7916:8046" ph="SELECT map_c... " />
-            <marker date="1523105109642" expanded="true" signature="9078:9215" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="9473:9616" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="10334:10500" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="11171:11281" ph="SELECT categ... Maps_Categories" />
-            <marker date="1523105109642" expanded="true" signature="12053:12123" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="13320:13457" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="13715:13858" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="14283:14449" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="15120:15190" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="15609:15809" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="16260:16576" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="18764:18901" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="19159:19302" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="19727:19893" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="20564:20634" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="21053:21253" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="21704:22020" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="28669:28720" ph="INSERT INTO Maps_Respondents... " />
-            <marker date="1523105109642" expanded="true" signature="28996:29079" ph="INSERT INTO Respondent_Answers... " />
-            <marker date="1523105109642" expanded="true" signature="31609:31668" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="31940:32001" ph="SELECT astex... Maps" />
-            <marker date="1523105109642" expanded="true" signature="32371:32690" ph="SELECT astex... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="33606:33828" ph="SELECT Q.que... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="34456:34489" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34504" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34505" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34890:34948" ph="SELECT name,... " />
-            <marker date="1523105109642" expanded="true" signature="35005:35161" ph="SELECT P.fir... " />
-            <marker date="1523105109642" expanded="true" signature="36074:36144" ph="INSERT INTO Feedbacks... " />
+            <element signature="e#656#1847#0" expanded="false" />
+            <element signature="e#1931#3630#0" expanded="false" />
+            <element signature="e#3675#3779#0" expanded="false" />
+            <element signature="e#3845#4754#0" expanded="false" />
+            <element signature="e#4830#5383#0" expanded="false" />
+            <element signature="e#5459#9033#0" expanded="false" />
+            <element signature="e#9098#10969#0" expanded="false" />
+            <element signature="e#11032#15154#0" expanded="false" />
+            <element signature="e#15240#16906#0" expanded="false" />
+            <element signature="e#16982#22479#0" expanded="false" />
+            <element signature="e#22548#24633#0" expanded="false" />
+            <element signature="e#24726#28892#0" expanded="false" />
+            <element signature="e#28981#36558#0" expanded="false" />
+            <element signature="e#36588#38591#0" expanded="false" />
+            <element signature="e#38770#39222#0" expanded="false" />
+            <element signature="e#39290#41391#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -791,55 +440,22 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#648#1830#0" expanded="false" />
-            <element signature="e#2042#2951#0" expanded="false" />
-            <element signature="e#3026#3579#0" expanded="false" />
-            <element signature="e#7125#8753#0" expanded="false" />
-            <element signature="e#18360#23727#0" expanded="false" />
-            <element signature="e#23798#27564#0" expanded="false" />
-            <element signature="e#27650#30026#0" expanded="false" />
-            <marker date="1523105109642" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1523105109642" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1523105109642" expanded="true" signature="3176:3251" ph="SELECT usern... Persons" />
-            <marker date="1523105109642" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="7916:8046" ph="SELECT map_c... " />
-            <marker date="1523105109642" expanded="true" signature="9078:9215" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="9473:9616" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="10334:10500" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="11171:11281" ph="SELECT categ... Maps_Categories" />
-            <marker date="1523105109642" expanded="true" signature="12053:12123" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="13320:13457" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="13715:13858" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="14283:14449" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="15120:15190" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="15609:15809" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="16260:16576" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="18764:18901" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="19159:19302" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="19727:19893" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="20564:20634" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="21053:21253" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="21704:22020" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="28669:28720" ph="INSERT INTO Maps_Respondents... " />
-            <marker date="1523105109642" expanded="true" signature="28996:29079" ph="INSERT INTO Respondent_Answers... " />
-            <marker date="1523105109642" expanded="true" signature="31609:31668" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="31940:32001" ph="SELECT astex... Maps" />
-            <marker date="1523105109642" expanded="true" signature="32371:32690" ph="SELECT astex... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="33606:33828" ph="SELECT Q.que... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="34456:34489" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34504" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34505" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34890:34948" ph="SELECT name,... " />
-            <marker date="1523105109642" expanded="true" signature="35005:35161" ph="SELECT P.fir... " />
-            <marker date="1523105109642" expanded="true" signature="36074:36144" ph="INSERT INTO Feedbacks... " />
+            <element signature="e#656#1847#0" expanded="false" />
+            <element signature="e#1931#3630#0" expanded="false" />
+            <element signature="e#3675#3779#0" expanded="false" />
+            <element signature="e#3845#4754#0" expanded="false" />
+            <element signature="e#4830#5383#0" expanded="false" />
+            <element signature="e#5459#9033#0" expanded="false" />
+            <element signature="e#9098#10969#0" expanded="false" />
+            <element signature="e#11032#15154#0" expanded="false" />
+            <element signature="e#15240#16906#0" expanded="false" />
+            <element signature="e#16982#22479#0" expanded="false" />
+            <element signature="e#22548#24633#0" expanded="false" />
+            <element signature="e#24726#28892#0" expanded="false" />
+            <element signature="e#28981#36558#0" expanded="false" />
+            <element signature="e#36588#38591#0" expanded="false" />
+            <element signature="e#38770#39222#0" expanded="false" />
+            <element signature="e#39290#41391#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -893,55 +509,22 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#648#1830#0" expanded="false" />
-            <element signature="e#2042#2951#0" expanded="false" />
-            <element signature="e#3026#3579#0" expanded="false" />
-            <element signature="e#7125#8753#0" expanded="false" />
-            <element signature="e#18360#23727#0" expanded="false" />
-            <element signature="e#23798#27564#0" expanded="false" />
-            <element signature="e#27650#30026#0" expanded="false" />
-            <marker date="1523105109642" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1523105109642" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1523105109642" expanded="true" signature="3176:3251" ph="SELECT usern... Persons" />
-            <marker date="1523105109642" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="7916:8046" ph="SELECT map_c... " />
-            <marker date="1523105109642" expanded="true" signature="9078:9215" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="9473:9616" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="10334:10500" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="11171:11281" ph="SELECT categ... Maps_Categories" />
-            <marker date="1523105109642" expanded="true" signature="12053:12123" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="13320:13457" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="13715:13858" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="14283:14449" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="15120:15190" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="15609:15809" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="16260:16576" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="18764:18901" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="19159:19302" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="19727:19893" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="20564:20634" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="21053:21253" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="21704:22020" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="28669:28720" ph="INSERT INTO Maps_Respondents... " />
-            <marker date="1523105109642" expanded="true" signature="28996:29079" ph="INSERT INTO Respondent_Answers... " />
-            <marker date="1523105109642" expanded="true" signature="31609:31668" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="31940:32001" ph="SELECT astex... Maps" />
-            <marker date="1523105109642" expanded="true" signature="32371:32690" ph="SELECT astex... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="33606:33828" ph="SELECT Q.que... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="34456:34489" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34504" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34505" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34890:34948" ph="SELECT name,... " />
-            <marker date="1523105109642" expanded="true" signature="35005:35161" ph="SELECT P.fir... " />
-            <marker date="1523105109642" expanded="true" signature="36074:36144" ph="INSERT INTO Feedbacks... " />
+            <element signature="e#656#1847#0" expanded="false" />
+            <element signature="e#1931#3630#0" expanded="false" />
+            <element signature="e#3675#3779#0" expanded="false" />
+            <element signature="e#3845#4754#0" expanded="false" />
+            <element signature="e#4830#5383#0" expanded="false" />
+            <element signature="e#5459#9033#0" expanded="false" />
+            <element signature="e#9098#10969#0" expanded="false" />
+            <element signature="e#11032#15154#0" expanded="false" />
+            <element signature="e#15240#16906#0" expanded="false" />
+            <element signature="e#16982#22479#0" expanded="false" />
+            <element signature="e#22548#24633#0" expanded="false" />
+            <element signature="e#24726#28892#0" expanded="false" />
+            <element signature="e#28981#36558#0" expanded="false" />
+            <element signature="e#36588#38591#0" expanded="false" />
+            <element signature="e#38770#39222#0" expanded="false" />
+            <element signature="e#39290#41391#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -965,55 +548,22 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#648#1830#0" expanded="false" />
-            <element signature="e#2042#2951#0" expanded="false" />
-            <element signature="e#3026#3579#0" expanded="false" />
-            <element signature="e#7125#8753#0" expanded="false" />
-            <element signature="e#18360#23727#0" expanded="false" />
-            <element signature="e#23798#27564#0" expanded="false" />
-            <element signature="e#27650#30026#0" expanded="false" />
-            <marker date="1523105109642" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1523105109642" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1523105109642" expanded="true" signature="3176:3251" ph="SELECT usern... Persons" />
-            <marker date="1523105109642" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="7916:8046" ph="SELECT map_c... " />
-            <marker date="1523105109642" expanded="true" signature="9078:9215" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="9473:9616" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="10334:10500" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="11171:11281" ph="SELECT categ... Maps_Categories" />
-            <marker date="1523105109642" expanded="true" signature="12053:12123" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="13320:13457" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="13715:13858" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="14283:14449" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="15120:15190" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="15609:15809" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="16260:16576" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="18764:18901" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="19159:19302" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="19727:19893" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="20564:20634" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="21053:21253" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="21704:22020" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="28669:28720" ph="INSERT INTO Maps_Respondents... " />
-            <marker date="1523105109642" expanded="true" signature="28996:29079" ph="INSERT INTO Respondent_Answers... " />
-            <marker date="1523105109642" expanded="true" signature="31609:31668" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="31940:32001" ph="SELECT astex... Maps" />
-            <marker date="1523105109642" expanded="true" signature="32371:32690" ph="SELECT astex... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="33606:33828" ph="SELECT Q.que... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="34456:34489" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34504" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34505" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34890:34948" ph="SELECT name,... " />
-            <marker date="1523105109642" expanded="true" signature="35005:35161" ph="SELECT P.fir... " />
-            <marker date="1523105109642" expanded="true" signature="36074:36144" ph="INSERT INTO Feedbacks... " />
+            <element signature="e#656#1847#0" expanded="false" />
+            <element signature="e#1931#3630#0" expanded="false" />
+            <element signature="e#3675#3779#0" expanded="false" />
+            <element signature="e#3845#4754#0" expanded="false" />
+            <element signature="e#4830#5383#0" expanded="false" />
+            <element signature="e#5459#9033#0" expanded="false" />
+            <element signature="e#9098#10969#0" expanded="false" />
+            <element signature="e#11032#15154#0" expanded="false" />
+            <element signature="e#15240#16906#0" expanded="false" />
+            <element signature="e#16982#22479#0" expanded="false" />
+            <element signature="e#22548#24633#0" expanded="false" />
+            <element signature="e#24726#28892#0" expanded="false" />
+            <element signature="e#28981#36558#0" expanded="false" />
+            <element signature="e#36588#38591#0" expanded="false" />
+            <element signature="e#38770#39222#0" expanded="false" />
+            <element signature="e#39290#41391#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1100,112 +650,97 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/new_map.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="41" column="58" lean-forward="false" selection-start-line="41" selection-start-column="58" selection-end-line="41" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Scripts/new_map_JavaScript.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="237" column="35" lean-forward="false" selection-start-line="237" selection-start-column="35" selection-end-line="237" selection-end-column="35" />
-          <folding>
-            <marker date="1522775888999" expanded="true" signature="13923:13981" ph="..." />
-            <marker date="1522775888999" expanded="true" signature="15838:15896" ph="..." />
-          </folding>
+        <state relative-caret-position="663">
+          <caret line="177" column="0" lean-forward="false" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/change_map.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
-          <caret line="41" column="57" lean-forward="false" selection-start-line="41" selection-start-column="57" selection-end-line="41" selection-end-column="57" />
+          <caret line="41" column="56" lean-forward="false" selection-start-line="41" selection-start-column="56" selection-end-line="41" selection-end-column="56" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Stylesheets/view_maps_stylesheet.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="2" lean-forward="false" selection-start-line="1" selection-start-column="2" selection-end-line="7" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/new_map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-15">
+          <caret line="42" column="58" lean-forward="false" selection-start-line="42" selection-start-column="58" selection-end-line="42" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Desktop/UIS/Webprogrammering/Workspace/Assignments/BookingSite/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1945">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1523473361255" expanded="true" signature="898:920" ph="SELECT * FRO... property" />
+            <marker date="1523473361255" expanded="true" signature="1610:1656" ph="SELECT * FRO... property" />
+            <marker date="1523473361255" expanded="true" signature="5729:5897" ph="INSERT INTO user_details... " />
+            <marker date="1523473361255" expanded="true" signature="6202:6235" ph="SELECT order... user_details" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/view_maps.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+        <state relative-caret-position="148">
+          <caret line="73" column="132" lean-forward="true" selection-start-line="73" selection-start-column="19" selection-end-line="73" selection-end-column="132" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CityShare_Flask/templates/feedback.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="74" column="71" lean-forward="false" selection-start-line="74" selection-start-column="71" selection-end-line="74" selection-end-column="71" />
+        <state relative-caret-position="36">
+          <caret line="6" column="12" lean-forward="true" selection-start-line="6" selection-start-column="12" selection-end-line="7" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CityShare_Flask/CityShare.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="927" column="19" lean-forward="false" selection-start-line="927" selection-start-column="19" selection-end-line="927" selection-end-column="19" />
+        <state relative-caret-position="340">
+          <caret line="1084" column="27" lean-forward="true" selection-start-line="1084" selection-start-column="27" selection-end-line="1084" selection-end-column="27" />
           <folding>
-            <element signature="e#546#581#0" expanded="false" />
-            <element signature="e#648#1830#0" expanded="false" />
-            <element signature="e#2042#2951#0" expanded="false" />
-            <element signature="e#3026#3579#0" expanded="false" />
-            <element signature="e#7125#8753#0" expanded="false" />
-            <element signature="e#18360#23727#0" expanded="false" />
-            <element signature="e#23798#27564#0" expanded="false" />
-            <element signature="e#27650#30026#0" expanded="false" />
-            <marker date="1523105109642" expanded="true" signature="1087:1215" ph="INSERT INTO Persons... " />
-            <marker date="1523105109642" expanded="true" signature="2185:2295" ph="SELECT COUNT... Persons" />
-            <marker date="1523105109642" expanded="true" signature="3176:3251" ph="SELECT usern... Persons" />
-            <marker date="1523105109642" expanded="true" signature="5811:5872" ph="INSERT INTO Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="6021:6084" ph="INSERT INTO Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="6356:6493" ph="INSERT INTO Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="6659:6717" ph="INSERT INTO Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="7916:8046" ph="SELECT map_c... " />
-            <marker date="1523105109642" expanded="true" signature="9078:9215" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="9473:9616" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="10334:10500" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="11171:11281" ph="SELECT categ... Maps_Categories" />
-            <marker date="1523105109642" expanded="true" signature="12053:12123" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="13320:13457" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="13715:13858" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="14283:14449" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="15120:15190" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="15609:15809" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="16260:16576" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="18764:18901" ph="SELECT M.use... Maps_Interviewers" />
-            <marker date="1523105109642" expanded="true" signature="19159:19302" ph="SELECT M.use... Maps_Administrators" />
-            <marker date="1523105109642" expanded="true" signature="19727:19893" ph="SELECT map_c... Maps" />
-            <marker date="1523105109642" expanded="true" signature="20564:20634" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="21053:21253" ph="SELECT A.res... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="21704:22020" ph="SELECT S.sha... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="25948:26027" ph="UPDATE Maps_Interviewers... " />
-            <marker date="1523105109642" expanded="true" signature="26251:26332" ph="UPDATE Maps_Administrators... " />
-            <marker date="1523105109642" expanded="true" signature="26754:26940" ph="UPDATE Maps_Categories... " />
-            <marker date="1523105109642" expanded="true" signature="27158:27238" ph="UPDATE Maps_Questions... " />
-            <marker date="1523105109642" expanded="true" signature="28669:28720" ph="INSERT INTO Maps_Respondents... " />
-            <marker date="1523105109642" expanded="true" signature="28996:29079" ph="INSERT INTO Respondent_Answers... " />
-            <marker date="1523105109642" expanded="true" signature="31609:31668" ph="SELECT quest... Maps_Questions" />
-            <marker date="1523105109642" expanded="true" signature="31940:32001" ph="SELECT astex... Maps" />
-            <marker date="1523105109642" expanded="true" signature="32371:32690" ph="SELECT astex... Shapes" />
-            <marker date="1523105109642" expanded="true" signature="33606:33828" ph="SELECT Q.que... Respondent_Answers" />
-            <marker date="1523105109642" expanded="true" signature="34456:34489" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34504" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34456:34505" ph="SELECT feedb... Feedbacks" />
-            <marker date="1523105109642" expanded="true" signature="34890:34948" ph="SELECT name,... " />
-            <marker date="1523105109642" expanded="true" signature="35005:35161" ph="SELECT P.fir... " />
-            <marker date="1523105109642" expanded="true" signature="36074:36144" ph="INSERT INTO Feedbacks... " />
+            <element signature="e#656#1847#0" expanded="false" />
+            <element signature="e#1931#3630#0" expanded="false" />
+            <element signature="e#3675#3779#0" expanded="false" />
+            <element signature="e#3845#4754#0" expanded="false" />
+            <element signature="e#4830#5383#0" expanded="false" />
+            <element signature="e#5459#9033#0" expanded="false" />
+            <element signature="e#9098#10969#0" expanded="false" />
+            <element signature="e#11032#15154#0" expanded="false" />
+            <element signature="e#15240#16906#0" expanded="false" />
+            <element signature="e#16982#22479#0" expanded="false" />
+            <element signature="e#22548#24633#0" expanded="false" />
+            <element signature="e#24726#28892#0" expanded="false" />
+            <element signature="e#28981#36558#0" expanded="false" />
+            <element signature="e#36588#38591#0" expanded="false" />
+            <element signature="e#38770#39222#0" expanded="false" />
+            <element signature="e#39290#41391#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CityShare_Flask/static/Datebase/MySqlSchema.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1332">
-          <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>

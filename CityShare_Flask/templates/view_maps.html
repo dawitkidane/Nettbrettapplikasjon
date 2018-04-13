@@ -9,8 +9,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+<<<<<<< HEAD
     <!-- Link to jQuery Library -->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+=======
+    <!-- Link to static/view_maps_stylesheet.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/view_maps_stylesheet.css') }}">
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+>>>>>>> 21245061a68838c2dfbc30af0dfee3cef472c4ad
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -93,7 +101,7 @@
                     {% if map.Can_Update_Map %}
                         <a href="/UpdateMapDetails?mapid={{ map.mapid }}" class="btn btn-warning">Rediger</a>
                     {% endif %}
-                    <a href="/feedback?mapid={{ map.mapid }}" class="btn btn-info">Tilbakemelding</a>
+                    <a href="/feedso/{{ map.mapid }}" class="btn btn-info">Tilbakemelding</a>
                 </div>
 
                 <div class="map_details_box" id="Map_details_id_{{ map.mapid }}">
@@ -106,6 +114,12 @@
             </div>
 
         {% endfor %}
+
+        {% if not maps %}
+            <div id="errdiv"class="alert alert-danger">
+                <p id="errtxt">{{ session.get('err') }}</p>
+            </div>
+        {% endif %}
 
     </div>
 

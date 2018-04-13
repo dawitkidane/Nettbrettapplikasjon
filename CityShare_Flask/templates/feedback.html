@@ -6,14 +6,12 @@
         #feedbacks{
             height: 25%;
             max-height: 650px;
-            border-left: 1px solid grey;
-            border-right: 1px solid grey;
-            border-bottom: 1px solid grey;
-            border-radius: 5px;
+            border: 1px solid grey;
+            box-shadow: 5px 5px #d3d3d3;
+            border-radius: 50px 20px;
             margin: 5px;
             padding: 2%;
             padding-top: 0;
-
         }
         #all_feedback{
             height: 25%;
@@ -37,14 +35,15 @@
             font-size: small;
         }
         #new_feedbacks{
-            height: 50%;
-
-            border: 1px solid grey;
-            border-radius: 5px;
+            height: 650px;
+            max-height: 100%;
             overflow: auto;
             margin: 5px;
             text-align: center;
             padding: 15px;
+            border: 1px solid grey;
+            box-shadow: 5px 5px #d3d3d3;
+            border-radius: 50px 20px
         }
         h1{
             font-size: 2em;
@@ -71,6 +70,7 @@
             .map_box {
                 width: 90%;
             }
+
             #feedbacks{
                 height: 25%;
                 max-height: 500px;
@@ -90,17 +90,17 @@
 
             }
             #new_feedbacks{
-                height: 50%;
-
+                height: 25%;
+                max-height: 500px;
                 border: 1px solid grey;
                 border-radius: 5px;
 
                 margin: 5px;
                 text-align: center;
                 padding: 15px;
+
             }
         }
-
         .map_info_box, .static_map_box {
             vertical-align: middle;
             display: inline-block;
@@ -117,6 +117,7 @@
         strong {
             color: #2a62bc;
         }
+
     </style>
 {% endblock %}
 
@@ -136,8 +137,9 @@
                         <p><strong>Beskrivelse: </strong>{{ map.description }}</p>
                     </div>
                 </div>
-            {% endfor %}
-            <form action="/addfeedback?mapid={{ session.get('mapid') }}" method="post">
+
+            <form action="/addfeedback/{{map.mapid }}" method="post">
+                <input type="hidden" name="action" value="do" />
                 <fieldset>
                     <legend>GIVE YOUR FEEDBACK</legend>
 
@@ -146,9 +148,11 @@
                     </div>
                     <div>
                         <button id="submitbutton" type="submit" class="btn btn-success">Save</button>
+                         <button type="button" id="cancelbtn" onclick="location.href='/showmaps'" class="btn btn-danger">Back</button>
                     </div>
                 </fieldset>
             </form>
+    {% endfor %}
     </div >
 
     <div id="feedbacks" class="col-lg-7 col-m-7 col-sm-6 col-xs-11">
@@ -160,7 +164,6 @@
                     <p><strong>{{ feedback.firstname }} {{ feedback.lastname }} &nbsp</strong><span id="dat">{{ feedback.date }}</span></p>
                     <p>{{ feedback.cmt }}</p>
             </div>
-
         {% endfor %}
         </div>
     </div>
