@@ -32,10 +32,12 @@ a, a:hover, a:active, a:visited, a:focus {
     position: relative; z-index: 9999;
 }
 
-.btn-info, .btn-danger, .btn-success {
+.btn-info, .btn-danger, .btn-success, btn-warning {
     width: 100%;
     padding: 5px;
     margin: 5px 0px 5px 0px;
+    margin-top: 1%;
+
 }
 
 .input-group, .form-group {

@@ -1,150 +1,168 @@
-function getBoundsZoomLevel(bounds, mapDim) {
-    var WORLD_DIM = { height: 256, width: 256 };
-    var ZOOM_MAX = 21;
+    function getBoundsZoomLevel(bounds, mapDim) {
+        var WORLD_DIM = { height: 256, width: 256 };
+        var ZOOM_MAX = 21;
 
-    function latRad(lat) {
-        var sin = Math.sin(lat * Math.PI / 180);
-        var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
-        return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
-    }
-
-
-    function zoom(mapPx, worldPx, fraction) {
-        return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
-    }
-
-    var ne = bounds.getNorthEast();
-    var sw = bounds.getSouthWest();
-
-    var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
-
-    var lngDiff = ne.lng() - sw.lng();
-    var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-
-    var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
-    var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
-
-    return Math.min(latZoom, lngZoom, ZOOM_MAX);
-}
-
-var map = null;
-function initMap() {
-    map = new google.maps.Map(document.getElementById('Map'), {
-        zoom: 11,
-        center: {lat: 58.969975, lng: 5.733107},
-        mapTypeControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_BOTTOM
-        },
-        streetViewControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_CENTER
-        },
-        zoomControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_CENTER
-        },
-        fullscreenControl: false
-    });
-
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-            map.setCenter(pos);
-            map.setZoom(11);
-            }, function() {
-            // bruker ønsker ikke å dele sin posisjon
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        alert("Din browser støtter ikke geografisk gjenfinning");
-    }
-
-    var bounds = {
-        north: 0,
-        south: 0,
-        east: 0,
-        west: 0
-    };
-    var rectangle = new google.maps.Rectangle({
-        bounds: bounds,
-        editable: true,
-        draggable: true
-    });
-
-    map.addListener('bounds_changed', function() {
-        if (map.getZoom() < 3) map.setZoom(3);
-
-        lat_center = map.getCenter().lat();
-        lng_center = map.getCenter().lng();
-        n = (map.getBounds().getNorthEast().lat()+lat_center)/2;
-        s = (map.getBounds().getSouthWest().lat()+lat_center)/2;
-        e = (map.getBounds().getNorthEast().lng()+lng_center)/2;
-        w = (map.getBounds().getSouthWest().lng()+lng_center)/2;
-        bounds = {
-            north: n,
-            south: s,
-            east: e,
-            west: w
-        };
-        rectangle.setMap(null);
-        rectangle.setBounds(bounds);
-        rectangle.setMap(map);
-        });
-
-    rectangle.addListener('bounds_changed', function () {
-        $('#geo_boundery').val(rectangle.getBounds());
-
-        var $mapDiv = $('#Map');
-        var mapDim = { height: $mapDiv.height(), width: $mapDiv.width() };
-        calculated_zoom = getBoundsZoomLevel(rectangle.getBounds(), mapDim);
-        $('#geo_zoom').val(calculated_zoom+1);
-        });
-
-
-
-
-    var card = document.getElementById('pac-card');
-    var input = document.getElementById('pac-input');
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(card);
-
-    var autocomplete = new google.maps.places.Autocomplete(input);
-
-    // Bind the map's bounds (viewport) property to the autocomplete object,
-    // so that the autocomplete requests use the current map bounds for the
-    // bounds option in the request.
-    autocomplete.bindTo('bounds', map);
-
-    autocomplete.addListener('place_changed', function() {
-
-        var place = autocomplete.getPlace();
-        if (!place.geometry) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
-            window.alert("No details available for input: '" + place.name + "'");
-            return;
+        function latRad(lat) {
+            var sin = Math.sin(lat * Math.PI / 180);
+            var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+            return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
         }
 
-        // If the place has a geometry, then present it on a map.
-        if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
+
+        function zoom(mapPx, worldPx, fraction) {
+            return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+        }
+
+        var ne = bounds.getNorthEast();
+        var sw = bounds.getSouthWest();
+
+        var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+
+        var lngDiff = ne.lng() - sw.lng();
+        var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+        var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+        var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+        return Math.min(latZoom, lngZoom, ZOOM_MAX);
+    }
+
+    var map = null;
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('Map'), {
+            zoom: 11,
+            center: {lat: 58.969975, lng: 5.733107},
+            mapTypeControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
+            },
+            streetViewControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_CENTER
+            },
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_CENTER
+            },
+            fullscreenControl: false
+        });
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                map.setCenter(pos);
+                map.setZoom(11);
+                var location = new google.maps.Marker({
+                    clickable: false,
+                    icon: new google.maps.MarkerImage('//maps.gstatic.com/mapfiles/mobile/mobileimgs2.png',
+                        new google.maps.Size(22,22),
+                        new google.maps.Point(0,18),
+                        new google.maps.Point(11,11)),
+                    shadow: null,
+                    zIndex: 999,
+                    map: map // your google.maps.Map object
+                });
+                location.setPosition(pos);
+                // Add circle overlay and bind to marker
+                var circle = new google.maps.Circle({
+                  map: map,
+                  radius: 10,    // 10 miles in metres
+                  fillColor: '#00bcff',
+                    strokeColor: '#00bcff'
+                });
+                circle.bindTo('center', location, 'position');
+
+                }, function() {
+                // bruker ønsker ikke å dele sin posisjon
+            });
         } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);  // Why 17? Because it looks good.
+            // Browser doesn't support Geolocation
+            alert("Din browser støtter ikke geografisk gjenfinning");
         }
 
-        var address = '';
-        if (place.address_components) {
-            address = [
-                (place.address_components[0] && place.address_components[0].short_name || ''),
-                (place.address_components[1] && place.address_components[1].short_name || ''),
-                (place.address_components[2] && place.address_components[2].short_name || '')
-            ].join(' ');
-        }
-
-
+        var bounds = {
+            north: 0,
+            south: 0,
+            east: 0,
+            west: 0
+        };
+        var rectangle = new google.maps.Rectangle({
+            bounds: bounds,
+            editable: true,
+            draggable: true
         });
-    }
+
+        map.addListener('bounds_changed', function() {
+            if (map.getZoom() < 3) map.setZoom(3);
+
+            lat_center = map.getCenter().lat();
+            lng_center = map.getCenter().lng();
+
+            n = (map.getBounds().getNorthEast().lat()+lat_center)/2;
+            s = (map.getBounds().getSouthWest().lat()+lat_center)/2;
+            e = (map.getBounds().getNorthEast().lng()+lng_center)/2;
+            w = (map.getBounds().getSouthWest().lng()+lng_center)/2;
+
+
+            bounds = {north: n, south: s, east: e, west: w};
+            rectangle.setMap(null);
+            rectangle.setBounds(bounds);
+            rectangle.setMap(map);
+            });
+
+        rectangle.addListener('bounds_changed', function () {
+            $('#geo_boundery').val(rectangle.getBounds());
+
+            var $mapDiv = $('#Map');
+            var mapDim = { height: $mapDiv.height(), width: $mapDiv.width() };
+            calculated_zoom = getBoundsZoomLevel(rectangle.getBounds(), mapDim);
+            $('#geo_zoom').val(calculated_zoom+1);
+            });
+
+
+
+
+        var card = document.getElementById('pac-card');
+        var input = document.getElementById('pac-input');
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(card);
+
+        var autocomplete = new google.maps.places.Autocomplete(input);
+
+        // Bind the map's bounds (viewport) property to the autocomplete object,
+        // so that the autocomplete requests use the current map bounds for the
+        // bounds option in the request.
+        autocomplete.bindTo('bounds', map);
+
+        autocomplete.addListener('place_changed', function() {
+
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                // User entered the name of a Place that was not suggested and
+                // pressed the Enter key, or the Place Details request failed.
+                window.alert("No details available for input: '" + place.name + "'");
+                return;
+            }
+
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);  // Why 17? Because it looks good.
+            }
+
+            var address = '';
+            if (place.address_components) {
+                address = [
+                    (place.address_components[0] && place.address_components[0].short_name || ''),
+                    (place.address_components[1] && place.address_components[1].short_name || ''),
+                    (place.address_components[2] && place.address_components[2].short_name || '')
+                ].join(' ');
+            }
+
+
+            });
+        }
 
     $(document).ready(function () {
 
@@ -154,10 +172,11 @@ function initMap() {
         // Checking that users are added to the map before submitting
         $("#form").submit(function (e) {
             var missing_values = true;
-            alert_msg = "Manglende Input Verdier: \nDu må legge til minst en av følgende";
-
+            alert_msg = "Manglende Input Verdier:\nDu må legge til minst en av følgende";
+            counter = 0;
             if ($("#category_body_point").children().length === 0) {
-                alert_msg += "\n -> Punkt Kategorier !";
+                counter++;
+                alert_msg += "\n"+counter+". Punkt Kategorier !";
                 missing_values = false;
                 $("#add_points_btn").removeClass("btn-info");
                 $("#add_points_btn").addClass("btn-danger");
@@ -167,7 +186,8 @@ function initMap() {
             }
 
             if ($("#category_body_Road").children().length === 0) {
-                alert_msg += "\n -> Vei Kategorier !";
+                counter++;
+                alert_msg += "\n"+counter+". Vei Kategorier !";
                 missing_values = false;
                 $("#add_roads_btn").removeClass("btn-info");
                 $("#add_roads_btn").addClass("btn-danger");
@@ -177,7 +197,8 @@ function initMap() {
             }
 
             if ($("#category_body_area").children().length === 0) {
-                alert_msg += "\n -> Område Kategorier !";
+                counter++;
+                alert_msg += "\n"+counter+". Område Kategorier !";
                 missing_values = false;
                 $("#add_areas_btn").removeClass("btn-info");
                 $("#add_areas_btn").addClass("btn-danger");
@@ -187,7 +208,8 @@ function initMap() {
             }
 
             if ($("#category_body_Interviewers").children().length === 0) {
-                alert_msg += "\n -> Interviewer !";
+                counter++;
+                alert_msg += "\n"+counter+". Interviewer !";
                 missing_values = false;
                 $("#add_interviewers_btn").removeClass("btn-info");
                 $("#add_interviewers_btn").addClass("btn-danger");
@@ -197,7 +219,8 @@ function initMap() {
             }
 
             if ($("#category_body_Administrators").children().length === 0) {
-                alert_msg += "\n -> Administratorer !";
+                counter++;
+                alert_msg += "\n"+counter+". Administratorer !";
                 missing_values = false;
                 $("#add_administrators_btn").removeClass("btn-info");
                 $("#add_administrators_btn").addClass("btn-danger");
@@ -207,7 +230,8 @@ function initMap() {
             }
 
             if ($("#category_body_questions").children().length === 0) {
-                alert_msg += "\n -> Spørsmål !";
+                counter++;
+                alert_msg += "\n"+counter+". Spørsmål !";
                 missing_values = false;
                 $("#add_questions_btn").removeClass("btn-info");
                 $("#add_questions_btn").addClass("btn-danger");
