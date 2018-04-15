@@ -18,36 +18,30 @@
     <!-- Link to static/view_maps_stylesheet.css -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/view_maps_stylesheet.css') }}">
 
-
-
     <!-- link to static/Scripts/view_maps_JavaScript.js -->
     <script src="{{ url_for('static',filename='Scripts/view_maps_JavaScript.js') }}"></script>
 
     <script>
     function read_maps() {
-        Maps = {};
-            {% for map in maps -%}
-                Maps["{{ map.mapid }}"] = {
-                    creater: "{{ map.creater }}",
-                    title: "{{ map.title }}",
-                    expirydate: "{{ map.expirydate }}",
-                    issuedate: "{{ map.issuedate }}",
-                    description: "{{ map.description }}".replace("\n","")
-                };
-            {% endfor %}
-        return Maps;
+        Maps_ids = [];
+        {% for map in maps -%}
+            Maps_ids.push("{{ map.mapid }}");
+        {% endfor %}
+        return Maps_ids;
     }
-    var Maps = read_maps();
+    var Maps_ids = read_maps();
     $(document).ready(function(){
+
           $("#filter").on("keyup", function() {
             var value = $(this).val().toLowerCase();
             if (value != "") {
-                for (var key in Maps) {
-                    title = (Maps[key]["title"]).toLowerCase();
-                    description = (Maps[key]["description"]).toLowerCase();
-                    creater = (Maps[key]["creater"]).toLowerCase();
-                    expirydate = (Maps[key]["expirydate"]).toLowerCase();
-                    issuedate = (Maps[key]["issuedate"]).toLowerCase();
+                for (var i = 0; i < Maps_ids.length; i++) {
+                    key = Maps_ids[i];
+                    title = ($('#title_map_'+key)).val().toLowerCase();
+                    description = ($('#description_map_'+key)).val().toLowerCase();
+                    creater = ($('#creater_map_'+key)).val().toLowerCase();
+                    expirydate = ($('#expirydate_map_'+key)).val().toLowerCase();
+                    issuedate = ($('#issuedate_map_'+key)).val().toLowerCase();
 
                     if ((title.includes(value)) || (description.includes(value))
                         || (creater.includes(value)) || (expirydate.includes(value))
@@ -58,7 +52,7 @@
                     }
                 }
             } else {
-                for (var key in Maps) {
+                for (var key in Maps_ids) {
                     $("#Map_"+key).css("display","inline-block");
                 }
             }
@@ -99,7 +93,7 @@
                     {% if map.Can_Update_Map %}
                         <a href="/UpdateMapDetails?mapid={{ map.mapid }}" class="btn btn-warning">Rediger</a>
                     {% endif %}
-                    <a href="/feedso/{{ map.mapid }}" class="btn btn-info">Tilbakemelding</a>
+                    <a href="/FeedbackArena?mapid={{ map.mapid }}" class="btn btn-info">Tilbakemelding</a>
                 </div>
 
                 <div class="map_details_box" id="Map_details_id_{{ map.mapid }}">
@@ -108,16 +102,16 @@
                     <p><strong>Utstedet den: </strong>{{ map.issuedate }}</p>
                     <p><strong>Gyldig til: </strong>{{ map.expirydate }}</p>
                     <p><strong>Beskrivelse: </strong>{{ map.description }}</p>
+                    <input type="hidden" id="creater_map_{{ map.mapid}}" value="{{ map.creater }}">
+                    <input type="hidden" id="title_map_{{ map.mapid}}" value="{{ map.title}}">
+                    <input type="hidden" id="issuedate_map_{{ map.mapid}}" value="{{ map.issuedate }}">
+                    <input type="hidden" id="expirydate_map_{{ map.mapid}}" value="{{ map.expirydate }}">
+                    <input type="hidden" id="description_map_{{ map.mapid}}" value="{{ map.description }}">
                 </div>
             </div>
 
         {% endfor %}
 
-        {% if not maps %}
-            <div id="errdiv"class="alert alert-danger">
-                <p id="errtxt">{{ session.get('err') }}</p>
-            </div>
-        {% endif %}
 
     </div>
 

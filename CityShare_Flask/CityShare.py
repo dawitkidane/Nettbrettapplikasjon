@@ -1,9 +1,9 @@
 from flask import Flask, render_template, url_for, request, json, g, session, redirect
 import mysql.connector
+import Classes
 
 app = Flask(__name__)
 app.secret_key = "any random string"
-
 
 def get_db():
     if not hasattr(g, '_database'):
@@ -13,9 +13,17 @@ def get_db():
                                               db='sql2217838')
     return g._database
 
-
 @app.route('/')
 def index():
+
+    """
+    authority = classes.Authority(session.get('Logged_in', None))
+    print(authority.is_logged_in())
+    authority.is_administrator(1)
+    authority.is_intervjuer(1)
+    authority.has_access_to_map(1)
+    """
+
     return render_template("home.html")
 
 
@@ -918,101 +926,60 @@ def Update_Map_Details():
         return render_template("error.html", Fail="Noe Feil har skjedd, prov igjen")
 
 
-def feedbacks(mapid):
+@app.route("/FeedbackArena", methods=['POST', 'GET'])
+def feedbacks():
 
     conn = get_db()
     cursor = conn.cursor()
+    if request.method == "GET":
+        try:
+            mapid = request.args.get('mapid')
+            sql = "SELECT first_name, last_name, date, cmt FROM Feedbacks as F JOIN Persons as P On F.user = P.username WHERE F.map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+            cursor.execute(sql)
+            data = cursor.fetchall()
+            feedbacks = []
+            for entry in data:
+                feedback = {
+                    "writer": entry[0]+" "+entry[1],
+                    "date_and_time": entry[2],
+                    "content": entry[3]
+                }
+                feedbacks.append(feedback)
+            feedbacks = reversed(feedbacks)
 
-    sql = "SELECT feedback_id FROM Feedbacks WHERE map_id = " + str(mapid) + ";"
-    try:
-        cursor.execute(sql)
-        data = cursor.fetchall()
-        feedids = []
-        for entry in data:
-            feedids.append(entry[0])
+            return render_template("feedback.html", feedbacks = feedbacks, Map_ID=mapid)
+            conn.close()
 
-        feedo = []
-        for feed in reversed(feedids):
-            fee = {
-                "feedid": feed,
-            }
-            conn = get_db()
-            cursor = conn.cursor()
+        except mysql.connector.Error as err:
+            conn.close()
+            print(err.msg)
+            return render_template("error.html")
 
-            sql = "SELECT P.first_name, P.last_name, date, cmt FROM Feedbacks AS F JOIN Persons AS P ON P.username = F.user " \
-                  "WHERE feedback_id = 'MAP_ID';".replace("MAP_ID", str(feed))
+    elif request.method == "POST":
+        try:
+            map_id = request.form.get("Map_ID")
+            username = session.get("Logged_in", None)
+            content = request.form.get("Content");
 
-            try:
-                cursor.execute(sql)
-                data = cursor.fetchone()
-                fee['firstname'] = data[0]
-                fee['lastname'] = data[1]
-                fee['date'] = data[2]
-                fee['cmt'] = data[3]
-                fee['mapid'] = mapid
-                feedo.append(fee)
+            sql = "INSERT INTO Feedbacks(map_id, user, cmt) VALUES(%s,%s,%s);"
+            cursor.execute(sql,(map_id, username, content))
+            conn.commit()
+            sql = "SELECT first_name, last_name FROM Persons WHERE username = 'Username'".replace("Username",username)
+            cursor.execute(sql)
+            data = cursor.fetchone()
+            full_name = data[0]+" "+data[1]
+            conn.close()
+            return full_name
 
-            except mysql.connector.Error as err:
-                conn.close()
-                print(err.msg)
+        except mysql.connector.Error as err:
+            conn.close()
+            print(err.msg)
+            return "Failed"
 
-        map = {
-            "mapid": mapid,
-        }
-        maps= []
-        sql = "SELECT map_creater, title, date(start_date), end_date, description, astext(Centroid(geo_boundery)), zoom FROM Maps WHERE map_id = " + str(
-            mapid) + ";"
-
-        cursor.execute(sql)
-        test = cursor.fetchone()
-        map['creater'] = test[0]
-        map['title'] = test[1]
-        map['issuedate'] = str(test[2])
-        map['expirydate'] = str(test[3])
-        map['description'] = str(test[4])
-        map['center'] = (str(test[5]).strip("POINT(").strip(")")).replace(" ", ",")
-        map['zoom'] = str(test[6])
-        map['mapid'] = str(mapid)
-
-        maps.append(map)
-
-    except mysql.connector.Error as err:
-        conn.close()
-        print(err.msg)
-        return "Failed"
-    finally:
-        conn.close()
+    else:
+        return "Unknown request"
 
     return render_template("feedback.html", maps=maps, feedo=feedo)
-
-@app.route("/feedso/<int:mapid>")
-def feedback(mapid):
-    return feedbacks(mapid)
-
-
-@app.route("/addfeedback/<int:mapid>", methods=['POST', 'GET'])
-def addfeedback(mapid):
-    mapid = mapid
-    user = session.get("Logged_in")
-    comment = request.form.get('cmt')
-
-    conn = get_db()
-    data = conn.cursor()
-    sql = "INSERT INTO Feedbacks(map_id, user, cmt)" \
-        "VALUES(%s,%s, %s);"
-
-    try:
-        data.execute(sql, (mapid, user, comment))
-        conn.commit()
-
-        return feedbacks(mapid)
-    except mysql.connector.Error as err:
-        conn.close()
-        print(err.msg)
-
-    finally:
-        conn.close()
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000)

@@ -598,17 +598,17 @@
                 fullscreenControl: false,
                 bounds: bounds,
 
+                mapTypeControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
+                },
                 streetViewControlOptions: {
-                    position: google.maps.ControlPosition.LEFT_CENTER
+                    position: google.maps.ControlPosition.RIGHT_CENTER
                 },
                 zoomControlOptions: {
-                    position: google.maps.ControlPosition.LEFT_CENTER
-                },
-                mapTypeControlOptions: {
                     position: google.maps.ControlPosition.RIGHT_CENTER
                 },
                 fullscreenControl: false
-            });
+                });
 
             last_valid_center = map.getCenter();
             last_valid_zoom = map.getZoom();
@@ -703,39 +703,25 @@
                 }
             });
 
-
-            lat_constant = Math.abs(northeastcorner.lat()-southwestcorner.lat());
-            lng_constant = Math.abs(northeastcorner.lng()-southwestcorner.lng());
-            var outerCoords = [
-                {lat: northeastcorner.lat()+lat_constant, lng: southwestcorner.lng()-lng_constant}, // north west
-                {lat: southwestcorner.lat()-lat_constant, lng: southwestcorner.lng()-lng_constant}, // south west
-                {lat: southwestcorner.lat()-lat_constant, lng: northeastcorner.lng()+lng_constant}, // south east
-                {lat: northeastcorner.lat()+lat_constant, lng: northeastcorner.lng()+lng_constant} // north east
-            ];
-            var innerCoords = [
-                {lat: northeastcorner.lat(), lng: northeastcorner.lng()},  // north east
-                {lat: southwestcorner.lat(), lng: northeastcorner.lng()}, // south east
-                {lat: southwestcorner.lat(), lng: southwestcorner.lng()}, // south west
-                {lat: northeastcorner.lat(), lng: southwestcorner.lng()}, // north west
-
-            ];
-            map.data.add({
-                geometry: new google.maps.Data.Polygon([outerCoords, innerCoords])
-            });
-            map.data.setStyle(function(feature) {
-              var color = 'white';
-              if (feature.getProperty('isColorful')) {
-                color = feature.getProperty('color');
-              }
-              return /** @type {google.maps.Data.StyleOptions} */({
-                  fillColor: color,
-                  fillOpacity: 1,
-                  strokeColor: color,
-                  strokeWeight: 2
+            var borders = new google.maps.Polygon({
+                path: [
+                    new google.maps.LatLng(northeastcorner.lat(),southwestcorner.lng()),
+                    northeastcorner,
+                    new google.maps.LatLng(southwestcorner.lat(),northeastcorner.lng()),
+                    southwestcorner
+                ],
+                strokeColor: "#1e90ff",
+                strokeOpacity: 1,
+                strokeWeight: 15,
+                fillColor: "#ffffff",
+                fillOpacity: 0,
+                map: map
               });
+            $('#toggle_border_btn').click(function () {
+                visible = borders.getVisible()
+                if (visible) {borders.setVisible(false)}
+                else {borders.setVisible(true)}
             });
-
-
 
             loadShapes();
 
@@ -859,6 +845,14 @@
                                 Deakriver Filter / Vis alt
                             </button>
                         </div>
+
+                        <div class="slidecontainer">
+                            <div class="btn-group btn-group-justified">
+                                <a onclick="$('#pac-card').toggle();" class="btn btn-success">Skjul/Vis Søkefelt</a>
+                                <a id="toggle_border_btn" class="btn btn-primary">Skjul/Vis grenser</a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

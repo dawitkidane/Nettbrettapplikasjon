@@ -17,7 +17,6 @@ function auto_adjust_dimentions() {
                     choice_panel_toggled = true;
                 }
         }
-
         $(document).ready(function () {
 
             $("#info_window").hide();
