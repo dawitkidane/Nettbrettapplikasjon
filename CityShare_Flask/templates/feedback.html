@@ -1,18 +1,11 @@
 {% extends "index.html" %}
 {% block stylingblock %}
-    <!-- Link to static/stylesheets/feedback_stylesheet.css -->
+    <!-- Link to static/stylesheets/feedback_stylesheet_version_0.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/feedback_stylesheet_version_0.css') }}">
 
-    <style>
-    p {
-        white-space: pre-wrap;
-        font-size: inherit;
-        color: inherit;
-        border: initial;
-        padding: initial;
-        font-family: inherit;
-    }
-    </style>
+{% endblock %}
 
+{% block scriptblock %}
 
     <script>
         $(document).ready(function(){
@@ -23,7 +16,7 @@
                   Content: $('#feedback_box').val()
                 },
                 function(data,status){
-                    if (data != "Failed") {
+                    if (data != "0" && data != "1" && data != "2" && data != "4" && data != "5") {
 
                         var d = new Date();
                         month = (d.getMonth()+1)
@@ -40,10 +33,14 @@
 
                         $('#feedback_list').prepend(element);
                         $('#feedback_box').val("");
-
-                    }
-                    else {
-                        alert("Noe feil har skjedd, prøv igjen");
+                    } else if (data == "0") {
+                        alert("Ukjent Feil, prøv igjen")
+                    } else if (data == "1") {
+                        alert("Feil i databasen, prøv igjen senere")
+                    } else if (data == "2") {
+                        alert("Du har ikkje tilgang til å dette kartet")
+                    } else if (data == "4") {
+                        alert("Du er ikke innlogget")
                     }
                 });
             });
@@ -62,6 +59,7 @@
         </div>
 
         <button type="button" id="add_feedback_btn" class="btn btn-success btn-block">Send Tilbakemedling</button>
+        <button type="button" onclick="window.history.back();" class="btn btn-danger btn-block">Tilbake til mine kart</button>
 
         <br>
 

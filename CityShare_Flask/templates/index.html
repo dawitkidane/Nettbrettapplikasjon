@@ -15,11 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Link to static/index_stylesheet.css -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/index_stylesheet.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/index_stylesheet_version_0.css') }}">
 
     <!-- This is important inorder to to set the viewport width to the width of the device, add this to your HTML file -->
     <!-- insure the webpage is responisve to the design -->
     <meta name="viewport" content="width=device-width">
+
+    <link rel="shortcut icon" href="../static/Images/app_icon.png" type="image/png">
 
     {% block stylingblock %}
     {% endblock %}

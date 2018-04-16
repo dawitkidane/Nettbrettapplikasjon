@@ -1,8 +1,8 @@
 {% extends 'index.html' %}
 
 {% block stylingblock %}
-    <!-- Link to static/edit_map_stylesheet.css -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/edit_map_stylesheet.css') }}">
+    <!-- Link to static/open_and_analyze_map_stylesheet_version_0.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/open_and_analyze_map_stylesheet_version_0.css') }}">
 {% endblock %}
 
 {% block scriptblock %}
@@ -15,8 +15,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <!-- link to static/Scripts/edit_map_JavaScript.js -->
-    <script src="{{ url_for('static',filename='Scripts/edit_map_JavaScript.js') }}"></script>
+    <!-- link to static/Scripts/open_map_JavaScript_version_0.js -->
+    <script src="{{ url_for('static',filename='Scripts/open_map_JavaScript_version_0.js') }}"></script>
 
 
     <script>
@@ -180,9 +180,14 @@
                                 $("#question_{{ question.ID }}").val("");
                             {% endfor %}
                             return;
-                        } else {
-                            alert("Kan ikke lagre respondent data, sjekk internett forbindelse");
-                            return;
+                        } else if (data == "0") {
+                            alert("Ukjent Feil, prøv igjen")
+                        } else if (data == "1") {
+                            alert("Feil i databasen, prøv igjen senere")
+                        } else if (data == "2") {
+                            alert("Du har ikkje tilgang til å slette dette")
+                        } else if (data == "4") {
+                            alert("Du er ikke innlogget")
                         }
                     });
         }
@@ -433,6 +438,14 @@
 
         }
 
+        // function to warn the user that he is about to go back, and might lose data if not saved
+        function go_back() {
+            answer = confirm("Dette kan medfører tap av data.\nEr du sikker at du go tilbake ?");
+            if (answer == true) {
+                history.back();
+            }
+        }
+
     </script>
 
 {% endblock %}
@@ -442,6 +455,8 @@
     <!-- Choice panel to the left of the map or hidden/shown on small width devices -->
     <div id="ChoicePanel" class="part">
         <div class="panel-group" id="accordion">
+
+            <button type="button" onclick="go_back();" class="btn btn-danger btn-block">Tilbake til mine kart</button>
 
             <div>
                 <button type="button" id="show_map_btn" class="btn btn-warning" style="width: 100%">Back to Map</button>

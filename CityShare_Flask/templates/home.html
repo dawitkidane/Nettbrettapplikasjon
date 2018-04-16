@@ -3,7 +3,7 @@
 {% block stylingblock %}
 
     <!-- Link to static/home_stylesheet.css -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/home_stylesheet.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/home_stylesheet_version_0.css') }}">
 
 {% endblock %}
 
@@ -33,7 +33,8 @@
                 <div class="row" style="height: 100%">
                     <div class="col-lg-6">
                         <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/PKBwr7bhOfU"></iframe>
+                            <iframe class="embed-responsive-item" allowfullscreen="allowfullscreen"
+                                    src="https://www.youtube.com/embed/PKBwr7bhOfU"></iframe>
                         </div>
                     </div>
                     <div class="col-lg-1"></div>

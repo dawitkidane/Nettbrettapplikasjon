@@ -15,15 +15,6 @@ def get_db():
 
 @app.route('/')
 def index():
-
-    """
-    authority = classes.Authority(session.get('Logged_in', None))
-    print(authority.is_logged_in())
-    authority.is_administrator(1)
-    authority.is_intervjuer(1)
-    authority.has_access_to_map(1)
-    """
-
     return render_template("home.html")
 
 
@@ -42,7 +33,8 @@ def signup():
         conn = get_db()
         cursor = conn.cursor()
         sql = "INSERT INTO Persons(username, login_pass, first_name, last_name, e_post, telephone) " \
-              "VALUES(%s,%s,%s,%s,%s,%s);"
+              "VALUES(aes_encrypt(%s,'enckey'),aes_encrypt(%s,'enckey')," \
+              "%s,%s,%s,%s);"
         try:
             cursor.execute(sql, (username, password, firstname, surname, email, telephone))
             conn.commit()
@@ -69,9 +61,9 @@ def update_account():
         conn = get_db()
         cursor = conn.cursor()
         if request.method == 'GET':
-            sql = "SELECT login_pass, first_name, last_name, e_post, telephone " \
+            sql = "SELECT cast(aes_decrypt(login_pass, 'enckey') AS CHAR(20)), first_name, last_name, e_post, telephone " \
                   "FROM Persons " \
-                  "WHERE username = 'USERNAME'".replace('USERNAME', username)
+                  "WHERE username = aes_encrypt('USERNAME','enckey')".replace('USERNAME', username)
             cursor.execute(sql)
             data = cursor.fetchone()
             person = {
@@ -85,9 +77,9 @@ def update_account():
             return render_template("update_account.html", person=person)
         else:
             sql = "UPDATE Persons " \
-                  "SET login_pass = 'PASS', first_name = 'FIRST_NAME', " \
+                  "SET login_pass = aes_encrypt('PASS','enckey'), first_name = 'FIRST_NAME', " \
                   "last_name = 'LAST_NAME', e_post = 'MAIL', telephone = 'TELE' " \
-                  "WHERE username = 'USERNAME';".replace('USERNAME', username)
+                  "WHERE username = aes_encrypt('USERNAME','enckey');".replace('USERNAME', username)
             sql = sql.replace("PASS", request.form.get("password"))
             sql = sql.replace("FIRST_NAME", request.form.get("firstname"))
             sql = sql.replace("LAST_NAME", request.form.get("surname"))
@@ -106,7 +98,6 @@ def update_account():
 @app.route('/signout')
 def signout():
     session.pop('Logged_in', None)
-    session.pop('is_Admin', None)
     return render_template('home.html')
 
 
@@ -117,7 +108,10 @@ def login():
 
     conn = get_db()
     cursor = conn.cursor()
-    sql = "SELECT COUNT(username) FROM Persons WHERE BINARY username = %s AND BINARY login_pass = %s LIMIT 0, 1;"
+    sql = "SELECT count(username) " \
+          "FROM Persons " \
+          "WHERE BINARY username = aes_encrypt(%s,'enckey') AND BINARY login_pass = aes_encrypt(%s,'enckey') " \
+          "LIMIT 0, 1;"
     try:
         cursor.execute(sql, (username, password))
         row = cursor.fetchone()
@@ -125,7 +119,6 @@ def login():
 
         if does_exist == 1:
             session["Logged_in"] = username
-
             return render_template("home.html")
 
         else:
@@ -147,7 +140,9 @@ def search_for_users():
     ### TODO: search in database and return results
     conn = get_db()
     cursor = conn.cursor()
-    sql = "SELECT username FROM Persons where username = 'search' or e_post = 'search';".replace('search', username)
+    #sql = "SELECT username FROM Persons where username = 'search' or e_post = 'search';".replace('search', username)
+    sql = "SELECT cast(aes_decrypt(username, 'enckey') AS CHAR(20)) " \
+          "FROM Persons where username = aes_encrypt('search','enckey') or e_post = 'search';".replace('search', username)
     try:
         cursor.execute(sql)
         data = cursor.fetchall()
@@ -167,8 +162,11 @@ def search_for_users():
 @app.route('/addnewmap', methods=['POST', 'GET'])
 def add_new_map():
     map_creater = session.get("Logged_in", None)
-    if map_creater is None:
-        return render_template("error.html", msg="Du ma vaere innlogget for a kunne lage et kart !")
+
+    authority = Classes.Authority(map_creater)
+
+    if authority.is_logged_in() is False:
+        return render_template("error.html", Fail_Code=4)
 
     if request.method == 'GET':
         return render_template("new_map.html")
@@ -214,19 +212,19 @@ def add_new_map():
         conn = get_db()
         cursor = conn.cursor()
         sql = "INSERT INTO Maps(map_creater, title, description, end_date, geo_boundery, zoom)" \
-              "VALUES(%s,%s,%s,%s," + geo_boundery + ",%s);"
+              "VALUES(aes_encrypt(%s,'enckey'),%s,%s,%s," + geo_boundery + ",%s);"
         try:
             cursor.execute(sql, (map_creater, title, description, enddate, geo_zoom))
             conn.commit()
             Map_id = cursor.lastrowid
 
             for user in Interviewers:
-                sql = "INSERT INTO Maps_Interviewers(username, map_id) VALUES(%s,%s);"
+                sql = "INSERT INTO Maps_Interviewers(username, map_id) VALUES(aes_encrypt(%s,'enckey'),%s);"
                 cursor.execute(sql, (user, Map_id))
                 conn.commit()
 
             for user in Administrators:
-                sql = "INSERT INTO Maps_Administrators(username, map_id) VALUES(%s,%s);"
+                sql = "INSERT INTO Maps_Administrators(username, map_id) VALUES(aes_encrypt(%s,'enckey'),%s);"
                 cursor.execute(sql, (user, Map_id))
                 conn.commit()
 
@@ -247,7 +245,12 @@ def add_new_map():
         except mysql.connector.Error as err:
             conn.close()
             print(err.msg)
-            return render_template("new_map.html", Fail="En Feil har skjedd, prov igjen!")
+            return render_template("new_map.html", Fail_Code=1)
+
+        except Exception as err:
+            conn.close()
+            print(err)
+            return render_template("new_map.html", Fail_Code=0)
 
         conn.close()
         return render_template("home.html")
@@ -256,23 +259,24 @@ def add_new_map():
 @app.route("/showmaps", methods=['GET'])
 def show_maps():
     username = session.get("Logged_in", None)
-    if username is None:
-        return render_template("error.html", msg="Du ma vaere innlogget for a se dine kart !")
 
-    conn = get_db()
-    cursor = conn.cursor()
-    sql = "(SELECT map_id FROM Maps_Interviewers WHERE username = 'person')" \
-          "UNION ALL" \
-          "(SELECT map_id FROM Maps_Administrators WHERE username = 'person');".replace('person', str(username))
+    authority = Classes.Authority(username)
+
+    if authority.is_logged_in() is False:
+        return render_template("error.html", Fail_Code=4)
+
     try:
+        conn = get_db()
+        cursor = conn.cursor()
+        sql = "(SELECT map_id FROM Maps_Interviewers WHERE username = aes_encrypt('person','enckey'))" \
+              "UNION ALL" \
+              "(SELECT map_id FROM Maps_Administrators WHERE username = aes_encrypt('person','enckey'));".replace('person', str(username))
+
         cursor.execute(sql)
         data = cursor.fetchall()
         mapids = []
         for entry in set(data):
             mapids.append(entry[0])
-
-        if mapids.__len__() == 0:
-            return render_template("view_maps.html", maps={}, msg="Det er ingen registrerte kart pa deg!")
 
         maps = []
         for mapid in mapids:
@@ -282,7 +286,7 @@ def show_maps():
             conn = get_db()
             cursor = conn.cursor()
 
-            sql = "SELECT map_creater, title, date(start_date), end_date, description, astext(Centroid(geo_boundery)), zoom FROM Maps WHERE map_id = " + str(
+            sql = "SELECT cast(aes_decrypt(map_creater, 'enckey') AS CHAR(20)), title, date(start_date), end_date, description, astext(Centroid(geo_boundery)), zoom FROM Maps WHERE map_id = " + str(
                 mapid) + ";"
 
             cursor.execute(sql)
@@ -304,57 +308,45 @@ def show_maps():
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return render_template("view_maps.html", maps={}, Fail="En feil har skjedd, prov igjen!")
+        return render_template("error.html", Fail_Code=1)
+
+    except Exception as err:
+        conn.close()
+        print(err)
+        return render_template("error.html", Fail_Code=0)
 
     conn.close()
-    return render_template("view_maps.html", maps=maps)
+    return render_template("view_user_maps.html", maps=maps)
 
 
 @app.route("/EditMap", methods=['GET'])
 def edit_map():
     mapid = request.args.get('mapid')
     username = session.get("Logged_in", None)
-    if username is None:
-        return render_template("error.html", msg="Du ma vaere innlogget for a se ditt kart !")
 
-    conn = get_db()
-    cursor = conn.cursor()
+    authority = Classes.Authority(username)
 
-    # TODO: Getting the usernames and email for the Interviwers and Administrators
-    Interviewers = []
-    Administrators = []
-    sql = "SELECT M.username, e_post FROM Maps_Interviewers AS M JOIN Persons AS P ON M.username = P.username " \
-          "WHERE map_id = 'MAP_ID';".replace("MAP_ID", str(mapid))
+    if authority.is_logged_in() is False:
+        return render_template("error.html", Fail_Code=4)
+
+    is_valid = authority.is_map_valid(mapid)
+    if type(is_valid) == int:
+        return render_template("error.html", Fail_Code=is_valid)
+
+    # get all users for this map
+    Users = authority.get_map_users(mapid)
+    if type(Users) == int:
+        return render_template("error.html", Fail_Code=Users)
+
     try:
-        cursor.execute(sql)
-        data = cursor.fetchall()
-        for entry in data:
-            interviewer = {"username": entry[0], "email": entry[1]}
-            Interviewers.append(interviewer)
-
-        sql = "SELECT M.username, e_post FROM Maps_Administrators AS M JOIN Persons AS P ON M.username = P.username " \
-              "WHERE map_id = 'MAP_ID';".replace("MAP_ID", str(mapid))
-
-        cursor.execute(sql)
-        data = cursor.fetchall()
-        for entry in data:
-            Administrator = {"username": entry[0], "email": entry[1]}
-            Administrators.append(Administrator)
-
-        # TODO: Check if the user logged in has right to access this map
-        has_right = False
-        all_users = Administrators + Interviewers
-        for user in all_users:
-            if user["username"] == username:
-                has_right = True
-                break
-        if has_right == False:
-            return render_template("view_maps.html", Fail="Du har ikke tilgang til dette kartet!")
+        conn = get_db()
+        cursor = conn.cursor()
 
         # TODO: Reading map details from database
-        sql = "SELECT map_creater, title, description, start_date, end_date, astext(geo_boundery), zoom ,map_id " \
+        sql = "SELECT cast(aes_decrypt(map_creater, 'enckey') AS CHAR(20)), title, description, start_date, end_date, astext(geo_boundery), zoom ,map_id " \
               "FROM Maps " \
               "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
+
         cursor.execute(sql)
         data = cursor.fetchone()
         bounds = str(data[5]).strip("POLYGON((").strip("))").split(",")
@@ -406,15 +398,21 @@ def edit_map():
             }
             questions.append(question)
 
+        conn.close()
+
+        return render_template("open_map.html", map=map, points_categories=points_categories,
+                               roads_categories=roads_categories, questions=questions,
+                               areas_categories=areas_categories)
+
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return render_template("view_maps.html", Fail="En feil har skjedd, prov igjen!")
+        return render_template("error.html", Fail_Code=1)
 
-    conn.close()
-    return render_template("edit_map.html", map=map, points_categories=points_categories,
-                           roads_categories=roads_categories, questions=questions,
-                           areas_categories=areas_categories)
+    except Exception as err:
+        conn.close()
+        print(err)
+        return render_template("error.html", Fail_Code=0)
 
 
 @app.route("/RegisterRespondoent", methods=['POST'])
@@ -424,11 +422,25 @@ def RegisterRespondoent():
     Map_id = request.form.get('Map_id')
     logged_in_user = session.get("Logged_in", None)
 
+    authority = Classes.Authority(logged_in_user)
+    if authority.is_logged_in() is False:
+        return "4"
+
+    all_users = authority.get_map_users(Map_id)
+
+    if logged_in_user not in all_users:
+        return "2"
+
+    is_valid = authority.is_map_valid(Map_id)
+    if type(is_valid) == int:
+        return str(is_valid)
+
     # TODO Insert/create new respondent
-    conn = get_db()
-    cursor = conn.cursor()
-    sql = "INSERT INTO Maps_Respondents(map_id) VALUES(Map_id);".replace("Map_id", str(Map_id))
     try:
+        conn = get_db()
+        cursor = conn.cursor()
+        sql = "INSERT INTO Maps_Respondents(map_id) VALUES(Map_id);".replace("Map_id", str(Map_id))
+
         cursor.execute(sql)
         conn.commit()
         Respondoent_id = cursor.lastrowid
@@ -447,62 +459,59 @@ def RegisterRespondoent():
             center = "POINT" + str(shape['center'])
             area_or_path = "geomfromtext('LINESTRING(" + str(shape['area_or_path']) + ")')"
             sql = "INSERT INTO Shapes(category_ID, shape_creater, center, area_or_path, title, description, rate, respondent_ID)" \
-                  "VALUES(%s, %s, " + center + ", " + area_or_path + ", %s, %s, %s, %s);"
+                  "VALUES(%s, aes_encrypt(%s,'enckey'), " + center + ", " + area_or_path + ", %s, %s, %s, %s);"
 
             cursor.execute(sql, (str(shape['category_ID']), str(logged_in_user), shape['title'],
                                  shape['description'], shape['rating'], str(Respondoent_id)))
 
             conn.commit()
+            conn.close()
+            return "Success"
 
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return "Fail"
+        return "1"
 
-    conn.close()
-    return "Success"
+    except Exception as err:
+        conn.close()
+        print(err)
+        return "0"
 
 
 @app.route("/ViewMapResult", methods=['GET'])
 def view_map_result():
     mapid = request.args.get('mapid')
     username = session.get("Logged_in", None)
-    if username is None:
-        return render_template("error.html", msg="Du ma vaere innlogget for a se ditt kart !")
+
+    authority = Classes.Authority(username)
+
+    if authority.is_logged_in() is False:
+        return render_template("error.html", Fail_Code=4)
+
+    is_valid = authority.is_map_valid(mapid)
+    if type(is_valid) == int:
+        return render_template("error.html", Fail_Code=is_valid)
+
+    # get all users for this map
+    Users = authority.get_map_users(mapid)
+    if type(Users) == int:
+        return render_template("error.html", Fail_Code=Users)
 
     conn = get_db()
     cursor = conn.cursor()
-
-    # TODO: Check if a user is logged in
-    if username is None:
-        return render_template("error.html")
-
-    # TODO: Determine if the logged_in_user who is requesing the map is an administrator or just an interviewer
-    Interviewers = []
-    Administrators = []
-    sql = "SELECT M.username, e_post FROM Maps_Interviewers AS M JOIN Persons AS P ON M.username = P.username " \
-          "WHERE map_id = 'MAP_ID';".replace("MAP_ID", str(mapid))
     try:
-        cursor.execute(sql)
-        data = cursor.fetchall()
-        for entry in data:
-            interviewer = {"username": entry[0], "email": entry[1]}
-            Interviewers.append(interviewer)
 
-        sql = "SELECT M.username, e_post FROM Maps_Administrators AS M JOIN Persons AS P ON M.username = P.username " \
-              "WHERE map_id = 'MAP_ID';".replace("MAP_ID", str(mapid))
-        cursor.execute(sql)
-        data = cursor.fetchall()
-        for entry in data:
-            Administrator = {"username": entry[0], "email": entry[1]}
-            Administrators.append(Administrator)
+        Interviewers, Administrators = authority.get_all_map_users(mapid)
+        if type(Interviewers) == int:
+            return render_template("error.html", Fail_Code=Interviewers)
 
         Administrators_names = []
         for user in Administrators:
             Administrators_names.append(user["username"])
 
         # TODO: Reading the map_details
-        sql = "SELECT map_creater, title, description, start_date, end_date, astext(geo_boundery), zoom ,map_id " \
+        sql = "SELECT cast(aes_decrypt(map_creater, 'enckey') AS CHAR(20)), title, description, start_date, end_date, astext(geo_boundery), zoom ,map_id " \
               "FROM Maps " \
               "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
         cursor.execute(sql)
@@ -550,7 +559,7 @@ def view_map_result():
             questions_response.append(Question_response)
 
         # TODO: Reading already registered shapes on map
-        sql = "SELECT S.shape_id, S.shape_creater, astext(S.center), astext(S.area_or_path), S.title, S.description, " \
+        sql = "SELECT S.shape_id, cast(aes_decrypt(S.shape_creater, 'enckey') AS CHAR(20)), astext(S.center), astext(S.area_or_path), S.title, S.description, " \
               "S.rate, M.category_type, M.category_image_or_color, respondent_ID " \
               "FROM Shapes S JOIN Maps_Categories M ON S.category_ID = M.category_ID " \
               "WHERE map_id = MAP_ID;".replace("MAP_ID", str(mapid))
@@ -582,23 +591,25 @@ def view_map_result():
                 elif shape['category_type'] == "Area":
                     areas.append(shape)
 
+        interviwers, administrators = authority.get_all_map_users(mapid)
+        all_users = interviwers+administrators
+
+        return render_template("analyze_map.html", Users=all_users, Map=map,
+                               Questions=questions, Questions_response=questions_response,
+                               Points=points, Areas=areas, Roads=roads)
+
 
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return render_template("error.html", Fail="En feil har skjedd, prov igjen!")
+        return render_template("error.html", Fail_Code=1)
+
+    except Exception as err:
+        conn.close()
+        print(err)
+        return render_template("error.html", Fail_Code=0)
 
     conn.close()
-
-    all_users = []
-    if username in Administrators_names:
-        for user in (Administrators + Interviewers):
-            if user not in all_users:
-                all_users.append(user)
-
-    return render_template("view_map_result.html", Users=all_users, Map=map,
-                           Questions=questions, Questions_response=questions_response,
-                           Points=points, Areas=areas, Roads=roads)
 
 
 @app.route("/Edit_Shape", methods=['POST'])
@@ -608,44 +619,64 @@ def edit_shape():
     Shape_id = request.form.get("shape_id")
     Task = request.form.get("task")
 
+    authority = Classes.Authority(username)
+
+    if authority.is_logged_in() is False:
+        return "4"
+
+    Interviewers, Administrators = authority.get_all_map_users(map_id)
+
     conn = get_db()
     cursor = conn.cursor()
 
     try:
-        ## TODO: Check to see if the logged_in user is an adminstrator of this map or her/she is creater of this shape
-        sql = "SELECT shape_creater FROM Shapes WHERE shape_creater = 'USERNAME' AND shape_id = SHAPE_ID " \
-              "UNION ALL " \
-              "SELECT username FROM Maps_Administrators WHERE username = 'USERNAME' AND MAP_ID = 1;"
-        sql = sql.replace("USERNAME", username)
-        sql = sql.replace("MAP_ID", map_id)
-        sql = sql.replace("SHAPE_ID", Shape_id)
-        cursor.execute(sql)
-        data = cursor.fetchall()
-        names = []
-        for name in data:
-            names.append(name[0])
-        if username not in names:
-            return "Du har ikke rettighet til a gjore dette!"
+        Interviewers_names = []
+        for Interviewer in Interviewers:
+            Interviewers_names.append(Interviewer["username"])
+
+        Administrators_names = []
+        for Administrator in Administrators:
+            Administrators_names.append(Administrator["username"])
+
+        if username not in Administrators_names and username not in Interviewers_names:
+            return "2"
 
         ## TODO: Do the requested task to update
         if Task == "Update":
             Title = request.form.get("title")
             Description = request.form.get("description")
             Rating = request.form.get("rating")
-            sql = "UPDATE Shapes " \
-                  "SET title = 'TITLE', description = 'DESCRIPTION', rate = RATING " \
-                  "WHERE shape_id = SHAPE_ID;".replace("SHAPE_ID", Shape_id)
+            if username in Interviewers_names:
+                sql = "UPDATE Shapes SET title = 'TITLE1', description = 'DESCRIPTION1', rate = 1 WHERE " \
+                      "shape_creater = aes_encrypt('PERSON','enckey') " \
+                      "AND shape_id = SHAPE_ID;".replace("SHAPE_ID", Shape_id).replace("PERSON", username)
+            else:
+                sql = "UPDATE Shapes " \
+                      "SET title = 'TITLE', description = 'DESCRIPTION', rate = RATING " \
+                      "WHERE shape_id = SHAPE_ID;".replace("SHAPE_ID", Shape_id)
             sql = sql.replace('TITLE', Title)
             sql = sql.replace('DESCRIPTION', Description)
             sql = sql.replace('RATING', Rating)
             cursor.execute(sql)
-            conn.commit();
+            conn.commit()
+            conn.close()
+
+            return "Success"
 
         ## TODO: Do the requested task to delete
         elif Task == "Delete":
-            sql = "DELETE FROM Shapes WHERE shape_id = SHAPE_ID;".replace("SHAPE_ID", Shape_id)
+            if username in Interviewers_names:
+                sql = "DELETE FROM Shapes WHERE " \
+                      "shape_creater = aes_encrypt('PERSON','enckey') " \
+                      "AND shape_id = SHAPE_ID;".replace("SHAPE_ID", Shape_id).replace("PERSON", username)
+            else:
+                sql = "DELETE FROM Shapes " \
+                      "WHERE shape_id = SHAPE_ID;".replace("SHAPE_ID", Shape_id)
             cursor.execute(sql)
             conn.commit()
+            conn.close()
+
+            return "Success"
 
         ## TODO: in case the task is not spesified
         else:
@@ -655,44 +686,32 @@ def edit_shape():
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return "Error"
+        return "1"
 
-    return "Success"
+    except Exception as err:
+        conn.close()
+        print(err)
+        return "0"
 
 
 @app.route("/DownloadMapAsCSVFile", methods=['POST'])
-def Download_Map_As_CSV_File():
+def download_map_as_csv_file():
     username = session.get("Logged_in")
     Map_id = json.loads(request.form.get('Map_id'))
     Shapes_data = json.loads(request.form.get('Data'))
     Respondents = json.loads(request.form.get("Respondoents"))
 
+    authority = Classes.Authority(username)
+    if authority.is_logged_in() is False:
+        return "4"
+    all_users = authority.get_map_users(str(Map_id))
+    if type(all_users) == int:
+        return str(all_users)
+
     conn = get_db()
     cursor = conn.cursor()
 
-    # TODO: Check if a user is logged in
-    if username is None:
-        return render_template("error.html",
-                               Fail="Du ma vaere logget inn for a kunne laste ned ditt kart som en .csv fil!")
-
-    # TODO: Determine if the logged_in_user who is requesing the map is an administrator or an interviewer
-    All_Users = []
-    sql = "(SELECT M.username FROM Maps_Administrators AS M JOIN Persons AS P ON M.username = P.username WHERE map_id = MAP_ID)" \
-          "UNION" \
-          "(SELECT M.username FROM Maps_Interviewers AS M JOIN Persons AS P ON M.username = P.username WHERE map_id = MAP_ID);".replace(
-        "MAP_ID", str(Map_id))
     try:
-        cursor.execute(sql)
-        data = cursor.fetchall()
-        for entry in data:
-            User = entry[0]
-            All_Users.append(User)
-
-        # TODO: checking if the current user name has right to this map
-        if username not in All_Users:
-            conn.close()
-            return render_template("error.html", Fail="Du har ingen rettighet til dette kartet !")
-
         file_header = "Map_ID,Map_bounds,Area_or_path_Coordinates,Center,Interviewer," \
                       "Title,Description,Rating,Category_type,Respondent_ID"
 
@@ -710,12 +729,18 @@ def Download_Map_As_CSV_File():
         map_bounds = cursor.fetchone()[0]
 
         for shape_id in Shapes_data:
-            line = file_header
-            line = line.replace("Map_ID", str(Map_id))
-            line = line.replace("Map_bounds", str(map_bounds))
+            line = str(Map_id)+","
+            striped_bounds = (map_bounds.strip("POLYGON((")).strip("))")
+            bounds_coordinates = striped_bounds.split(",")
+            flipped_bounds = "POLYGON(("
+            for coordinate in list(bounds_coordinates):
+                flipped = coordinate.split(" ")
+                flipped_bounds += flipped[1]+" "+flipped[0]+","
+            flipped_bounds = flipped_bounds[:-1]+"))"
+            line += flipped_bounds+","
 
             # TODO: Read relevant shape's data from database
-            sql = "SELECT astext(S.area_or_path), astext(S.center), S.shape_creater, S.title, S.description, " \
+            sql = "SELECT astext(S.area_or_path), astext(S.center), cast(aes_decrypt(S.shape_creater, 'enckey') AS CHAR(20)), S.title, S.description, " \
                   "S.rate, M.category_type, S.respondent_ID " \
                   "FROM Shapes S JOIN Maps_Categories M ON S.category_ID = M.category_ID " \
                   "WHERE map_id = 'MAP_ID' AND shape_id = 'SHAPE_ID';" \
@@ -724,17 +749,31 @@ def Download_Map_As_CSV_File():
             cursor.execute(sql)
             shape = cursor.fetchone()
 
-            ## Map_ID,Map_bounds,Area_or_path_Coordinates,Center,Interviewer,Title,Description,Rating,Category_type,Respondent_ID
-            line = line.replace("Map_ID", str(Map_id))
-            line = line.replace("Map_bounds", str(map_bounds))
-            line = line.replace("Area_or_path_Coordinates", str(shape[0]))
-            line = line.replace("Center", str(shape[1]))
-            line = line.replace("Interviewer", str(shape[2]))
-            line = line.replace("Title", str(shape[3]))
-            line = line.replace("Description", str(shape[4]))
-            line = line.replace("Rating", str(shape[5]))
-            line = line.replace("Category_type", str(shape[6]))
-            line = line.replace("Respondent_ID", str(shape[7]))
+            if str(shape[0]) != "None":
+                striped_area_or_path = (str(shape[0]).strip("LINESTRING(")).strip(")")
+                area_or_path_coordinates = striped_area_or_path.split(",")
+                flipped_area_or_path = "LINESTRING("
+                for coordinate in list(area_or_path_coordinates):
+                    flipped = coordinate.split(" ")
+                    flipped_area_or_path += flipped[1] + " " + flipped[0] + ","
+                flipped_area_or_path = flipped_area_or_path[:-1] + ")"
+                line += flipped_area_or_path + ","
+            else:
+                line += "None" + ","
+
+            striped_center = (str(shape[1]).strip("POINT(")).strip(")")
+            flipped_center = "POINT("
+            flipped = striped_center.split(" ")
+            flipped_center += flipped[1] + " " + flipped[0] + ")"
+            line += flipped_center + ","
+
+
+            line += str(shape[2])+","
+            line += str(shape[3])+","
+            line += str(shape[4])+","
+            line += str(shape[5])+","
+            line += str(shape[6])+","
+            line += str(shape[7])+","
 
             sql = "SELECT Q.question, R.Answer " \
                   "FROM Respondent_Answers AS R JOIN Maps_Questions AS Q ON R.question_ID = Q.question_ID " \
@@ -745,23 +784,33 @@ def Download_Map_As_CSV_File():
             Questions = cursor.fetchall()
 
             for q in Questions:
-                line = line.replace(str(q[0]), str(q[1]))
+                answer = q[1]
+                if str(answer) == "":
+                    answer = "None"
+                line += answer+","
 
             file_content += line + "\n"
 
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return "Fail"
+        return "1"
+
+    except Exception as err:
+        conn.close()
+        print(err)
+        return "0"
 
     return file_content
 
 
 @app.route("/UpdateMapDetails", methods=['POST', 'GET'])
-def Update_Map_Details():
+def update_map_details():
     username = session.get("Logged_in", None)
-    if username is None:
-        return render_template("error.html", msg="Du ma vaere innlogget for a se a kunne redigere ditt kart !")
+
+    authority = Classes.Authority(username)
+    if authority.is_logged_in() is False:
+        return render_template("error.html", Fail_Code=4)
 
     if request.method == "GET":
         Map_id = request.args.get("mapid")
@@ -774,12 +823,12 @@ def Update_Map_Details():
 
         sql = "SELECT map_id, map_creater, title, description, end_date, astext(Centroid(geo_boundery)), zoom " \
               "FROM Maps " \
-              "WHERE map_creater = 'person' AND map_id = MAP_ID;".replace("person", username).replace("MAP_ID", Map_id)
+              "WHERE map_creater = aes_encrypt('person','enckey') AND map_id = MAP_ID;".replace("person", username).replace("MAP_ID", Map_id)
 
         cursor.execute(sql)
         data = cursor.fetchone()
         if data is None:
-            return render_template("error.html", msg="Du har ikke rettighet til a oppdatere dette kartet")
+            return render_template("error.html", Fail_Code=2)
 
         Map = {}
         Map["id"] = data[0]
@@ -923,17 +972,31 @@ def Update_Map_Details():
     except mysql.connector.Error as err:
         conn.close()
         print(err.msg)
-        return render_template("error.html", Fail="Noe Feil har skjedd, prov igjen")
+        return render_template("error.html", Fail_Code=1)
+
+    except Exception as err:
+        conn.close()
+        print(err)
+        return render_template("error.html", Fail_Code=0)
 
 
 @app.route("/FeedbackArena", methods=['POST', 'GET'])
 def feedbacks():
+    username = session.get("Logged_in", None)
+    authority = Classes.Authority(username)
 
     conn = get_db()
     cursor = conn.cursor()
     if request.method == "GET":
         try:
+            if authority.is_logged_in() is False:
+                return render_template("error.html", Fail_Code=4)
+
             mapid = request.args.get('mapid')
+            all_users = authority.get_map_users(mapid)
+            if type(all_users) == int:
+                return render_template("error.html", Fail_Code=all_users)
+
             sql = "SELECT first_name, last_name, date, cmt FROM Feedbacks as F JOIN Persons as P On F.user = P.username WHERE F.map_id = MAP_ID;".replace("MAP_ID", str(mapid))
             cursor.execute(sql)
             data = cursor.fetchall()
@@ -953,18 +1016,28 @@ def feedbacks():
         except mysql.connector.Error as err:
             conn.close()
             print(err.msg)
-            return render_template("error.html")
+            return render_template("error.html", Fail_Code=1)
+        except Exception as err:
+            conn.close()
+            print(err)
+            return render_template("error.html", Fail_Code=0)
 
     elif request.method == "POST":
         try:
+            if authority.is_logged_in() is False:
+                return "4"
             map_id = request.form.get("Map_ID")
+            all_users = authority.get_map_users(map_id)
+            if type(all_users) == int:
+                return str(all_users)
+
             username = session.get("Logged_in", None)
             content = request.form.get("Content");
 
-            sql = "INSERT INTO Feedbacks(map_id, user, cmt) VALUES(%s,%s,%s);"
+            sql = "INSERT INTO Feedbacks(map_id, user, cmt) VALUES(%s,aes_encrypt(%s,'enckey'),%s);"
             cursor.execute(sql,(map_id, username, content))
             conn.commit()
-            sql = "SELECT first_name, last_name FROM Persons WHERE username = 'Username'".replace("Username",username)
+            sql = "SELECT first_name, last_name FROM Persons WHERE username = aes_encrypt('Username','enckey')".replace("Username",username)
             cursor.execute(sql)
             data = cursor.fetchone()
             full_name = data[0]+" "+data[1]
@@ -974,7 +1047,11 @@ def feedbacks():
         except mysql.connector.Error as err:
             conn.close()
             print(err.msg)
-            return "Failed"
+            return "1"
+        except Exception as err:
+            conn.close()
+            print(err)
+            return "0"
 
     else:
         return "Unknown request"

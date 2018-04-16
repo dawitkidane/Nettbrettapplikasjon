@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block stylingblock %}
-    <!-- Link to static/stylesheets/error_stylesheet.css -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/error_stylesheet.css') }}">
+    <!-- Link to static/stylesheets/error_stylesheet_version_0.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/error_stylesheet_version_0.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -9,8 +9,16 @@
 
         <h1 >Obs! En feil har skjedd!</h1>
 
-        {% if msg or Fail %}
-            <strong>{{ msg }}{{ Fail }}</strong>
+        {% if Fail_Code == 0 %}
+            <strong>Ukjent Feil</strong>
+        {% elif Fail_Code == 1 %}
+            <strong>Database Feil</strong>
+        {% elif Fail_Code == 2 %}
+            <strong>Du har ikke rettighet til å gjøre dette</strong>
+        {% elif Fail_Code == 3 %}
+            <strong>Dette Kartet er gått ut på dato</strong>
+        {% elif Fail_Code == 4 %}
+            <strong>Du må være innlogget for å få tilgang</strong>
         {% endif %}
 
         <a href="/">Gå tilbake til hjemsiden</a>

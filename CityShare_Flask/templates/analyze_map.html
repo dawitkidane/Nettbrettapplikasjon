@@ -1,8 +1,8 @@
 {% extends 'index.html' %}
 
 {% block stylingblock %}
-    <!-- Link to static/edit_map_stylesheet.css -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/edit_map_stylesheet.css') }}">
+    <!-- Link to static/open_and_analyze_map_stylesheet_version_0.css -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='Stylesheets/open_and_analyze_map_stylesheet_version_0.css') }}">
 {% endblock %}
 
 {% block scriptblock %}
@@ -21,8 +21,8 @@
     <script src="../static/Icon_Selector_plugin/javascript/chosen.jquery.js"></script>
     <script src="../static/Icon_Selector_plugin/javascript/ImageSelect.jquery.js"></script>
 
-    <!-- link to static/Scripts/view_map_result_JavaScript.js -->
-    <script src="{{ url_for('static',filename='Scripts/view_map_result_JavaScript.js') }}"></script>
+    <!-- link to static/Scripts/analyze_map_JavaScript_version_0.js -->
+    <script src="{{ url_for('static',filename='Scripts/analyze_map_JavaScript_version_0.js') }}"></script>
 
     <script>
 
@@ -305,9 +305,9 @@
             shape_check = false;
             if (selected_interviewers.includes(shape["shape_creater"])
                 && types.includes(shape["type"])
-                && shape["title"].includes(title)
-                && shape["description"].includes(description)
-                && shape["rating"].includes(rating)) {
+                && shape["title"].includes(title[0])
+                && shape["description"].includes(description[0])
+                && (shape["rating"].includes(rating[0]) || rating[1] == false)) {
                 shape_check = true;
             }
 
@@ -334,9 +334,9 @@
             shape_check = false;
             if (selected_interviewers.includes(shape["shape_creater"])
                 || types.includes(shape["type"])
-                || shape["title"].includes(title)
-                || shape["description"].includes(description)
-                || shape["rating"].includes(rating)) {
+                || (shape["title"].includes(title[0]) && title[1] == true)
+                || (shape["description"].includes(description[0]) && description[1] == true)
+                || (shape["rating"].includes(rating[0]) && rating[1] == true)) {
                 shape_check = true;
             }
 
@@ -368,14 +368,18 @@
 
             selected_interviewers = $("#filter_interviewers").val();
 
-            types = ["Not_Checked","Not_Checked","Not_Checked"];
-            if ($("#Point").is(':checked')) types[0] = "POINT";
-            if ($("#Road").is(':checked')) types[1] = "ROAD";
-            if ($("#Area").is(':checked')) types[2] = "AREA";
+            types = ["POINT","ROAD","AREA"];
+            if (!($("#Point").is(':checked'))) types[0] = "not";
+            if (!($("#Road").is(':checked'))) types[1] = "not";
+            if (!($("#Area").is(':checked'))) types[2] = "not";
 
-            title = $("#title_search").val();
-            description = $("#description_search").val();
-            rating = $("#rating_search").val();
+
+            title = [$("#title_search").val(),true];
+            description = [$("#description_search").val(),true];
+            rating = [$("#rating_search").val(),true];
+            if (title[0] == "") title[1] = false;
+            if (description[0] == "") description[1] = false;
+            if (rating[0] == "0") rating[1] = false;
 
             expected_question_answer = {};
 
@@ -393,9 +397,6 @@
                     if (selected_interviewers == null) {
                         selected_interviewers = [];
                     }
-                    if (title == "") title = "NOT_CHECKED";
-                    if (description == "") description = "NOT_CHECKED";
-                    if (rating == "") rating = "NOT_CHECKED";
                     match = Compare_Shape_exclusive(shapes[key], selected_interviewers, types, title, description, rating, expected_question_answer);
                 } else if (filter_type == "Inclusive") {
                     if (selected_interviewers == null) {
@@ -450,12 +451,17 @@
                         Data: (JSON.stringify(shapes_ids)),
                     },
                     function (data, status) {
-                        if (data != "Fail") {
+                        if (data != "0" && data != "1" && data != "2" && data != "4") {
                             download("citydata_uis_map_nr_number.csv".replace("number", "{{ Map.mapid }}"), data);
                             return;
-                        } else {
-                            alert("En feil har skjedd, Kan ikke lagre filen, sjekk internett forbindelse");
-                            return;
+                        } else if (data == "0") {
+                            alert("Ukjent Feil, prøv igjen")
+                        } else if (data == "1") {
+                            alert("Feil i databasen, prøv igjen senere")
+                        } else if (data == "2") {
+                            alert("Du har ikkje tilgang til å slette dette")
+                        } else if (data == "4") {
+                            alert("Du er ikke innlogget")
                         }
                     });
 
@@ -750,15 +756,21 @@
                         shapes[current_shape_id]["rating"] = rating;
                         (shapes[current_shape_id]["infowindow"]).close();
                         handle_on_close_info_window();
-                    } else if (data == "Error") {
-                        alert("En feil har skjedd, prøv igjen")
+                    } else if (data == "0") {
+                        alert("Ukjent Feil, prøv igjen")
+                    } else if (data == "1") {
+                        alert("Feil i databasen, prøv igjen senere")
+                    } else if (data == "2") {
+                        alert("Du har ikkje tilgang til å oppdatere dette")
+                    } else if (data == "4") {
+                        alert("Du er ikke innlogget")
                     }
                 });
         }
 
         // function to delete the shape when the user click the red button on the infow window to delete
         function Delete_Shape() {
-            answer = confirm("Er du sikke at du vil slette denne markøren ?");
+            answer = confirm("Er du sikker at du vil slette denne markøren ?");
 
             if (answer == true) {
                 $.post("/Edit_Shape",
@@ -777,12 +789,26 @@
                             delete current_shapes[current_shape_id];
                             $("#pac-card").show();
 
-                        } else if (data == "Error") {
-                            alert("En feil har skjedd, prøv igjen")
+                        } else if (data == "0") {
+                            alert("Ukjent Feil, prøv igjen")
+                        } else if (data == "1") {
+                            alert("Feil i databasen, prøv igjen senere")
+                        } else if (data == "2") {
+                            alert("Du har ikkje tilgang til å slette dette")
+                        } else if (data == "4") {
+                            alert("Du er ikke innlogget")
                         }
                     });
             }
 
+        }
+
+        // function to warn the user that he is about to go back, and might lose data if not saved
+        function go_back() {
+            answer = confirm("Dette kan medfører tap av data.\nEr du sikker at du go tilbake ?");
+            if (answer == true) {
+                history.back();
+            }
         }
 
     </script>
@@ -799,6 +825,8 @@
     <!-- Choice panel to the left of the map or hidden/shown on small width devices -->
     <div id="ChoicePanel" class="part">
         <div class="panel-group" id="accordion">
+
+            <button type="button" onclick="go_back();" class="btn btn-danger btn-block">Tilbake til mine kart</button>
 
             <div>
                 <button type="button" id="show_map_btn" class="btn btn-warning" style="width: 100%">Back to Map</button>
@@ -919,9 +947,9 @@
                                     <input type="text" class="form-control" id="description_search" placeholder="Beskrivelse" name="description_search">
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="rating">Objekter med Vurdering: </label>
-                                    <input type="number" min="1" max="5" class="form-control" id="rating_search" placeholder="Vurdering = 2" name="rating_search">
+                                <div class='slidecontainer form-group'>
+                                    <p>Din Vurdering: <span id='currentRating'></span></p>
+                                    <input type='range' name="rating_search"  min='0' max='5' value='2' class='slider' value='0' id="rating_search" required>
                                 </div>
 
                                 <div class="form-group">
