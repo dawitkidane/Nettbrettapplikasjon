@@ -422,10 +422,6 @@ def RegisterRespondoent():
     Map_id = request.form.get('Map_id')
     logged_in_user = session.get("Logged_in", None)
 
-    for key in Shapes:
-        shape = dict(Shapes[key])
-        print(shape)
-
 
     authority = Classes.Authority(logged_in_user)
     if authority.is_logged_in() is False:
