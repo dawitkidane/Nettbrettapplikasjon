@@ -2,12 +2,23 @@ from flask import Flask, render_template, url_for, request, json, g, session, re
 import mysql.connector
 import datetime
 
+"""
 def get_db():
     if not hasattr(g, '_database'):
         g._database = mysql.connector.connect(host='sql2.freemysqlhosting.net',
                                               user='sql2217838',
                                               passwd='cR3!bC4!',
                                               db='sql2217838')
+    return g._database
+
+"""
+
+def get_db():
+    if not hasattr(g, '_database'):
+        g._database = mysql.connector.connect(host='mysql2.ux.uis.no',
+                                              user='mguniem',
+                                              passwd='8jtmyytk',
+                                              db='dbmguniem')
     return g._database
 
 
