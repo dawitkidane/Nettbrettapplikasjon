@@ -119,9 +119,6 @@
             $('#geo_zoom').val(calculated_zoom+1);
             });
 
-
-
-
         var card = document.getElementById('pac-card');
         var input = document.getElementById('pac-input');
         map.controls[google.maps.ControlPosition.TOP_CENTER].push(card);

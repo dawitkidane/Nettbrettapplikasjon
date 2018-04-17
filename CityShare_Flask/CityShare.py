@@ -422,6 +422,11 @@ def RegisterRespondoent():
     Map_id = request.form.get('Map_id')
     logged_in_user = session.get("Logged_in", None)
 
+    for key in Shapes:
+        shape = dict(Shapes[key])
+        print(shape)
+
+
     authority = Classes.Authority(logged_in_user)
     if authority.is_logged_in() is False:
         return "4"
@@ -464,9 +469,9 @@ def RegisterRespondoent():
             cursor.execute(sql, (str(shape['category_ID']), str(logged_in_user), shape['title'],
                                  shape['description'], shape['rating'], str(Respondoent_id)))
 
-            conn.commit()
-            conn.close()
-            return "Success"
+        conn.commit()
+        conn.close()
+        return "Success"
 
     except mysql.connector.Error as err:
         conn.close()
