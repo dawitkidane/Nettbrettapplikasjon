@@ -4,7 +4,7 @@ import Classes
 
 app = Flask(__name__)
 app.secret_key = "any random string"
-"""
+
 def get_db():
     if not hasattr(g, '_database'):
         g._database = mysql.connector.connect(host='sql2.freemysqlhosting.net',
@@ -12,8 +12,8 @@ def get_db():
                                               passwd='cR3!bC4!',
                                               db='sql2217838')
     return g._database
-"""
 
+"""
 def get_db():
     if not hasattr(g, '_database'):
         g._database = mysql.connector.connect(host='mysql2.ux.uis.no',
@@ -21,7 +21,7 @@ def get_db():
                                               passwd='8jtmyytk',
                                               db='dbmguniem')
     return g._database
-
+"""
 
 @app.route('/')
 def index():

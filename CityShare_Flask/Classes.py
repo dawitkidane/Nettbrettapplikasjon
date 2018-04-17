@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, request, json, g, session, re
 import mysql.connector
 import datetime
 
-"""
+
 def get_db():
     if not hasattr(g, '_database'):
         g._database = mysql.connector.connect(host='sql2.freemysqlhosting.net',
@@ -12,7 +12,6 @@ def get_db():
     return g._database
 
 """
-
 def get_db():
     if not hasattr(g, '_database'):
         g._database = mysql.connector.connect(host='mysql2.ux.uis.no',
@@ -20,7 +19,7 @@ def get_db():
                                               passwd='8jtmyytk',
                                               db='dbmguniem')
     return g._database
-
+"""
 
 class Authority:
     def __init__(self, username):
